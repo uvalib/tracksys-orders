@@ -1,0 +1,8 @@
+@mixin be-accessible(){
+   outline: 3px dotted var( --uvalib-accessibility-highlight );
+   outline-offset: 3px;
+}
+@mixin be-accessible-light(){
+   outline: 3px dotted var(--uvalib-grey-lightest);
+   outline-offset: 3px;
+}
