@@ -8,6 +8,7 @@ export default createStore({
       version: "unknown",
       error: "",
       termsAgree: false,
+      termsError: false,
       isUVA: "yes"
    },
    getters: {

@@ -2,7 +2,6 @@
    <div class="home">
       <h1>Digital Production Group Request Form</h1>
       <div class="content">
-         <div class="terms-note">You must agree to the terms and conditions to continue.</div>
          <p>
             Because preservation of its materials is of paramount concern, the Special Collections Department reserves the right to
             decline to digitize materials, or to limit the amount of material that can be safely digitized. If you have questions,
@@ -56,13 +55,14 @@
          </div>
          <h2>Terms of Agreement</h2>
          <div class="sect">
-            <label class="terms">
+            <label class="terms" id="terms-agree" >
                <input type="checkbox" v-model="termsAgree">
                <span>
                   I understand and agree to the above copyright statement and will only use the digitized resources as I indicate in my online request.
                   I also understand it is my responsibility to determine who owns the copyright of these materials unless otherwise noted.
                </span>
             </label>
+            <div v-if="termsError" class="terms-note">You must agree to the terms and conditions to continue.</div>
          </div>
          <h2>UVA Status</h2>
          <div class="sect">
@@ -78,7 +78,7 @@
          </div>
       </div>
       <div class="button-bar">
-         <button>Create Request</button>
+         <button @click="createReequestClicked">Create Request</button>
       </div>
    </div>
 </template>
@@ -89,10 +89,16 @@ export default {
    name: 'Home',
    computed: {
       ...mapFields([
-         'termsAgree', 'isUVA'
+         'termsAgree', 'isUVA', "termsError"
       ]),
    },
-   components: {
+   methods: {
+      createReequestClicked() {
+         this.termsError = false
+         if ( this.termsAgree == false) {
+            this.termsError = true
+         }
+      }
    }
 }
 </script>
@@ -103,10 +109,12 @@ div.content {
    max-width: 60%;
    margin: 0 auto;
    .terms-note {
-      text-align: center;
-      font-weight: bold;
+      text-align: left;
+      font-weight: normal;
       margin: 5px 0 35px 0;
       font-size: 1.2em;
+      color: var(--uvalib-red);
+      font-style: italic;
    }
    .warn {
       display: inline-block;
