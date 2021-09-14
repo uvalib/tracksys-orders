@@ -23,6 +23,11 @@ module.exports = {
         changeOrigin: true,
         logLevel: 'debug'
       },
+      '/authenticate': {
+        target: process.env.TS_ORDER_SRV,// or 'http://localhost:8085',
+        changeOrigin: true,
+        logLevel: 'debug'
+      },
       '/version': {
         target: process.env.TS_ORDER_SRV,// or 'http://localhost:8085',
         changeOrigin: true,

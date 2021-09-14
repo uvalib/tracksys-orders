@@ -17,6 +17,7 @@ type configData struct {
 	port        int
 	db          dbConfig
 	tracksysURL string
+	devAuthUser string
 }
 
 func getConfiguration() *configData {
@@ -30,6 +31,9 @@ func getConfiguration() *configData {
 	flag.StringVar(&config.db.Name, "dbname", "", "Database name")
 	flag.StringVar(&config.db.User, "dbuser", "", "Database user")
 	flag.StringVar(&config.db.Pass, "dbpass", "", "Database password")
+
+	// dev setup
+	flag.StringVar(&config.devAuthUser, "devuser", "", "Authorized computing id for dev")
 
 	flag.Parse()
 
@@ -52,6 +56,9 @@ func getConfiguration() *configData {
 	log.Printf("[CONFIG] dbport        = [%d]", config.db.Port)
 	log.Printf("[CONFIG] dbname        = [%s]", config.db.Name)
 	log.Printf("[CONFIG] dbuser        = [%s]", config.db.User)
+	if config.devAuthUser != "" {
+		log.Printf("[CONFIG] devuser       = [%s]", config.devAuthUser)
+	}
 
 	return &config
 }

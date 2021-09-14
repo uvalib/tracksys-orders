@@ -97,6 +97,14 @@ export default {
          this.termsError = false
          if ( this.termsAgree == false) {
             this.termsError = true
+            return
+         }
+
+         if (this.isUVA) {
+            window.location.href = "/authenticate"
+         } else {
+            this.$store.dispatch("startRequest")
+            this.$router.push("/request")
          }
       }
    }

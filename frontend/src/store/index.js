@@ -9,25 +9,46 @@ export default createStore({
       error: "",
       termsAgree: false,
       termsError: false,
-      isUVA: "yes"
+      isUVA: "yes",
+      currStepIdx: 0,
+      steps: [
+         {name: "Customer Information", component: "CustomerInfo", page: 1},
+         {name: "Address Information", component: "AddressInfo", page: 2},
+         {name: "General Request Information", component: "RequestInfo", page: 3},
+         {name: "Item Information", component: "ItemInfo", page: 4},
+         {name: "Review Order", component: "ReviewOrder", page: 5},
+      ],
+      computeID: ""
    },
    getters: {
       getField,
+      currStep: state => {
+         return state.steps[state.currStepIdx]
+      },
+      numSteps: state => {
+         return state.steps.length
+      }
    },
    mutations: {
       updateField,
-      setVersion(state, data) {
-         state.version = `${data.version}-${data.build}`
+      clearError(state) {
+         state.error = ""
+      },
+      clearRequest(state) {
+         state.currStepIdx = 0
+      },
+      setComputeID(state, cid) {
+         state.computeID = cid
       },
       setError(state, msg) {
          state.error = msg
       },
-      clearError(state) {
-         state.error = ""
+      setVersion(state, data) {
+         state.version = `${data.version}-${data.build}`
       },
       setWorking(state, flag) {
          state.working = flag
-      }
+      },
    },
    actions: {
       getVersion(ctx) {
@@ -37,5 +58,9 @@ export default createStore({
             // NO-OP
          })
       },
+      startRequest(ctx) {
+         ctx.commit("clearRequest")
+         ctx.commit("setWorking", true)
+      }
    }
 })

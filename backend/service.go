@@ -16,13 +16,15 @@ import (
 type serviceContext struct {
 	Version     string
 	TrackSysURL string
+	DevAuthUser string
 	DB          *dbx.DB
 }
 
 // InitializeService sets up the service context for all API handlers
 func initializeService(version string, cfg *configData) *serviceContext {
 	ctx := serviceContext{Version: version,
-		TrackSysURL: cfg.tracksysURL}
+		TrackSysURL: cfg.tracksysURL,
+		DevAuthUser: cfg.devAuthUser}
 
 	log.Printf("INFO: connecting to DB...")
 	connectStr := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
@@ -36,6 +38,30 @@ func initializeService(version string, cfg *configData) *serviceContext {
 	log.Printf("INFO: DB Connection established")
 
 	return &ctx
+}
+
+func (svc *serviceContext) authenticate(c *gin.Context) {
+	log.Printf("Checking authentication headers...")
+	log.Printf("Dump all request headers ==================================")
+	for name, values := range c.Request.Header {
+		for _, value := range values {
+			log.Printf("%s=%s\n", name, value)
+		}
+	}
+	log.Printf("END header dump ===========================================")
+
+	computingID := c.GetHeader("remote_user")
+	if svc.DevAuthUser != "" {
+		computingID = svc.DevAuthUser
+		log.Printf("Using dev auth user ID: %s", computingID)
+	}
+	if computingID == "" {
+		log.Printf("ERROR: Expected auth header not present in request. Not authorized.")
+		c.Redirect(http.StatusFound, "/forbidden")
+		return
+	}
+
+	c.Redirect(http.StatusFound, fmt.Sprintf("/granted?user=%s", computingID))
 }
 
 func (svc *serviceContext) healthCheck(c *gin.Context) {
