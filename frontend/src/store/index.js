@@ -20,6 +20,7 @@ export default createStore({
       ],
       computeID: "",
       customer: {
+         id: 0,
          firstName: "",
          lastName: "",
          email: "",
@@ -42,7 +43,7 @@ export default createStore({
       },
       clearRequest(state) {
          state.currStepIdx = 0
-         state.computeID = ""
+         state.customer.id = 0
          state.customer.firstName = ""
          state.customer.lastName = ""
          state.customer.email = ""
@@ -50,12 +51,20 @@ export default createStore({
       },
       setComputeID(state, cid) {
          state.computeID = cid
+         state.customer.email = `${cid}@virginia.edu`
       },
       setError(state, msg) {
          state.error = msg
       },
       setVersion(state, data) {
          state.version = `${data.version}-${data.build}`
+      },
+      setUserData(state, data) {
+         state.customer.id = data.id
+         state.customer.firstName = data.firstName
+         state.customer.lastName = data.lastName
+         state.customer.email = data.email
+         state.customer.academicStatusID = data.academicStatusID
       },
       setWorking(state, flag) {
          state.working = flag
@@ -71,7 +80,17 @@ export default createStore({
       },
       startRequest(ctx) {
          ctx.commit("clearRequest")
-         // ctx.commit("setWorking", true)
+         console.log("START REQUEST... COMPUTE ID: "+ctx.state.computeID)
+         if (ctx.state.computeID != "") {
+            ctx.commit("setWorking", true)
+            axios.get(`/api/users/${ctx.state.computeID}`).then(response => {
+               ctx.commit("setUserData", response.data)
+               ctx.commit("setWorking", false)
+            }).catch( _e => {
+               // NO-OP, there is just no user data pre-populated
+               ctx.commit("setWorking", false)
+            })
+         }
       }
    }
 })

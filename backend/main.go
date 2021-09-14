@@ -28,10 +28,10 @@ func main() {
 	router.GET("/version", svc.getVersion)
 	router.GET("/healthcheck", svc.healthCheck)
 	router.GET("/authenticate", svc.authenticate)
-	// api := router.Group("/api")
-	// {
-
-	// }
+	api := router.Group("/api")
+	{
+		api.GET("/users/:id", svc.getUser)
+	}
 
 	// Note: in dev mode, this is never actually used. The front end is served
 	// by yarn and it proxies all requests to the API to the routes above

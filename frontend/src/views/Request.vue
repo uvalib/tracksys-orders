@@ -7,7 +7,7 @@
       </div>
       <component :is="currStep.component"></component>
    </div>
-   <WaitSpinner message="Processing..." :overlay="true" v-if="working"/>
+   <wait-spinner message="Processing..." :overlay="true" v-if="working"/>
 </template>
 
 <script>

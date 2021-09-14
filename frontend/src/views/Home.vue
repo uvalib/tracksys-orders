@@ -78,7 +78,7 @@
          </div>
       </div>
       <div class="button-bar">
-         <UvaButton @click="createReequestClicked">Create Request</UvaButton>
+         <uva-button @click="createReequestClicked">Create Request</uva-button>
       </div>
    </div>
 </template>

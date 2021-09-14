@@ -10,7 +10,7 @@
       </div>
       <div class="form-row">
          <label for="email">Email</label>
-         <input id="email" type="text" v-model="email">
+         <input id="email" type="text" v-model="email" :disabled="email.length > 0">
       </div>
       <div class="form-row">
          <label for="academic-status">Academic Status</label>
@@ -25,15 +25,17 @@
          </select>
       </div>
       <div class="button-bar">
-         <UvaButton @click="cancelClicked">Cancel</UvaButton>
-         <UvaButton @click="nextClicked" class="pad-left">Next</UvaButton>
+         <uva-button @click="cancelClicked">Cancel</uva-button>
+         <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
       </div>
    </div>
 </template>
 
 <script>
 import { mapFields } from 'vuex-map-fields'
+import UvaButton from './UvaButton.vue';
 export default {
+   components: { UvaButton },
    computed: {
       ...mapFields([
          'customer.firstName', 'customer.lastName', 'customer.email', 'customer.academicStatusID'
