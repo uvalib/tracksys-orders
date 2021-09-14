@@ -2,3 +2,4 @@
 bin
 package/scripts/build.ksh
 package/scripts/shell.ksh
+run.sh
