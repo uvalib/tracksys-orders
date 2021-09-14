@@ -18,7 +18,13 @@ export default createStore({
          {name: "Item Information", component: "ItemInfo", page: 4},
          {name: "Review Order", component: "ReviewOrder", page: 5},
       ],
-      computeID: ""
+      computeID: "",
+      customer: {
+         firstName: "",
+         lastName: "",
+         email: "",
+         academicStatusID: 0,
+      }
    },
    getters: {
       getField,
@@ -36,6 +42,11 @@ export default createStore({
       },
       clearRequest(state) {
          state.currStepIdx = 0
+         state.computeID = ""
+         state.customer.firstName = ""
+         state.customer.lastName = ""
+         state.customer.email = ""
+         state.customer.academicStatusID = 0
       },
       setComputeID(state, cid) {
          state.computeID = cid
@@ -60,7 +71,7 @@ export default createStore({
       },
       startRequest(ctx) {
          ctx.commit("clearRequest")
-         ctx.commit("setWorking", true)
+         // ctx.commit("setWorking", true)
       }
    }
 })

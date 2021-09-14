@@ -78,7 +78,7 @@
          </div>
       </div>
       <div class="button-bar">
-         <button @click="createReequestClicked">Create Request</button>
+         <UvaButton @click="createReequestClicked">Create Request</UvaButton>
       </div>
    </div>
 </template>
@@ -165,19 +165,5 @@ div.content {
    max-width: 60%;
    margin: 25px auto;
    text-align: right;
-   button {
-      font-size: 1.1em;
-      font-weight: normal;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: var(--uvalib-brand-blue-light);
-      border: 1px solid var(--uvalib-brand-blue-light);
-      color: white;
-      &:hover {
-         background-color: var(--uvalib-brand-blue-lighter);
-      }
-   }
-
 }
 </style>

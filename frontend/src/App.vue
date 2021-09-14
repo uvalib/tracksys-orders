@@ -109,6 +109,12 @@ export default {
          text-decoration: underline;
       }
    }
+   input[type=text], select {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid var(--uvalib-grey-light);
+      box-sizing: border-box;
+   }
 }
 
 body {

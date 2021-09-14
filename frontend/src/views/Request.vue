@@ -5,13 +5,19 @@
          <span class="name">{{currStep.name}}</span>
          <span class="sequence">Section {{currStep.page}} of {{numSteps}}</span>
       </div>
+      <component :is="currStep.component"></component>
    </div>
+   <WaitSpinner message="Processing..." :overlay="true" v-if="working"/>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex"
+import CustomerInfo from "@/components/CustomerInfo"
 export default {
    name: 'Request',
+   components: {
+       CustomerInfo
+   },
    computed: {
       ...mapState({
          working : state => state.working,

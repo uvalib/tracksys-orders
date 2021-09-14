@@ -13,6 +13,12 @@ router.store = store
 app.use(store)
 app.use(router)
 
+import UvaButton from "@/components/UvaButton"
+app.component('UvaButton', UvaButton)
+
+import WaitSpinner from "@/components/WaitSpinner"
+app.component('WaitSpinner', WaitSpinner)
+
 import '@fortawesome/fontawesome-free/css/all.css'
 
 // actually mount to DOM
