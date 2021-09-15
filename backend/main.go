@@ -31,6 +31,7 @@ func main() {
 	api := router.Group("/api")
 	{
 		api.GET("/users/:id", svc.getUser)
+		api.POST("/users", svc.updateUser)
 	}
 
 	// Note: in dev mode, this is never actually used. The front end is served

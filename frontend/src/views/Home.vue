@@ -67,12 +67,12 @@
          <h2>UVA Status</h2>
          <div class="sect">
             <label for="is_uva_yes" class="radio">
-                <input type="radio" name="is_uva" id="is_uva_yes" value="yes" v-model="isUVA" class="uva-radio">
+                <input type="radio" name="is_uva" id="is_uva_yes" :value="true" v-model="isUVA" class="uva-radio">
                 I am UVA faculty, staff, or student.  <span style="font-style: italic;">(You will be asked to verify your identity using
                <a target="_blank" href="http://itc.virginia.edu/netbadge/">NetBadge</a>.)</span>
             </label>
             <label for="is_uva_no" class="radio">
-               <input type="radio" name="is_uva" id="is_uva_no" value="no" v-model="isUVA" class="uva-radio">
+               <input type="radio" name="is_uva" id="is_uva_no" :value="false" v-model="isUVA" class="uva-radio">
                I am not affiliated with UVA.
             </label>
          </div>
@@ -84,13 +84,14 @@
 </template>
 
 <script>
-import { mapFields } from 'vuex-map-fields'
 export default {
    name: 'Home',
-   computed: {
-      ...mapFields([
-         'termsAgree', 'isUVA', "termsError"
-      ]),
+   data() {
+      return {
+         termsAgree: false,
+         isUVA: true,
+         termsError: false
+      }
    },
    methods: {
       createReequestClicked() {
@@ -100,9 +101,12 @@ export default {
             return
          }
 
-         if (this.isUVA) {
+         this.$store.commit("clearRequest")
+         if (this.isUVA ) {
+            console.log("CALL AUTH")
             window.location.href = "/authenticate"
          } else {
+            console.log("START REQUES")
             this.$store.dispatch("startRequest")
             this.$router.push("/request")
          }

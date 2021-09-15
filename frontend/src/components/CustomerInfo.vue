@@ -10,9 +10,9 @@
       </div>
       <div class="form-row">
          <label for="email">Email</label>
-         <input id="email" type="text" v-model="email" :disabled="email.length > 0">
+         <input id="email" type="text" v-model="email" :disabled="computeID.length > 0">
       </div>
-      <div class="form-row">
+      <div class="form-row" v-if="computeID.length > 0">
          <label for="academic-status">Academic Status</label>
          <select id="academic-status" v-model="academicStatusID">
             <option disabled value="0">Select an academic status</option>
@@ -24,6 +24,7 @@
             <option value="8">Continuing Education</option>
          </select>
       </div>
+      <p class="error">{{error}}</p>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
@@ -33,6 +34,7 @@
 
 <script>
 import { mapFields } from 'vuex-map-fields'
+import { mapState } from 'vuex'
 import UvaButton from './UvaButton.vue';
 export default {
    components: { UvaButton },
@@ -40,6 +42,11 @@ export default {
       ...mapFields([
          'customer.firstName', 'customer.lastName', 'customer.email', 'customer.academicStatusID'
       ]),
+      ...mapState({
+         working : state => state.working,
+         error: state => state.error,
+         computeID: state => state.computeID
+      }),
    },
    methods: {
       cancelClicked() {
@@ -47,7 +54,18 @@ export default {
          this.$router.push("/")
       },
       nextClicked() {
-         alert("next!")
+         if (this.computeID.length == 0) {
+            this.academicStatusID = "1"
+         }
+         if ( this.email.length == 0) {
+            this.$store.commit("setError", "Customer email is required")
+            return
+         }
+         if ( this.academicStatusID == 0) {
+            this.$store.commit("setError", "Academic status is required")
+            return
+         }
+         this.$store.dispatch("updateCustomer")
       }
    }
 };
@@ -68,6 +86,11 @@ export default {
          width: 100%;
          margin: 5px 0;
       }
+   }
+   .error {
+      font-style: italic;
+      color: var(--uvalib-red);
+      margin-bottom: 0;
    }
    .button-bar {
       text-align: right;

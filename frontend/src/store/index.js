@@ -7,9 +7,6 @@ export default createStore({
       working: false,
       version: "unknown",
       error: "",
-      termsAgree: false,
-      termsError: false,
-      isUVA: "yes",
       currStepIdx: 0,
       steps: [
          {name: "Customer Information", component: "CustomerInfo", page: 1},
@@ -42,6 +39,7 @@ export default createStore({
          state.error = ""
       },
       clearRequest(state) {
+         state.computeID = ""
          state.currStepIdx = 0
          state.customer.id = 0
          state.customer.firstName = ""
@@ -49,12 +47,21 @@ export default createStore({
          state.customer.email = ""
          state.customer.academicStatusID = 0
       },
+      nextStep(state) {
+         state.currStepIdx++
+      },
       setComputeID(state, cid) {
          state.computeID = cid
          state.customer.email = `${cid}@virginia.edu`
       },
-      setError(state, msg) {
-         state.error = msg
+      setError(state, err) {
+         if (err.message) {
+            state.error = err.message
+         } else if (err.response) {
+            state.error = err.response.data
+         } else {
+            state.error = err
+         }
       },
       setVersion(state, data) {
          state.version = `${data.version}-${data.build}`
@@ -79,8 +86,6 @@ export default createStore({
          })
       },
       startRequest(ctx) {
-         ctx.commit("clearRequest")
-         console.log("START REQUEST... COMPUTE ID: "+ctx.state.computeID)
          if (ctx.state.computeID != "") {
             ctx.commit("setWorking", true)
             axios.get(`/api/users/${ctx.state.computeID}`).then(response => {
@@ -90,6 +95,17 @@ export default createStore({
                // NO-OP, there is just no user data pre-populated
                ctx.commit("setWorking", false)
             })
+         }
+      },
+      async updateCustomer(ctx) {
+         ctx.commit("setWorking", true)
+         try {
+            await axios.post(`/api/users`, ctx.state.customer)
+            ctx.commit("setWorking", false)
+            ctx.commit("nextStep")
+         } catch (err) {
+            ctx.commit("setError", err)
+            ctx.commit("setWorking", false)
          }
       }
    }
