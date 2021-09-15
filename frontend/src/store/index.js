@@ -16,13 +16,25 @@ export default createStore({
          {name: "Review Order", component: "ReviewOrder", page: 5},
       ],
       computeID: "",
+      differentBillingAddress: false,
       customer: {
          id: 0,
          firstName: "",
          lastName: "",
          email: "",
          academicStatusID: 0,
-      }
+      },
+      address: {
+         addressType: "primary",
+         id: 0,
+         address1: "",
+         address2: "",
+         city: "",
+         state: "",
+         zip: "",
+         country: "",
+         phone: ""
+      },
    },
    getters: {
       getField,
@@ -46,9 +58,29 @@ export default createStore({
          state.customer.lastName = ""
          state.customer.email = ""
          state.customer.academicStatusID = 0
+         state.address.id = 0
+         state.address.type = ""
+         state.address.address1 = ""
+         state.address.address2 = ""
+         state.address.city = ""
+         state.address.state = ""
+         state.address.zip = ""
+         state.address.country = ""
+         state.address.phone = ""
       },
       nextStep(state) {
          state.currStepIdx++
+      },
+      setAddress(state, data) {
+         state.address.id = data.id
+         state.address.type = data.addressType
+         state.address.address1 = data.address1
+         state.address.address2 = data.address2
+         state.address.city = data.city
+         state.address.state = data.state
+         state.address.zip = data.zip
+         state.address.country = data.country
+         state.address.phone = data.phone
       },
       setComputeID(state, cid) {
          state.computeID = cid
@@ -97,12 +129,23 @@ export default createStore({
             })
          }
       },
+      getAddressInfo(ctx, type) {
+         ctx.commit("setWorking", true)
+         axios.get(`/api/users/${ctx.state.customer.id}/address?type=${type}`).then(response => {
+            ctx.commit("setAddress", response.data)
+            ctx.commit("setWorking", false)
+         }).catch( _e => {
+            // NO-OP, there is just no user data pre-populated
+            ctx.commit("setWorking", false)
+         })
+      },
       async updateCustomer(ctx) {
          ctx.commit("setWorking", true)
          try {
             await axios.post(`/api/users`, ctx.state.customer)
             ctx.commit("setWorking", false)
             ctx.commit("nextStep")
+            ctx.dispatch("getAddressInfo", "primary")
          } catch (err) {
             ctx.commit("setError", err)
             ctx.commit("setWorking", false)
