@@ -22,6 +22,10 @@ app.component('WaitSpinner', WaitSpinner)
 import vueCountryRegionSelect from 'vue3-country-region-select'
 app.use(vueCountryRegionSelect)
 
+import Datepicker from 'vue3-date-time-picker'
+import 'vue3-date-time-picker/dist/main.css'
+app.component('Datepicker', Datepicker)
+
 import '@fortawesome/fontawesome-free/css/all.css'
 
 // actually mount to DOM

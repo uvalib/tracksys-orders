@@ -16,6 +16,7 @@
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-country-region-select": "^1.0.0",
+    "vue3-date-time-picker": "^1.1.1",
     "vuex": "^4.0.0-0",
     "vuex-map-fields": "^1.4.1"
   },

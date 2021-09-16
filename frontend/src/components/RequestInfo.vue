@@ -6,7 +6,10 @@
             Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it.
             <span class="important">Starting mid-November through mid-January additional turnaround time is required due to the holiday season.</span>
          </div>
-         <input id="due" type="text" v-model="dueDate">
+         <Datepicker v-model="dueDate" :enable-time-picker="false"
+            placeholder="YYYY-MM-DD" :format="formatDate"
+            :auto-apply="true" :weekStart="0">
+         </Datepicker>
       </div>
       <div class="form-row">
          <label for="instruct">Special Instructions</label>
@@ -91,12 +94,26 @@ export default {
       }),
    },
    methods: {
+      formatDate(date) {
+         const day = `${date.getDate()}`
+         const month = `${date.getMonth()+1}`
+         const year = date.getFullYear()
+         return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
+      },
       cancelClicked() {
          this.$store.commit("clearRequest")
          this.$router.push("/")
       },
       nextClicked() {
-         // TODO
+         if (this.dueDate == "" || this.dueDate == null) {
+            this.$store.commit("setError", "Due date is required")
+            return
+         }
+         if (this.intendedUseID == 0) {
+            this.$store.commit("setError", "Intended use is required")
+            return
+         }
+         this.$store.commit("nextStep")
       }
    }
 };

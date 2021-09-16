@@ -102,6 +102,14 @@ export default createStore({
          state.computeID = cid
          state.customer.email = `${cid}@virginia.edu`
       },
+      setDefaultDueDate(state) {
+         let sd = new Date()
+         sd.setDate(sd.getDate() + 29)
+         const day = `${sd.getDate()}`
+         const month = `${sd.getMonth()+1}`
+         const year = sd.getFullYear()
+         state.request.dueDate = `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
+      },
       setError(state, err) {
          if (err.message) {
             state.error = err.message
@@ -175,6 +183,7 @@ export default createStore({
                ctx.dispatch("getAddressInfo", "billing")
             } else {
                ctx.commit("nextStep")
+               ctx.commit("setDefaultDueDate")
                ctx.commit("setWorking", false)
             }
          }).catch( err => {

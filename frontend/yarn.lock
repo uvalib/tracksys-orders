@@ -8536,6 +8536,11 @@ vue3-country-region-select@^1.0.0:
     vue "^3.0.0"
     vue-i18n "^9.0.0"
 
+vue3-date-time-picker@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/vue3-date-time-picker/-/vue3-date-time-picker-1.1.1.tgz#6cdf902dcf7be5f941030c424e87b36b6ef807b2"
+  integrity sha512-dQAYIH+Romk5YO0BiIYsEW7MR3T85BfKSNjjAbT2sJ4yEqu8dn5/pvAT9w1puIQ98vIBkN0sySindYwpfHpFKQ==
+
 vue@^3.0.0:
   version "3.2.11"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.11.tgz#6b92295048df705ddac558fd3e3ed553e55e57c8"
