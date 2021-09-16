@@ -15,6 +15,7 @@
     "sass-loader": "^10",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue3-country-region-select": "^1.0.0",
     "vuex": "^4.0.0-0",
     "vuex-map-fields": "^1.4.1"
   },

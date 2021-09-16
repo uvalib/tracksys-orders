@@ -33,6 +33,7 @@ func main() {
 		api.GET("/users/:id", svc.getUser)
 		api.POST("/users", svc.updateUser)
 		api.GET("/users/:id/address", svc.getUserAddress)
+		api.POST("/users/:id/address", svc.updateUserAddress)
 	}
 
 	// Note: in dev mode, this is never actually used. The front end is served

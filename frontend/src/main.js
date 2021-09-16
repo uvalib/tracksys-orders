@@ -19,6 +19,9 @@ app.component('UvaButton', UvaButton)
 import WaitSpinner from "@/components/WaitSpinner"
 app.component('WaitSpinner', WaitSpinner)
 
+import vueCountryRegionSelect from 'vue3-country-region-select'
+app.use(vueCountryRegionSelect)
+
 import '@fortawesome/fontawesome-free/css/all.css'
 
 // actually mount to DOM

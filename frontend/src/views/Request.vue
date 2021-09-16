@@ -13,10 +13,11 @@
 <script>
 import { mapState, mapGetters } from "vuex"
 import CustomerInfo from "@/components/CustomerInfo"
+import AddressInfo from "@/components/AddressInfo"
 export default {
    name: 'Request',
    components: {
-       CustomerInfo
+       CustomerInfo, AddressInfo
    },
    computed: {
       ...mapState({
@@ -37,15 +38,14 @@ div.content {
    max-width: 60%;
    margin: 0 auto;
    .step {
-      font-size: 1.15em;
       display: flex;
       flex-flow: row nowrap;
       justify-content: space-between;
-      padding: 0 5px 5px 5px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid var(--uvalib-grey);
-      font-weight: bold;
-      color: var(--uvalib-text);
+      background: var(--uvalib-grey);
+      color: white;
+      border: 0;
+      padding: 5px 10px;
+      border-radius: 5px;
    }
 }
 </style>

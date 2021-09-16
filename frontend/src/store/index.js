@@ -71,9 +71,20 @@ export default createStore({
       nextStep(state) {
          state.currStepIdx++
       },
+      resetAddress(state, addrType) {
+         state.address.id = 0
+         state.address.addressType = addrType
+         state.address.address1 = ""
+         state.address.address2 = ""
+         state.address.city = ""
+         state.address.state = ""
+         state.address.zip = ""
+         state.address.country = ""
+         state.address.phone = ""
+      },
       setAddress(state, data) {
          state.address.id = data.id
-         state.address.type = data.addressType
+         state.address.addressType = data.addressType
          state.address.address1 = data.address1
          state.address.address2 = data.address2
          state.address.city = data.city
@@ -137,19 +148,34 @@ export default createStore({
          }).catch( _e => {
             // NO-OP, there is just no user data pre-populated
             ctx.commit("setWorking", false)
+            ctx.commit("resetAddress", type)
          })
       },
-      async updateCustomer(ctx) {
+      updateCustomer(ctx) {
          ctx.commit("setWorking", true)
-         try {
-            await axios.post(`/api/users`, ctx.state.customer)
+         axios.post(`/api/users`, ctx.state.customer).then(response => {
+            ctx.commit("setUserData", response.data)
             ctx.commit("setWorking", false)
             ctx.commit("nextStep")
             ctx.dispatch("getAddressInfo", "primary")
-         } catch (err) {
+         }).catch( err => {
             ctx.commit("setError", err)
             ctx.commit("setWorking", false)
-         }
+         })
+      },
+      updateAddress(ctx) {
+         ctx.commit("setWorking", true)
+         axios.post(`/api/users/${ctx.state.customer.id}/address`, ctx.state.address).then( _response => {
+            if (ctx.state.differentBillingAddress && ctx.state.address.addressType == 'primary') {
+               ctx.dispatch("getAddressInfo", "billing")
+            } else {
+               ctx.commit("nextStep")
+               ctx.commit("setWorking", false)
+            }
+         }).catch( err => {
+            ctx.commit("setError", err)
+            ctx.commit("setWorking", false)
+         })
       }
    }
 })

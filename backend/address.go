@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -69,7 +70,10 @@ func (svc serviceContext) getUserAddress(c *gin.Context) {
 		return
 	}
 
-	out := addressJSON{ID: addr.ID, Type: addr.Type}
+	out := addressJSON{ID: addr.ID, Type: "primary"}
+	if addr.Type == "billable_address" {
+		out.Type = "billing"
+	}
 	if addr.Address1.Valid {
 		out.Address1 = addr.Address1.String
 	}
@@ -92,4 +96,77 @@ func (svc serviceContext) getUserAddress(c *gin.Context) {
 		out.Phone = addr.Phone.String
 	}
 	c.JSON(http.StatusOK, out)
+}
+
+func (svc *serviceContext) updateUserAddress(c *gin.Context) {
+	uidStr := c.Param("id")
+	var addr addressJSON
+	err := c.ShouldBindJSON(&addr)
+	if err != nil {
+		log.Printf("ERROR: unable to parse address update payload: %s", err.Error())
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	uid, err := strconv.ParseInt(uidStr, 10, 64)
+	if err != nil {
+		log.Printf("ERROR: invalid user id %s: %s", uidStr, err.Error())
+		c.String(http.StatusBadRequest, "invlalid user id")
+		return
+	}
+	log.Printf("INFO: user id %s requests address update: %+v", uidStr, addr)
+	addrRec := addressRec{ID: addr.ID, UserID: uid, UpdatedAt: time.Now(), Type: "primary"}
+	if addr.Type != "primary" {
+		addrRec.Type = "billable_address"
+	}
+	if addr.Address1 != "" {
+		addrRec.Address1.String = addr.Address1
+		addrRec.Address1.Valid = true
+	}
+	if addr.Address2 != "" {
+		addrRec.Address2.String = addr.Address2
+		addrRec.Address2.Valid = true
+	}
+	if addr.City != "" {
+		addrRec.City.String = addr.City
+		addrRec.City.Valid = true
+	}
+	if addr.State != "" {
+		addrRec.State.String = addr.State
+		addrRec.State.Valid = true
+	}
+	if addr.Zip != "" {
+		addrRec.Zip.String = addr.Zip
+		addrRec.Zip.Valid = true
+	}
+	if addr.Country != "" {
+		addrRec.Country.String = addr.Country
+		addrRec.Country.Valid = true
+	}
+	if addr.Phone != "" {
+		addrRec.Phone.String = addr.Phone
+		addrRec.Phone.Valid = true
+	}
+	if addr.ID > 0 {
+		log.Printf("INFO: updating user %s address", uidStr)
+		upErr := svc.DB.Model(&addrRec).Exclude("CreatedAt", "UserID").Update()
+		if upErr != nil {
+			log.Printf("ERROR: unable to update address for customer %s: %s", uidStr, upErr.Error())
+			c.String(http.StatusInternalServerError, upErr.Error())
+		} else {
+			c.JSON(http.StatusOK, addrRec)
+		}
+		return
+	}
+
+	log.Printf("INFO: create new address for user %s", uidStr)
+	addrRec.CreatedAt = time.Now()
+	addErr := svc.DB.Model(&addrRec).Insert()
+	if addErr != nil {
+		log.Printf("ERROR: unable to add address for customer %s: %s", uidStr, addErr.Error())
+		c.String(http.StatusInternalServerError, addErr.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, addrRec)
 }
