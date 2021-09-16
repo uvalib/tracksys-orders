@@ -39,7 +39,11 @@ export default createStore({
          dueDate: "",
          specialInstructions: "",
          intendedUseID: 0
-      }
+      },
+      currItemIdx: 0,
+      items: [
+         {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""}
+      ]
    },
    getters: {
       getField,
@@ -52,6 +56,13 @@ export default createStore({
    },
    mutations: {
       updateField,
+      clearItems(state) {
+         state.items.splice(0, state.items.length)
+         state.items.push({title: "", pageNum: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""})
+      },
+      addItem(state) {
+         state.items.push({title: "", pageNum: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""})
+      },
       clearError(state) {
          state.error = ""
       },
