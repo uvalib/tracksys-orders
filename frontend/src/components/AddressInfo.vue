@@ -45,9 +45,7 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapState } from 'vuex'
-import UvaButton from './UvaButton.vue';
 export default {
-   components: { UvaButton },
    computed: {
       ...mapFields([
          'address.addressType', 'address.address1', 'address.address2', 'address.city', 'address.state',
@@ -55,7 +53,6 @@ export default {
       ]),
       ...mapState({
          error: state => state.error,
-         computeID: state => state.computeID
       }),
    },
    methods: {

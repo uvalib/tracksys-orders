@@ -14,10 +14,11 @@
 import { mapState, mapGetters } from "vuex"
 import CustomerInfo from "@/components/CustomerInfo"
 import AddressInfo from "@/components/AddressInfo"
+import RequestInfo from "@/components/RequestInfo"
 export default {
    name: 'Request',
    components: {
-       CustomerInfo, AddressInfo
+       CustomerInfo, AddressInfo, RequestInfo
    },
    computed: {
       ...mapState({

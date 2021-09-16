@@ -35,6 +35,11 @@ export default createStore({
          country: "",
          phone: ""
       },
+      request: {
+         dueDate: "",
+         specialInstructions: "",
+         intendedUseID: 0
+      }
    },
    getters: {
       getField,

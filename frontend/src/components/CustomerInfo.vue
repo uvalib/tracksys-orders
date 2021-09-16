@@ -35,15 +35,12 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import { mapState } from 'vuex'
-import UvaButton from './UvaButton.vue';
 export default {
-   components: { UvaButton },
    computed: {
       ...mapFields([
          'customer.firstName', 'customer.lastName', 'customer.email', 'customer.academicStatusID'
       ]),
       ...mapState({
-         working : state => state.working,
          error: state => state.error,
          computeID: state => state.computeID
       }),
