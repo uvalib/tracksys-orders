@@ -42,7 +42,8 @@ export default createStore({
          intendedUseID: 0
       },
       currItemIdx: -1,
-      items: []
+      items: [],
+      requestID: ""
    },
    getters: {
       getField,
@@ -241,6 +242,21 @@ export default createStore({
                ctx.commit("setDefaultDueDate")
                ctx.commit("setWorking", false)
             }
+         }).catch( err => {
+            ctx.commit("setError", err)
+            ctx.commit("setWorking", false)
+         })
+      },
+      submitOrder(ctx) {
+         ctx.commit("setWorking", true)
+         let req = {
+            userID: ctx.state.customer.id,
+            request: ctx.state.request,
+            items: ctx.state.items
+         }
+         axios.post(`/api/submit`, req).then( _response => {
+            // TODO
+            ctx.commit("setWorking", false)
          }).catch( err => {
             ctx.commit("setError", err)
             ctx.commit("setWorking", false)

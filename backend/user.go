@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +33,7 @@ type customerJSON struct {
 	FirstName        string `json:"firstName"`
 	LastName         string `json:"lastName"`
 	Email            string `json:"email"`
-	AcademicStatusID string `json:"academicStatusID"`
+	AcademicStatusID int64  `json:"academicStatusID"`
 }
 
 func (svc *serviceContext) getUser(c *gin.Context) {
@@ -57,7 +56,7 @@ func (svc *serviceContext) getUser(c *gin.Context) {
 		return
 	}
 
-	out := customerJSON{ID: user.ID, AcademicStatusID: fmt.Sprintf("%d", user.AcademicStatusID)}
+	out := customerJSON{ID: user.ID, AcademicStatusID: user.AcademicStatusID}
 	if user.FirstName.Valid {
 		out.FirstName = user.FirstName.String
 	}
@@ -87,8 +86,7 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 	}
 
 	log.Printf("INFO: customer update payload: %+v", user)
-	asID, _ := strconv.ParseInt(user.AcademicStatusID, 10, 64)
-	custRec := customerRec{ID: user.ID, AcademicStatusID: asID, UpdatedAt: time.Now()}
+	custRec := customerRec{ID: user.ID, AcademicStatusID: user.AcademicStatusID, UpdatedAt: time.Now()}
 	if user.FirstName != "" {
 		custRec.FirstName.String = user.FirstName
 		custRec.FirstName.Valid = true

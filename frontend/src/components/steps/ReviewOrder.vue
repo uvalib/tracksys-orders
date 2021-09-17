@@ -89,7 +89,7 @@ export default {
          this.$store.commit("addItems")
       },
       submitClicked() {
-         // TODO
+         this.$store.dispatch("submitOrder")
       }
    }
 };

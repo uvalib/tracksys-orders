@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Request from '../views/Request.vue'
+import Thanks from '../views/Thanks.vue'
 import Forbidden from '../views/Forbidden.vue'
 import NotFound from '../views/NotFound.vue'
 
@@ -14,6 +15,11 @@ const routes = [
       path: '/request',
       name: 'Request',
       component: Request
+   },
+   {
+      path: '/thanks',
+      name: 'Thanks',
+      component: Thanks
    },
    {
       path: '/forbidden',
