@@ -45,55 +45,52 @@ type addressJSON struct {
 
 func (svc serviceContext) getUserAddress(c *gin.Context) {
 	uid := c.Param("id")
-	aType := c.Query("type")
-	if aType == "" {
-		aType = "primary"
-	} else if aType == "billing" {
-		aType = "billable_address"
-	}
-	log.Printf("INFO: get %s address for user id %s", aType, uid)
+	log.Printf("INFO: get addresses for user id %s", uid)
 
-	q := svc.DB.NewQuery("select * from addresses where addressable_id={:id} and addressable_type={:at} and address_type={:t}")
+	q := svc.DB.NewQuery("select * from addresses where addressable_id={:id} and addressable_type={:at} order by address_type desc")
 	q.Bind(dbx.Params{"id": uid})
 	q.Bind(dbx.Params{"at": "Customer"})
-	q.Bind(dbx.Params{"t": aType})
-	var addr addressRec
-	err := q.One(&addr)
+	var addresses []addressRec
+	err := q.All(&addresses)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Printf("INFO: no %s address found for user %s", aType, uid)
+			log.Printf("INFO: no address found for user %s", uid)
 			c.String(http.StatusNotFound, "no address")
 		} else {
-			log.Printf("ERROR: unable to get %s address user %s: %s", aType, uid, err.Error())
+			log.Printf("ERROR: unable to get address user %s: %s", uid, err.Error())
 			c.String(http.StatusInternalServerError, err.Error())
 		}
 		return
 	}
 
-	out := addressJSON{ID: addr.ID, Type: "primary"}
-	if addr.Type == "billable_address" {
-		out.Type = "billing"
-	}
-	if addr.Address1.Valid {
-		out.Address1 = addr.Address1.String
-	}
-	if addr.Address2.Valid {
-		out.Address2 = addr.Address2.String
-	}
-	if addr.City.Valid {
-		out.City = addr.City.String
-	}
-	if addr.State.Valid {
-		out.State = addr.State.String
-	}
-	if addr.Zip.Valid {
-		out.Zip = addr.Zip.String
-	}
-	if addr.Country.Valid {
-		out.Country = addr.Country.String
-	}
-	if addr.Phone.Valid {
-		out.Phone = addr.Phone.String
+	out := make([]addressJSON, 0)
+	for _, addr := range addresses {
+		jsonAddr := addressJSON{ID: addr.ID, Type: "primary"}
+		if addr.Type == "billable_address" {
+			jsonAddr.Type = "billing"
+		}
+		if addr.Address1.Valid {
+			jsonAddr.Address1 = addr.Address1.String
+		}
+		if addr.Address2.Valid {
+			jsonAddr.Address2 = addr.Address2.String
+		}
+		if addr.City.Valid {
+			jsonAddr.City = addr.City.String
+		}
+		if addr.State.Valid {
+			jsonAddr.State = addr.State.String
+		}
+		if addr.Zip.Valid {
+			jsonAddr.Zip = addr.Zip.String
+		}
+		if addr.Country.Valid {
+			jsonAddr.Country = addr.Country.String
+		}
+		if addr.Phone.Valid {
+			jsonAddr.Phone = addr.Phone.String
+		}
+		out = append(out, jsonAddr)
 	}
 	c.JSON(http.StatusOK, out)
 }
@@ -114,7 +111,7 @@ func (svc *serviceContext) updateUserAddress(c *gin.Context) {
 		c.String(http.StatusBadRequest, "invlalid user id")
 		return
 	}
-	log.Printf("INFO: user id %s requests address update: %+v", uidStr, addr)
+	log.Printf("INFO: user id %d requests address update: %+v", uid, addr)
 	addrRec := addressRec{ID: addr.ID, UserID: uid, UpdatedAt: time.Now(), Type: "primary"}
 	if addr.Type != "primary" {
 		addrRec.Type = "billable_address"
@@ -148,7 +145,7 @@ func (svc *serviceContext) updateUserAddress(c *gin.Context) {
 		addrRec.Phone.Valid = true
 	}
 	if addr.ID > 0 {
-		log.Printf("INFO: updating user %s address", uidStr)
+		log.Printf("INFO: updating user %s address %d", uidStr, addr.ID)
 		upErr := svc.DB.Model(&addrRec).Exclude("CreatedAt", "UserID").Update()
 		if upErr != nil {
 			log.Printf("ERROR: unable to update address for customer %s: %s", uidStr, upErr.Error())

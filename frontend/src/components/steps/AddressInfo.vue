@@ -4,31 +4,31 @@
       <h2 v-else>Billing Address Information</h2>
       <div class="form-row">
          <label for="address1">Address Line 1</label>
-         <input id="address1" type="text" v-model="address1">
+         <input id="address1" type="text" v-model="address.address1">
       </div>
       <div class="form-row">
          <label for="address2">Address Line 2</label>
-         <input id="address2" type="text" v-model="address2">
+         <input id="address2" type="text" v-model="address.address2">
       </div>
       <div class="form-row">
          <label for="city">City</label>
-         <input id="city" type="text" v-model="city">
+         <input id="city" type="text" v-model="address.city">
       </div>
       <div class="form-row">
          <label for="state">State</label>
-         <input id="state" type="text" v-model="state">
+         <input id="state" type="text" v-model="address.state">
       </div>
       <div class="form-row">
          <label for="zip">Zip Code</label>
-         <input id="zip" type="text" v-model="zip">
+         <input id="zip" type="text" v-model="address.zip">
       </div>
       <div class="form-row">
          <label for="country">Country</label>
-         <country-select id="country" v-model="country" :country="country" topCountry="US" :countryName="true" :usei18n="false" />
+         <country-select id="country" v-model="address.country" :country="address.country" topCountry="US" :countryName="true" :usei18n="false" />
       </div>
       <div class="form-row">
          <label for="phone">Phone</label>
-         <input id="phone" type="text" v-model="phone">
+         <input id="phone" type="text" v-model="address.phone">
       </div>
       <div class="form-row bill" v-if="addressType=='primary'">
          <label for="billing">Do you have a different billing address?</label>
@@ -44,16 +44,22 @@
 
 <script>
 import { mapFields } from 'vuex-map-fields'
+import { mapMultiRowFields } from 'vuex-map-fields'
 import { mapState } from 'vuex'
 export default {
    computed: {
-      ...mapFields([
-         'address.addressType', 'address.address1', 'address.address2', 'address.city', 'address.state',
-         'address.zip', 'address.country', 'address.phone', 'differentBillingAddress'
-      ]),
+      ...mapFields([ 'differentBillingAddress' ]),
       ...mapState({
          error: state => state.error,
+         currAddressIdx: state => state.currAddressIdx
       }),
+      ...mapMultiRowFields(['addresses']),
+      address() {
+         return this.addresses[this.currAddressIdx]
+      },
+      addressType() {
+         return this.address.addressType
+      }
    },
    methods: {
       cancelClicked() {

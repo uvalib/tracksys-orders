@@ -25,17 +25,8 @@ export default createStore({
          email: "",
          academicStatusID: 0,
       },
-      address: {
-         addressType: "primary",
-         id: 0,
-         address1: "",
-         address2: "",
-         city: "",
-         state: "",
-         zip: "",
-         country: "",
-         phone: ""
-      },
+      currAddressIdx: 0,
+      addresses: [],
       request: {
          dueDate: "",
          specialInstructions: "",
@@ -108,40 +99,21 @@ export default createStore({
          state.customer.lastName = ""
          state.customer.email = ""
          state.customer.academicStatusID = 0
-         state.address.id = 0
-         state.address.type = ""
-         state.address.address1 = ""
-         state.address.address2 = ""
-         state.address.city = ""
-         state.address.state = ""
-         state.address.zip = ""
-         state.address.country = ""
-         state.address.phone = ""
+         state.addresses.splice(0, state.addresses.length)
+         state.currAddressIdx = 0
       },
       nextStep(state) {
          state.currStepIdx++
       },
-      resetAddress(state, addrType) {
-         state.address.id = 0
-         state.address.addressType = addrType
-         state.address.address1 = ""
-         state.address.address2 = ""
-         state.address.city = ""
-         state.address.state = ""
-         state.address.zip = ""
-         state.address.country = ""
-         state.address.phone = ""
+      resetAddresses(state) {
+         state.currAddressIdx = 0
+         state.addresses.splice(0, state.addresses.length)
       },
-      setAddress(state, data) {
-         state.address.id = data.id
-         state.address.addressType = data.addressType
-         state.address.address1 = data.address1
-         state.address.address2 = data.address2
-         state.address.city = data.city
-         state.address.state = data.state
-         state.address.zip = data.zip
-         state.address.country = data.country
-         state.address.phone = data.phone
+      setAddresses(state, data) {
+         data.forEach( addr => state.addresses.push( Object.assign({}, addr) ))
+      },
+      nextAddress(state) {
+         state.currAddressIdx++
       },
       setComputeID(state, cid) {
          state.computeID = cid
@@ -209,24 +181,23 @@ export default createStore({
             })
          }
       },
-      getAddressInfo(ctx, type) {
+      getAddressInfo(ctx) {
          ctx.commit("setWorking", true)
-         axios.get(`/api/users/${ctx.state.customer.id}/address?type=${type}`).then(response => {
-            ctx.commit("setAddress", response.data)
+         axios.get(`/api/users/${ctx.state.customer.id}/address`).then(response => {
+            ctx.commit("setAddresses", response.data)
             ctx.commit("setWorking", false)
+            ctx.commit("nextStep")
          }).catch( _e => {
             // NO-OP, there is just no user data pre-populated
             ctx.commit("setWorking", false)
-            ctx.commit("resetAddress", type)
+            ctx.commit("resetAddresses")
          })
       },
       updateCustomer(ctx) {
          ctx.commit("setWorking", true)
          axios.post(`/api/users`, ctx.state.customer).then(response => {
             ctx.commit("setUserData", response.data)
-            ctx.commit("setWorking", false)
-            ctx.commit("nextStep")
-            ctx.dispatch("getAddressInfo", "primary")
+            ctx.dispatch("getAddressInfo")
          }).catch( err => {
             ctx.commit("setError", err)
             ctx.commit("setWorking", false)
@@ -234,9 +205,11 @@ export default createStore({
       },
       updateAddress(ctx) {
          ctx.commit("setWorking", true)
-         axios.post(`/api/users/${ctx.state.customer.id}/address`, ctx.state.address).then( _response => {
-            if (ctx.state.differentBillingAddress && ctx.state.address.addressType == 'primary') {
-               ctx.dispatch("getAddressInfo", "billing")
+         let currAddr = ctx.state.addresses[ ctx.state.currAddressIdx ]
+         axios.post(`/api/users/${ctx.state.customer.id}/address`, currAddr).then( _response => {
+            if (ctx.state.differentBillingAddress && ctx.state.currAddressIdx == 0) {
+               ctx.commit("nextAddress")
+               ctx.commit("setWorking", false)
             } else {
                ctx.commit("nextStep")
                ctx.commit("setDefaultDueDate")
