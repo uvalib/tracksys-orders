@@ -12,6 +12,47 @@
             <dd>{{intendedUse(request.intendedUseID)}}</dd>
          </dl>
       </div>
+      <div class="items">
+         <div class="item" v-for="(item,idx) in items" :key="`item-${idx}`">
+            <div class="item-bar">
+               <span>Item #{{idx+1}}</span>
+               <span class="buttons">
+                  <button @click="editClicked(idx)">Edit</button>
+                  <button @click="deleteClicked(idx)">Delete</button>
+               </span>
+            </div>
+            <dl>
+               <dt>Title:</dt>
+               <dd>{{item.title}}</dd>
+               <dt>Pages:</dt>
+               <dd>{{item.pages}}</dd>
+               <template v-if="item.callNumber">
+                  <dt>Call Number:</dt>
+                  <dd>{{item.callNumber}}</dd>
+               </template>
+               <template v-if="item.author">
+                  <dt>Author:</dt>
+                  <dd>{{item.author}}</dd>
+               </template>
+               <template v-if="item.published">
+                  <dt>Year Published:</dt>
+                  <dd>{{item.published}}</dd>
+               </template>
+               <template v-if="item.location">
+                  <dt>Location:</dt>
+                  <dd>{{item.location}}</dd>
+               </template>
+               <template v-if="item.link">
+                  <dt>Web Link:</dt>
+                  <dd>{{item.link}}</dd>
+               </template>
+               <template v-if="item.description">
+                  <dt>Additional Info:</dt>
+                  <dd>{{item.description}}</dd>
+               </template>
+            </dl>
+         </div>
+      </div>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="addClicked" class="pad-left">Add Item</uva-button>
@@ -38,10 +79,16 @@ export default {
          this.$store.commit("clearRequest")
          this.$router.push("/")
       },
+      editClicked(idx) {
+         console.log("edit "+idx)
+      },
+      deleteClicked(idx) {
+         this.$store.commit("removeItem", idx)
+      },
       addClicked() {
          // TODO
       },
-      sibmitClicked() {
+      submitClicked() {
          // TODO
       }
    }
@@ -68,6 +115,19 @@ export default {
          -webkit-hyphens: auto;
          -moz-hyphens: auto;
          hyphens: auto;
+      }
+   }
+
+   .item-bar {
+      font-size: 1.15em;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      border-top: 1px solid var(--uvalib-grey-light);
+      padding: 5px;
+      border-bottom: 1px solid var(--uvalib-grey-light);
+      button {
+         margin-left: 5px;
       }
    }
 

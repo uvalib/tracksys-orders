@@ -64,7 +64,7 @@ export default createStore({
          if (v) {
             return v.name
          }
-         return "Unknowm"
+         return "Unknown"
       }
    },
    mutations: {
@@ -74,6 +74,10 @@ export default createStore({
       },
       addItem(state, item) {
          state.items.push(Object.assign({},item))
+      },
+      removeItem(state, idx) {
+         if (idx < 0 || idx > state.items.length-1) return
+         state.items.splice(idx, 1)
       },
       clearError(state) {
          state.error = ""
