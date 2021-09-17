@@ -128,6 +128,7 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 			log.Printf("ERROR: unable to update customer %d: %s", user.ID, upErr.Error())
 			c.String(http.StatusInternalServerError, upErr.Error())
 		} else {
+			user.ID = uid
 			c.JSON(http.StatusOK, user)
 		}
 		return
@@ -135,12 +136,14 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 
 	log.Printf("INFO: create new customer %+v", user)
 	custRec.CreatedAt = time.Now()
+	custRec.ID = 0
 	addErr := svc.DB.Model(&custRec).Insert()
 	if addErr != nil {
 		log.Printf("ERROR: unable to create customer %s: %s", user.Email, addErr.Error())
 		c.String(http.StatusInternalServerError, addErr.Error())
 		return
 	}
+	user.ID = custRec.ID
 	c.JSON(http.StatusOK, user)
 
 }

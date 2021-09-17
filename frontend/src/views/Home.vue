@@ -43,8 +43,8 @@
                   Payment information will be included with the fee estimate.
                </li>
                <li>
-                  We provide images at various resolutions and formats depending on the intended use of the request. Generally, we can
-                  provide either 300dpi JPEG images or TIF images at the higest resolution possible.
+                  We provide images at various resolutions and formats depending on the intended use of the request.
+                  Generally, we can provide 300dpi JPEG images, TIF images at the highest resolution possible, or PDFs.
                </li>
                <li>
                   All orders will be delivered via the web. If you wish for your order to be delivered by some other means,
