@@ -41,7 +41,7 @@ export default createStore({
          specialInstructions: "",
          intendedUseID: 0
       },
-      currItemIdx: 0,
+      currItemIdx: -1,
       items: []
    },
    getters: {
@@ -72,8 +72,25 @@ export default createStore({
       clearItems(state) {
          state.items.splice(0, state.items.length)
       },
+      editItem(state, idx) {
+         state.currItemIdx = idx
+         state.currStepIdx = 3
+      },
+      cancelItemEdit(state) {
+         state.currItemIdx = -1
+         state.currStepIdx = 4
+      },
+      updateItem(state, item) {
+         state.items.splice(state.currItemIdx, 1, Object.assign({},item))
+         state.currItemIdx = -1
+         state.currStepIdx = 4
+      },
       addItem(state, item) {
          state.items.push(Object.assign({},item))
+      },
+      addItems(state) {
+         state.currStepIdx = 3
+         state.currItemIdx = -1
       },
       removeItem(state, idx) {
          if (idx < 0 || idx > state.items.length-1) return

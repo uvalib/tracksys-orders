@@ -55,7 +55,7 @@
       </div>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
-         <uva-button @click="addClicked" class="pad-left">Add Item</uva-button>
+         <uva-button @click="addClicked" class="pad-left">Add Items</uva-button>
          <uva-button @click="submitClicked" class="pad-left">Submit Order</uva-button>
       </div>
    </div>
@@ -80,13 +80,13 @@ export default {
          this.$router.push("/")
       },
       editClicked(idx) {
-         console.log("edit "+idx)
+         this.$store.commit("editItem", idx)
       },
       deleteClicked(idx) {
          this.$store.commit("removeItem", idx)
       },
       addClicked() {
-         // TODO
+         this.$store.commit("addItems")
       },
       submitClicked() {
          // TODO

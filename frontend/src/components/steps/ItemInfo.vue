@@ -43,10 +43,14 @@
       <div class="help">
          Use the Add Item button to add addtional items to your order. When complete, click Complete Order to review and submit your order.
       </div>
-      <div class="button-bar">
+      <div class="button-bar" v-if="currItemIdx == -1">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="addClicked" class="pad-left">Add Item</uva-button>
          <uva-button @click="completeClicked" class="pad-left">Complete Order</uva-button>
+      </div>
+      <div class="button-bar" v-else>
+         <uva-button @click="cancelEditClicked">Cancel</uva-button>
+         <uva-button @click="updateClicked" class="pad-left">Update</uva-button>
       </div>
    </div>
 </template>
@@ -63,10 +67,17 @@ export default {
       ...mapState({
          error: state => state.error,
          computeID: state => state.computeID,
-         items: state => state.items
+         items: state => state.items,
+         currItemIdx: state => state.currItemIdx
       }),
    },
    methods: {
+      cancelEditClicked() {
+         this.$store.commit("cancelItemEdit")
+      },
+      updateClicked() {
+         this.$store.commit("updateItem", this.item)
+      },
       cancelClicked() {
          this.$store.commit("clearRequest")
          this.$router.push("/")
@@ -94,8 +105,21 @@ export default {
       resetItem() {
          this.item = {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""}
       }
-   }
-};
+   },
+   mounted() {
+      if ( this.currItemIdx > -1) {
+         let editItem = this.items[this.currItemIdx]
+         this.item.title = editItem.title
+         this.item.pages = editItem.pages
+         this.item.callNumber = editItem.callNumber
+         this.item.author = editItem.author
+         this.item.published = editItem.published
+         this.item.location = editItem.location
+         this.item.link = editItem.link
+         this.item.description = editItem.description
+      }
+   },
+}
 </script>
 
 <style scoped lang="scss">
