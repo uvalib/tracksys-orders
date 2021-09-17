@@ -125,10 +125,7 @@ export default createStore({
       setDefaultDueDate(state) {
          let sd = new Date()
          sd.setDate(sd.getDate() + 29)
-         const day = `${sd.getDate()}`
-         const month = `${sd.getMonth()+1}`
-         const year = sd.getFullYear()
-         state.request.dueDate = `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
+         state.request.dueDate = sd
       },
       setError(state, err) {
          if (err.message) {

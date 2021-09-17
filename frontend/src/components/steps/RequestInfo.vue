@@ -6,10 +6,7 @@
             Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it.
             <span class="important">Starting mid-November through mid-January additional turnaround time is required due to the holiday season.</span>
          </div>
-         <Datepicker v-model="dueDate" :enable-time-picker="false"
-            placeholder="YYYY-MM-DD" :format="formatDate"
-            :auto-apply="true" :weekStart="0">
-         </Datepicker>
+         <datepicker v-model="dueDate" class="picker"/>
       </div>
       <div class="form-row">
          <label for="instruct">Special Instructions</label>
@@ -128,6 +125,9 @@ export default {
       input, select {
          width: 100%;
          margin: 5px 0;
+      }
+      :deep(input.picker) {
+         width: 100%;
       }
       textarea {
          box-sizing: border-box;
