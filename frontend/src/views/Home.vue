@@ -103,15 +103,13 @@ export default {
 
          this.$store.commit("clearRequest")
          if (this.isUVA ) {
-            console.log("CALL AUTH")
             window.location.href = "/authenticate"
          } else {
-            console.log("START REQUES")
             this.$store.dispatch("startRequest")
             this.$router.push("/request")
          }
       }
-   }
+   },
 }
 </script>
 

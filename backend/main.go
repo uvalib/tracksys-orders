@@ -30,6 +30,7 @@ func main() {
 	router.GET("/authenticate", svc.authenticate)
 	api := router.Group("/api")
 	{
+		api.GET("/constants", svc.getConstants)
 		api.GET("/users/:id", svc.getUser)
 		api.POST("/users", svc.updateUser)
 		api.GET("/users/:id/address", svc.getUserAddress)

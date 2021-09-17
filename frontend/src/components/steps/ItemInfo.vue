@@ -1,6 +1,6 @@
 <template>
    <div class="item">
-      <div class="note pad-bottom">
+      <div class="help pad-bottom">
          In the boxes below, include the item, image, or page numbers to be scanned. If possible, include any additional
          descriptive information such as, item call number, box number, and folder or item description. Please add one item for each individual collection or book you would like digitized.
       </div>
@@ -33,13 +33,16 @@
          <input id="link" type="text" v-model="item.link">
       </div>
       <div class="form-row">
-         <label for="pages">Additional Description</label>
+         <label for="description">Additional Description</label>
          <div class="note">
             If the provided fields were insufficient to describe the item, include supplemental information above.
          </div>
-         <textarea rows="2" id="pages" v-model="item.pages"></textarea>
+         <textarea rows="2" id="description" v-model="item.description"></textarea>
       </div>
       <p class="error">{{error}}</p>
+      <div class="help">
+         Use the Add Item button to add addtional items to your order. When complete, click Complete Order to review and submit your order.
+      </div>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="addClicked" class="pad-left">Add Item</uva-button>
@@ -59,7 +62,8 @@ export default {
    computed: {
       ...mapState({
          error: state => state.error,
-         computeID: state => state.computeID
+         computeID: state => state.computeID,
+         items: state => state.items
       }),
    },
    methods: {
@@ -68,10 +72,27 @@ export default {
          this.$router.push("/")
       },
       addClicked() {
-         // TODO
+         if ( this.item.title == "" || this.item.pages == "") {
+            this.$store.commit("setError", "Title and Image/Pages are are required.")
+            return
+         }
+         this.$store.commit("addItem", this.item)
+         this.resetItem()
+         this.$nextTick( () => {
+            let titleInput = document.getElementById("title")
+            titleInput.focus()
+         })
       },
       completeClicked() {
-         // TODO
+         if ( this.item.title == "" || this.item.pages == "") {
+            this.$store.commit("setError", "Title and Image/Pages are are required.")
+            return
+         }
+         this.$store.commit("addItem", this.item)
+         this.$store.commit("nextStep")
+      },
+      resetItem() {
+         this.item = {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""}
       }
    }
 };
@@ -108,6 +129,9 @@ export default {
          border-radius: 5px;
          padding: 5px 10px;
          margin: 5px 0;
+         font-family: "franklin-gothic-urw", arial, sans-serif;
+         -webkit-font-smoothing: antialiased;
+         -moz-osx-font-smoothing: grayscale;
       }
    }
    .error {

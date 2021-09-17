@@ -29,15 +29,7 @@
          </div>
          <select id="intended-use" v-model="intendedUseID">
             <option disabled value="0">Select an intended use</option>
-            <option value="100">Classroom Instruction : 300 dpi JPEG</option>
-            <option value="102">GIS Processing : Highest possible resolution TIFF</option>
-            <option value="103">Online Exhibit : 300 dpi JPEG</option>
-            <option value="104">Personal Research : 300 dpi JPEG</option>
-            <option value="105">Physical Exhibit : Highest possible resolution TIFF</option>
-            <option value="106">Presentation : 300 dpi JPEG</option>
-            <option value="112">Print Publication : Highest possible resolution TIFF</option>
-            <option value="113">Reading Copy : PDF</option>
-            <option value="109">Web Publication : 300 dpi JPEG</option>
+            <option v-for="opt in intendedUses" :key="`u-${opt.id}`" :value="opt.id">{{opt.name}}</option>
          </select>
       </div>
 
@@ -83,7 +75,7 @@
 
 <script>
 import { mapFields } from 'vuex-map-fields'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
    computed: {
       ...mapFields([
@@ -92,6 +84,9 @@ export default {
       ...mapState({
          error: state => state.error,
       }),
+      ...mapGetters([
+        'intendedUses'
+      ])
    },
    methods: {
       formatDate(date) {
@@ -141,6 +136,9 @@ export default {
          border-radius: 5px;
          padding: 5px 10px;
          margin: 5px 0;
+         font-family: "franklin-gothic-urw", arial, sans-serif;
+         -webkit-font-smoothing: antialiased;
+         -moz-osx-font-smoothing: grayscale;
       }
       .note {
          font-style: italic;

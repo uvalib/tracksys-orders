@@ -7,6 +7,7 @@ export default createStore({
       working: false,
       version: "unknown",
       error: "",
+      constants: {},
       currStepIdx: 0,
       steps: [
          {name: "Customer Information", component: "CustomerInfo", page: 1},
@@ -41,9 +42,7 @@ export default createStore({
          intendedUseID: 0
       },
       currItemIdx: 0,
-      items: [
-         {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""}
-      ]
+      items: []
    },
    getters: {
       getField,
@@ -52,16 +51,29 @@ export default createStore({
       },
       numSteps: state => {
          return state.steps.length
+      },
+      academicStatuses: state => {
+         return state.constants['academicStatus']
+      },
+      intendedUses: state => {
+         return state.constants['intendedUse']
+      },
+      intendedUse: state => (id) => {
+         let uses = state.constants['intendedUse']
+         let v = uses.find( item => item.id == id)
+         if (v) {
+            return v.name
+         }
+         return "Unknowm"
       }
    },
    mutations: {
       updateField,
       clearItems(state) {
          state.items.splice(0, state.items.length)
-         state.items.push({title: "", pageNum: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""})
       },
-      addItem(state) {
-         state.items.push({title: "", pageNum: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""})
+      addItem(state, item) {
+         state.items.push(Object.assign({},item))
       },
       clearError(state) {
          state.error = ""
@@ -113,6 +125,9 @@ export default createStore({
          state.computeID = cid
          state.customer.email = `${cid}@virginia.edu`
       },
+      setConstants(state, data) {
+         state.constants = data
+      },
       setDefaultDueDate(state) {
          let sd = new Date()
          sd.setDate(sd.getDate() + 29)
@@ -152,7 +167,15 @@ export default createStore({
             // NO-OP
          })
       },
+      getConstants(ctx) {
+         axios.get(`/api/constants`).then(response => {
+            ctx.commit("setConstants", response.data)
+         }).catch( _e => {
+            // NO-OP, there is just no constants
+         })
+      },
       startRequest(ctx) {
+         ctx.dispatch("getConstants")
          if (ctx.state.computeID != "") {
             ctx.commit("setWorking", true)
             axios.get(`/api/users/${ctx.state.computeID}`).then(response => {

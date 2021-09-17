@@ -3,7 +3,7 @@
    <div class="content">
       <div class="step">
          <span class="name" v-if="currStep.component != 'ItemInfo'">{{currStep.name}}</span>
-         <span class="name" v-else>Item {{currItemIdx+1}} Information</span>
+         <span class="name" v-else>Item {{items.length+1}} Information</span>
          <span class="sequence">Section {{currStep.page}} of {{numSteps}}</span>
       </div>
       <component :is="currStep.component"></component>
@@ -13,19 +13,20 @@
 
 <script>
 import { mapState, mapGetters } from "vuex"
-import CustomerInfo from "@/components/CustomerInfo"
-import AddressInfo from "@/components/AddressInfo"
-import RequestInfo from "@/components/RequestInfo"
-import ItemInfo from "@/components/ItemInfo"
+import CustomerInfo from "@/components/steps/CustomerInfo"
+import AddressInfo from "@/components/steps/AddressInfo"
+import RequestInfo from "@/components/steps/RequestInfo"
+import ItemInfo from "@/components/steps/ItemInfo"
+import ReviewOrder from "@/components/steps/ReviewOrder"
 export default {
    name: 'Request',
    components: {
-       CustomerInfo, AddressInfo, RequestInfo, ItemInfo
+       CustomerInfo, AddressInfo, RequestInfo, ItemInfo, ReviewOrder
    },
    computed: {
       ...mapState({
          working : state => state.working,
-         currItemIdx: state => state.currItemIdx
+         items: state => state.items
       }),
       ...mapGetters([
         'currStep', 'numSteps'

@@ -16,12 +16,7 @@
          <label for="academic-status">Academic Status</label>
          <select id="academic-status" v-model="academicStatusID">
             <option disabled value="0">Select an academic status</option>
-            <option value="1">Non-UVA</option>
-            <option value="4">Staff</option>
-            <option value="5">Faculty</option>
-            <option value="6">Undergraduate Student</option>
-            <option value="7">Graduate Student</option>
-            <option value="8">Continuing Education</option>
+            <option v-for="opt in academicStatuses" :key="`as-${opt.id}`" :value="opt.id">{{opt.name}}</option>
          </select>
       </div>
       <p class="error">{{error}}</p>
@@ -34,7 +29,7 @@
 
 <script>
 import { mapFields } from 'vuex-map-fields'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
    computed: {
       ...mapFields([
@@ -44,6 +39,9 @@ export default {
          error: state => state.error,
          computeID: state => state.computeID
       }),
+      ...mapGetters([
+        'academicStatuses'
+      ])
    },
    methods: {
       cancelClicked() {
