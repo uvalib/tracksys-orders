@@ -49,6 +49,14 @@ export default createStore({
       academicStatuses: state => {
          return state.constants['academicStatus']
       },
+      academicStatusName: state => (id) => {
+         let vals = state.constants['academicStatus']
+         let v = vals.find( item => item.id == id)
+         if (v) {
+            return v.name
+         }
+         return "Unknown"
+      },
       intendedUses: state => {
          return state.constants['intendedUse']
       },
@@ -235,20 +243,21 @@ export default createStore({
             ctx.commit("setWorking", false)
          })
       },
-      submitOrder(ctx) {
-         ctx.commit("setWorking", true)
-         let req = {
-            userID: ctx.state.customer.id,
-            request: ctx.state.request,
-            items: ctx.state.items
-         }
-         axios.post(`/api/submit`, req).then( _response => {
-            // TODO
-            ctx.commit("setWorking", false)
-         }).catch( err => {
-            ctx.commit("setError", err)
-            ctx.commit("setWorking", false)
-         })
+      submitOrder(_ctx) {
+         // ctx.commit("setWorking", true)
+         // let req = {
+         //    userID: ctx.state.customer.id,
+         //    request: ctx.state.request,
+         //    items: ctx.state.items
+         // }
+         // axios.post(`/api/submit`, req).then( _response => {
+         //    // TODO
+         //    ctx.commit("setWorking", false)
+         // }).catch( err => {
+         //    ctx.commit("setError", err)
+         //    ctx.commit("setWorking", false)
+         // })
+         this.router.push("/thanks")
       }
    }
 })

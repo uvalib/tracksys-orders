@@ -12,14 +12,90 @@
             <h2>Order Summary</h2>
             <div class="subsection">
                <h3>Customer Information</h3>
-               <div class="fields">
-               </div>
+               <dl class="fields">
+                  <dt>First Name</dt>
+                  <dd>{{customer.firstName}}</dd>
+                  <dt>Last Name</dt>
+                  <dd>{{customer.lastName}}</dd>
+                  <dt>Email</dt>
+                  <dd>{{customer.email}}</dd>
+                  <dt>Academic Status</dt>
+                  <dd>{{academicStatus}}</dd>
+               </dl>
             </div>
             <div class="subsection">
                <h3>Primary Address</h3>
+               <dl class="fields">
+                  <dt>Address Line 1</dt>
+                  <dd>{{addresses[0].address1}}</dd>
+                  <dt>Address Line 2</dt>
+                  <dd>{{addresses[0].address2}}</dd>
+                  <dt>City</dt>
+                  <dd>{{addresses[0].city}}</dd>
+                  <dt>State</dt>
+                  <dd>{{addresses[0].state}}</dd>
+                  <dt>Zip Code</dt>
+                  <dd>{{addresses[0].zip}}</dd>
+                  <dt>Country</dt>
+                  <dd>{{addresses[0].country}}</dd>
+                  <dt>Phone</dt>
+                  <dd>{{addresses[0].phone}}</dd>
+               </dl>
+            </div>
+            <div class="subsection" v-if="differentBillingAddress">
+               <h3>Billing Address</h3>
+               <dl class="fields">
+                  <dt>Address Line 1</dt>
+                  <dd>{{addresses[1].address1}}</dd>
+                  <dt>Address Line 2</dt>
+                  <dd>{{addresses[1].address2}}</dd>
+                  <dt>City</dt>
+                  <dd>{{addresses[1].city}}</dd>
+                  <dt>State</dt>
+                  <dd>{{addresses[1].state}}</dd>
+                  <dt>Zip Code</dt>
+                  <dd>{{addresses[1].zip}}</dd>
+                  <dt>Country</dt>
+                  <dd>{{addresses[1].country}}</dd>
+                  <dt>Phone</dt>
+                  <dd>{{addresses[1].phone}}</dd>
+               </dl>
             </div>
             <div class="subsection">
                <h3>Item Information</h3>
+               <div v-for="item,idx in items" class="item" :key="`item-${idx}`">
+                  <div class="item-num">Item #{{idx+1}}</div>
+                  <dl class="fields indent">
+                     <dt>Title</dt>
+                     <dd>{{item.title}}</dd>
+                     <dt>Pages</dt>
+                     <dd>{{item.pages}}</dd>
+                     <template v-if="item.callNumber">
+                        <dt>Call Number</dt>
+                        <dd>{{item.callNumber}}</dd>
+                     </template>
+                     <template v-if="item.author">
+                        <dt>Author</dt>
+                        <dd>{{item.author}}</dd>
+                     </template>
+                     <template v-if="item.published">
+                        <dt>Year Published</dt>
+                        <dd>{{item.published}}</dd>
+                     </template>
+                     <template v-if="item.location">
+                        <dt>Location</dt>
+                        <dd>{{item.location}}</dd>
+                     </template>
+                     <template v-if="item.link">
+                        <dt>Web Link</dt>
+                        <dd>{{item.link}}</dd>
+                     </template>
+                     <template v-if="item.description">
+                        <dt>Description</dt>
+                        <dd>{{item.description}}</dd>
+                     </template>
+                  </dl>
+               </div>
             </div>
          </div>
          <div class="section">
@@ -56,7 +132,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex"
+import {mapState, mapGetters} from "vuex"
 export default {
    name: 'Thanks',
    computed: {
@@ -65,8 +141,16 @@ export default {
          items: state => state.items,
          request: state => state.request,
          customer: state => state.customer,
-         requestID: state => state.requestID
+         addresses: state => state.addresses,
+         differentBillingAddress: state => state.differentBillingAddress,
+         requestID: state => state.requestID,
       }),
+      ...mapGetters([
+        'academicStatusName'
+      ]),
+      academicStatus() {
+         return this.academicStatusName(this.customer.academicStatusID)
+      }
    },
    methods: {
       createAnother() {
@@ -79,7 +163,6 @@ export default {
 <style lang="scss" scoped>
 div.content {
    text-align: left;
-   max-width: 60%;
    margin: 0 auto;
    p {
       margin: 5px 0;
@@ -89,21 +172,53 @@ div.content {
       font-weight: bold;
       margin-bottom: 15px;
    }
-   h3 {
-      font-weight: normal;
-      font-size: 1.15em;
+   .subsection {
+      padding-left: 25px;
+      h3 {
+         font-weight: normal;
+         font-size: 1.15em;
+         border-bottom: 1px solid var(--uvalib-grey-light);
+      }
+      .item-num {
+         font-weight: bold;
+         margin: 20px 0 0px 25px;
+      }
    }
    h2 {
       font-weight: normal;
-      border-bottom: 1px solid var(--uvalib-grey-light);
-      padding-bottom: 15px;
-      margin-top: 35px;
+      padding: 5px 10px;
+      margin: 25px 0;
+      background: #efefef;
    }
    dl {
       color: var(--uvalib-text);
+      margin: 10px 0 0 15px;
       dt {
          font-weight: bold;
       }
+      dd {
+         margin-bottom: 10px;
+      }
+   }
+   dl.fields {
+      display: inline-grid;
+      grid-template-columns: max-content 2fr;
+      grid-column-gap: 15px;
+      margin: 10px 0 0 15px;
+      dt {
+         font-weight: bold;
+         text-align: right;
+      }
+      dd {
+         margin: 0 0 5px 0;
+         word-break: break-word;
+         -webkit-hyphens: auto;
+         -moz-hyphens: auto;
+         hyphens: auto;
+      }
+   }
+   dl.fields.indent {
+      margin-left: 25px;
    }
 }
 .button-bar {
@@ -111,4 +226,15 @@ div.content {
    margin: 25px auto;
    text-align: right;
 }
+@media only screen and (min-width: 768px) {
+   div.content  {
+      width: 60%;
+   }
+ }
+ @media only screen and (max-width: 768px) {
+   div.content  {
+      width: 95%;
+      font-size: 0.9em;
+   }
+ }
 </style>
