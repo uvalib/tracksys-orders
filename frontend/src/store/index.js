@@ -243,21 +243,20 @@ export default createStore({
             ctx.commit("setWorking", false)
          })
       },
-      submitOrder(_ctx) {
-         // ctx.commit("setWorking", true)
-         // let req = {
-         //    userID: ctx.state.customer.id,
-         //    request: ctx.state.request,
-         //    items: ctx.state.items
-         // }
-         // axios.post(`/api/submit`, req).then( _response => {
-         //    // TODO
-         //    ctx.commit("setWorking", false)
-         // }).catch( err => {
-         //    ctx.commit("setError", err)
-         //    ctx.commit("setWorking", false)
-         // })
-         this.router.push("/thanks")
+      submitOrder(ctx) {
+         ctx.commit("setWorking", true)
+         let req = {
+            userID: ctx.state.customer.id,
+            request: ctx.state.request,
+            items: ctx.state.items
+         }
+         axios.post(`/api/submit`, req).then( _response => {
+            this.router.push("/thanks")
+            ctx.commit("setWorking", false)
+         }).catch( err => {
+            ctx.commit("setError", err)
+            ctx.commit("setWorking", false)
+         })
       }
    }
 })

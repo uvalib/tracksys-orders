@@ -35,6 +35,7 @@ func main() {
 		api.POST("/users", svc.updateUser)
 		api.GET("/users/:id/address", svc.getUserAddress)
 		api.POST("/users/:id/address", svc.updateUserAddress)
+		api.POST("/submit", svc.submitRequest)
 	}
 
 	// Note: in dev mode, this is never actually used. The front end is served
