@@ -18,7 +18,6 @@ import (
 type serviceContext struct {
 	Version     string
 	TrackSysURL string
-	DevAuthUser string
 	DB          *dbx.DB
 	SMTP        smtpConfig
 	Dev         devConfig
@@ -56,8 +55,8 @@ func (svc *serviceContext) authenticate(c *gin.Context) {
 	log.Printf("END header dump ===========================================")
 
 	computingID := c.GetHeader("remote_user")
-	if svc.DevAuthUser != "" {
-		computingID = svc.DevAuthUser
+	if svc.Dev.authUser != "" {
+		computingID = svc.Dev.authUser
 		log.Printf("Using dev auth user ID: %s", computingID)
 	}
 	if computingID == "" {
@@ -115,10 +114,10 @@ type emailRequest struct {
 func (svc *serviceContext) SendEmail(request *emailRequest) error {
 	mail := gomail.NewMessage()
 	mail.SetHeader("MIME-version", "1.0")
-	mail.SetHeader("Content-Type", "text/html; charset=\"UTF-8\"")
 	mail.SetHeader("Subject", request.Subject)
 	mail.SetHeader("To", request.To...)
 	mail.SetHeader("From", request.From)
+	mail.SetHeader("Content-Transfer-Encoding", "BASE64")
 	if request.ReplyTo != "" {
 		mail.SetHeader("Reply-To", request.ReplyTo)
 	}

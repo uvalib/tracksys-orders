@@ -1,56 +1,65 @@
+<!DOCTYPE html>
 <html>
+
 <body>
    <div>
-      <div><img src="http://digiservdelivery.lib.virginia.edu/lib_letterhead.jpg" width="640" height="64"></div>
-      <p>Dear {{.FirstName}}, {{.LastName}},</p>
-      <p>Thank you for submitting a request to UVa Library Digital Production Group.  Below you will find a summary of your order.</p>
+      <div><img src='http://digiservdelivery.lib.virginia.edu/lib_letterhead.jpg' width='640' height='64'></div>
+      <p>Dear {{.User.FirstName}}, {{.User.LastName}},</p>
+      <p>Thank you for submitting a request to UVa Library Digital Production Group. Below you will find a summary of
+         your order.</p>
       <div>
          <h2>Order Summary</h2>
          <div>
             <h3>Customer Information</h3>
             <label>First Name:&nbsp;</label>
-            <span>{{.FirstName}}</span>
+            <span>{{.User.FirstName}}</span>
             <label>Last Name:&nbsp;</label>
-            <span>{{.LastName}}</span>
+            <span>{{.User.LastName}}</span>
             <label>Email:&nbsp;</label>
-            <span>{{.Email}}</span>
+            <span>{{.User.Email}}</span>
             <label>Academic Status:&nbsp;</label>
-            <span>{{.AcademicStatus}}</span>
+            <span>{{.User.AcademicStatusID}}</span>
          </div>
       </div>
       <div>
          <h2>Guideline Reminder</h2>
          <dl>
             <dt>Processing Time</dt>
-            <dd>Orders generally require at least 20 days to process.  Rush requests will be honored if possible.</dd>
+            <dd>Orders generally require at least 20 days to process. Rush requests will be honored if possible.</dd>
             <dt>Fees</dt>
-            <dd><em><strong>(Non-UVA only)</strong></em>  $50 for the first hour, $25 each additional hour.
-               Special Collections staff will send a fee estimate that must be paid before any digitization work is done.</dd>
+            <dd><em><strong>(Non-UVA only)</strong></em> $50 for the first hour, $25 each additional hour.
+               Special Collections staff will send a fee estimate that must be paid before any digitization work is
+               done.</dd>
             <dt>Deliverables</dt>
             <dd>300dpi JPEG or highest resolution TIFF, depending on your intended use.</dd>
             <dt>Delivery</dt>
-            <dd>All requests are delivered as online downloads. Special delivery needs will be honored at the Digital Production Group’s discretion.</dd>
+            <dd>All requests are delivered as online downloads. Special delivery needs will be honored at the Digital
+               Production Group’s discretion.</dd>
             <dt>Copyright</dt>
             <dd>
                All copies are provided for private study, scholarship, or research pursuant to 17 USC § 107 and/or 108.
-               Copyright and other legal restrictions may apply to further uses, and the Library does not grant permissions
+               Copyright and other legal restrictions may apply to further uses, and the Library does not grant
+               permissions
                or give legal advice regarding reuse of items in its collections.
-               Please see our <a href="https://small.library.virginia.edu/services/publishing/">Permissions and Publishing</a> page for more information.
+               Please see our <a href='https://small.library.virginia.edu/services/publishing/'>Permissions and
+                  Publishing</a> page for more information.
             </dd>
             <dt>Further Questions?</dt>
-            <dd>If you have questions about your request, contact <a href="mailto:digitalservices@virginia.edu"></a> and include the following request number: <strong>{{.RequestID}}</strong></dd>
+            <dd>If you have questions about your request, contact <a href='mailto:digitalservices@virginia.edu'></a> and
+               include the following request number: <strong>{{.OrderID}}</strong></dd>
          </dl>
       </div>
    </div>
 
    <div>
       <address>
-         <strong>University of Virginia Library</strong><br/>
-         Digital Production Group<br/>
-         <a href="mailto:digitalservices@virginia.edu">digitalservices@virginia.edu</a>
+         <strong>University of Virginia Library</strong><br />
+         Digital Production Group<br />
+         <a href='mailto:digitalservices@virginia.edu'>digitalservices@virginia.edu</a>
       </address>
 
-      <p>Learn more about us at <a href="http://dcs.library.virginia.edu/">http://dcs.library.virginia.edu</a></p>
+      <p>Learn more about us at <a href='http://dcs.library.virginia.edu/'>http://dcs.library.virginia.edu</a></p>
    </div>
 </body>
+
 </html>

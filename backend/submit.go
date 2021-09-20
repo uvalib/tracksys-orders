@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
+	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"time"
@@ -27,9 +30,11 @@ type requestInfo struct {
 }
 
 type submission struct {
-	UserID  int64       `json:"userID"`
-	Request requestInfo `json:"request"`
-	Items   []itemInfo  `json:"items"`
+	User      customerJSON  `json:"user"`
+	Addresses []addressJSON `json:"addresses"`
+	Request   requestInfo   `json:"request"`
+	Items     []itemInfo    `json:"items"`
+	OrderID   int64
 }
 
 type orderRec struct {
@@ -77,7 +82,7 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 		return
 	}
 
-	order := orderRec{CustomeerID: req.UserID, DateDue: req.Request.DueDate, Instructions: req.Request.Instructions,
+	order := orderRec{CustomeerID: req.User.ID, DateDue: req.Request.DueDate, Instructions: req.Request.Instructions,
 		DateSubmitted: time.Now(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Status: "requested"}
 	log.Printf("INFO: create order %+v", order)
 	err = svc.DB.Model(&order).Insert()
@@ -121,9 +126,32 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 			return
 		}
 	}
-
-	// TODO send email
-
 	log.Printf("INFO: all items created")
+
+	log.Printf("INFO: generating confirmation email")
+	tpl, err := template.ParseFiles("./templates/confirmation.html")
+	if err != nil {
+		log.Printf("ERROR: unable to load confirmation template: %s", err.Error())
+		c.String(http.StatusOK, "ok")
+		return
+
+	}
+
+	req.OrderID = order.ID
+	var renderedEmail bytes.Buffer
+	err = tpl.Execute(&renderedEmail, req)
+	if err != nil {
+		log.Printf("ERROR: unable to generate confirmation email for %s: %s", req.User.Email, err.Error())
+	} else {
+		to := make([]string, 0)
+		to = append(to, req.User.Email)
+		sub := fmt.Sprintf("UVA Digital Production Group - Request #%d Confirmation", order.ID)
+		eRequest := emailRequest{Subject: sub, To: to, From: svc.SMTP.Sender, CC: svc.SMTP.Sender, Body: renderedEmail.String()}
+		sendErr := svc.SendEmail(&eRequest)
+		if sendErr != nil {
+			log.Printf("ERROR: Unable to send confirm email to %s: %s", req.User.Email, sendErr.Error())
+		}
+	}
+
 	c.String(http.StatusOK, "ok")
 }

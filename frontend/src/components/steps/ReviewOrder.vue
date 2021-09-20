@@ -53,6 +53,7 @@
             </dl>
          </div>
       </div>
+      <p class="error">{{error}}</p>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="addClicked" class="pad-left">Add Items</uva-button>
@@ -136,7 +137,11 @@ export default {
          margin-left: 5px;
       }
    }
-
+   .error {
+      font-style: italic;
+      color: var(--uvalib-red);
+      margin-bottom: 0;
+   }
    .button-bar {
       text-align: right;
       padding: 15px 0;

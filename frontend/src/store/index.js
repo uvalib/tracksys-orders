@@ -124,6 +124,7 @@ export default createStore({
       },
       nextStep(state) {
          state.currStepIdx++
+         state.error = ""
       },
       resetAddresses(state) {
          state.currAddressIdx = 0
@@ -246,9 +247,15 @@ export default createStore({
       submitOrder(ctx) {
          ctx.commit("setWorking", true)
          let req = {
-            userID: ctx.state.customer.id,
+            user: ctx.state.customer,
+            addresses: [],
             request: ctx.state.request,
-            items: ctx.state.items
+            items: ctx.state.items,
+         }
+         if (ctx.state.differentBillingAddress == false) {
+            req.addresses.push(ctx.state.addresses[0])
+         } else {
+            req.addresses = ctx.state.addresses
          }
          axios.post(`/api/submit`, req).then( _response => {
             this.router.push("/thanks")
