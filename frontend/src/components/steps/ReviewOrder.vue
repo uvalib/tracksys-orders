@@ -3,7 +3,7 @@
       <div class="request">
          <dl>
             <dt>Date Due:</dt>
-            <dd>{{request.dueDate}}</dd>
+            <dd>{{formattedDueDate}}</dd>
             <template v-if="request.specialInstructions">
                <dt>Special Instructions:</dt>
                <dd>{{request.specialInstructions}}</dd>
@@ -72,7 +72,13 @@ export default {
       }),
       ...mapGetters([
          'intendedUse'
-      ])
+      ]),
+      formattedDueDate() {
+         const day = `${this.request.dueDate.getDate()}`
+         const month = `${this.request.dueDate.getMonth()+1}`
+         const year = this.request.dueDate.getFullYear()
+         return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
+      },
    },
    methods: {
       cancelClicked() {
@@ -86,7 +92,7 @@ export default {
          this.$store.commit("removeItem", idx)
       },
       addClicked() {
-         this.$store.commit("addItems")
+         this.$store.commit("addMoreItems")
       },
       submitClicked() {
          this.$store.dispatch("submitOrder")

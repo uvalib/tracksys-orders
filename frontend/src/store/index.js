@@ -34,6 +34,8 @@ export default createStore({
       },
       currItemIdx: -1,
       items: [],
+      origItem: {},
+      itemMode: "add",
       requestID: ""
    },
    getters: {
@@ -67,22 +69,29 @@ export default createStore({
       editItem(state, idx) {
          state.currItemIdx = idx
          state.currStepIdx = 3
+         state.itemMode =  "edit"
+         state.origItem = Object.assign({}, state.items[state.currItemIdx])
       },
-      cancelItemEdit(state) {
-         state.currItemIdx = -1
+      itemEditCanceled(state) {
+         state.items.splice(state.currItemIdx, 1,  state.origItem )
          state.currStepIdx = 4
+         state.itemMode =  "add"
+         state.origItem = {}
       },
-      updateItem(state, item) {
-         state.items.splice(state.currItemIdx, 1, Object.assign({},item))
-         state.currItemIdx = -1
+      itemEditDone(state) {
+         state.itemMode =  "add"
          state.currStepIdx = 4
+         state.origItem = {}
       },
-      addItem(state, item) {
-         state.items.push(Object.assign({},item))
+      addItem(state) {
+         state.items.push( {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""} )
+         state.currItemIdx = state.items.length -1
       },
-      addItems(state) {
+      addMoreItems(state) {
+         state.items.push( {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""} )
+         state.currItemIdx = state.items.length -1
+         state.itemMode =  "add"
          state.currStepIdx = 3
-         state.currItemIdx = -1
       },
       removeItem(state, idx) {
          if (idx < 0 || idx > state.items.length-1) return
@@ -101,6 +110,9 @@ export default createStore({
          state.customer.academicStatusID = 0
          state.addresses.splice(0, state.addresses.length)
          state.currAddressIdx = 0
+         state.items.splice(0, state.items.length)
+         state.currItemIdx = 0
+         state.error = ""
       },
       nextStep(state) {
          state.currStepIdx++
@@ -111,6 +123,9 @@ export default createStore({
       },
       setAddresses(state, data) {
          data.forEach( addr => state.addresses.push( Object.assign({}, addr) ))
+         if (state.addresses.length == 0) {
+            state.addresses.push( {addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: ""})
+         }
       },
       nextAddress(state) {
          state.currAddressIdx++
@@ -122,10 +137,13 @@ export default createStore({
       setConstants(state, data) {
          state.constants = data
       },
-      setDefaultDueDate(state) {
+      initRequest(state) {
          let sd = new Date()
          sd.setDate(sd.getDate() + 29)
          state.request.dueDate = sd
+         state.items.splice(0, state.items.length)
+         state.items.push( {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""} )
+         state.currItemIdx = 0
       },
       setError(state, err) {
          if (err.message) {
@@ -180,6 +198,7 @@ export default createStore({
       },
       getAddressInfo(ctx) {
          ctx.commit("setWorking", true)
+         ctx.commit("resetAddresses")
          axios.get(`/api/users/${ctx.state.customer.id}/address`).then(response => {
             ctx.commit("setAddresses", response.data)
             ctx.commit("setWorking", false)
@@ -187,7 +206,6 @@ export default createStore({
          }).catch( _e => {
             // NO-OP, there is just no user data pre-populated
             ctx.commit("setWorking", false)
-            ctx.commit("resetAddresses")
          })
       },
       updateCustomer(ctx) {
@@ -208,8 +226,8 @@ export default createStore({
                ctx.commit("nextAddress")
                ctx.commit("setWorking", false)
             } else {
+               ctx.commit("initRequest")
                ctx.commit("nextStep")
-               ctx.commit("setDefaultDueDate")
                ctx.commit("setWorking", false)
             }
          }).catch( err => {
