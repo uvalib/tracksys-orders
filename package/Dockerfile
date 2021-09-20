@@ -8,6 +8,7 @@ WORKDIR /build
 COPY go.mod go.sum Makefile ./
 COPY frontend ./frontend
 COPY backend ./backend
+COPY templates ./templates
 RUN make linux-full
 
 #
@@ -42,10 +43,11 @@ COPY package/scripts/entry.sh $APP_HOME/scripts/entry.sh
 COPY package/data/container_bash_profile /home/webservice/.profile
 COPY --from=builder /build/bin/tsorders.linux $APP_HOME/bin/tsorders
 COPY --from=builder /build/bin/public $APP_HOME/bin/public
+COPY --from=builder /build/bin/templates $APP_HOME/bin/templates
 
 # Ensure permissions are correct
 RUN chown webservice:webservice /home/webservice/.profile $APP_HOME/scripts/entry.sh $APP_HOME/bin/tsorders && chmod 755 /home/webservice/.profile $APP_HOME/scripts/entry.sh $APP_HOME/bin/tsorders
-RUN chown -R webservice:webservice $APP_HOME/bin/public && chmod -R 755 $APP_HOME/bin/public
+RUN chown -R webservice:webservice $APP_HOME/bin/public $APP_HOME/bin/templates && chmod -R 755 $APP_HOME/bin/public $APP_HOME/bin/templates
 
 # Add the build tag
 ARG BUILD_TAG

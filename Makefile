@@ -9,13 +9,19 @@ GOVET = $(GOCMD) vet
 
 BASE_NAME=tsorders
 
-build: darwin web
+build: darwin web deploy-templates
 
-all: darwin linux web
+all: darwin linux web deploy-templates
 
-linux-full: linux web
+linux-full: linux web deploy-templates
 
-darwin-full: darwin web
+darwin-full: darwin web deploy-templates
+
+deploy-templates:
+	mkdir -p bin/
+	rm -rf bin/templates
+	mkdir -p bin/templates
+	cp ./templates/* bin/templates
 
 web:
 	mkdir -p bin/

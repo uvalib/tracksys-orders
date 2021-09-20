@@ -115,7 +115,7 @@ type emailRequest struct {
 func (svc *serviceContext) SendEmail(request *emailRequest) error {
 	mail := gomail.NewMessage()
 	mail.SetHeader("MIME-version", "1.0")
-	mail.SetHeader("Content-Type", "text/plain; charset=\"UTF-8\"")
+	mail.SetHeader("Content-Type", "text/html; charset=\"UTF-8\"")
 	mail.SetHeader("Subject", request.Subject)
 	mail.SetHeader("To", request.To...)
 	mail.SetHeader("From", request.From)
@@ -125,7 +125,7 @@ func (svc *serviceContext) SendEmail(request *emailRequest) error {
 	if len(request.CC) > 0 {
 		mail.SetHeader("Cc", request.CC)
 	}
-	mail.SetBody("text/plain", request.Body)
+	mail.SetBody("text/html", request.Body)
 
 	if svc.Dev.fakeSMTP {
 		log.Printf("Email is in dev mode. Logging message instead of sending")
