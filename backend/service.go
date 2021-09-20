@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	dbx "github.com/go-ozzo/ozzo-dbx"
 	_ "github.com/go-sql-driver/mysql"
+	"gopkg.in/gomail.v2"
 )
 
 // ServiceContext contains common data used by all handlers
@@ -18,13 +20,16 @@ type serviceContext struct {
 	TrackSysURL string
 	DevAuthUser string
 	DB          *dbx.DB
+	SMTP        smtpConfig
+	Dev         devConfig
 }
 
 // InitializeService sets up the service context for all API handlers
 func initializeService(version string, cfg *configData) *serviceContext {
 	ctx := serviceContext{Version: version,
 		TrackSysURL: cfg.tracksysURL,
-		DevAuthUser: cfg.devAuthUser}
+		Dev:         cfg.dev,
+		SMTP:        cfg.smtp}
 
 	log.Printf("INFO: connecting to DB...")
 	connectStr := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
@@ -95,4 +100,50 @@ func (svc *serviceContext) getVersion(c *gin.Context) {
 	vMap["version"] = Version
 	vMap["build"] = build
 	c.JSON(http.StatusOK, vMap)
+}
+
+type emailRequest struct {
+	Subject string
+	To      []string
+	ReplyTo string
+	CC      string
+	From    string
+	Body    string
+}
+
+// SendEmail will and send an email to the specified recipients
+func (svc *serviceContext) SendEmail(request *emailRequest) error {
+	mail := gomail.NewMessage()
+	mail.SetHeader("MIME-version", "1.0")
+	mail.SetHeader("Content-Type", "text/plain; charset=\"UTF-8\"")
+	mail.SetHeader("Subject", request.Subject)
+	mail.SetHeader("To", request.To...)
+	mail.SetHeader("From", request.From)
+	if request.ReplyTo != "" {
+		mail.SetHeader("Reply-To", request.ReplyTo)
+	}
+	if len(request.CC) > 0 {
+		mail.SetHeader("Cc", request.CC)
+	}
+	mail.SetBody("text/plain", request.Body)
+
+	if svc.Dev.fakeSMTP {
+		log.Printf("Email is in dev mode. Logging message instead of sending")
+		log.Printf("==================================================")
+		mail.WriteTo(log.Writer())
+		log.Printf("==================================================")
+		return nil
+	}
+
+	log.Printf("Sending %s email to %s", request.Subject, strings.Join(request.To, ","))
+	if svc.SMTP.Pass != "" {
+		dialer := gomail.Dialer{Host: svc.SMTP.Host, Port: svc.SMTP.Port, Username: svc.SMTP.User, Password: svc.SMTP.Pass}
+		dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+		return dialer.DialAndSend(mail)
+	}
+
+	log.Printf("Sending email with no auth")
+	dialer := gomail.Dialer{Host: svc.SMTP.Host, Port: svc.SMTP.Port}
+	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	return dialer.DialAndSend(mail)
 }

@@ -13,11 +13,25 @@ type dbConfig struct {
 	Name string
 }
 
+type smtpConfig struct {
+	Host   string
+	Port   int
+	User   string
+	Pass   string
+	Sender string
+}
+
+type devConfig struct {
+	authUser string
+	fakeSMTP bool
+}
+
 type configData struct {
 	port        int
 	db          dbConfig
+	smtp        smtpConfig
+	dev         devConfig
 	tracksysURL string
-	devAuthUser string
 }
 
 func getConfiguration() *configData {
@@ -32,8 +46,16 @@ func getConfiguration() *configData {
 	flag.StringVar(&config.db.User, "dbuser", "", "Database user")
 	flag.StringVar(&config.db.Pass, "dbpass", "", "Database password")
 
+	// SMTP settings
+	flag.StringVar(&config.smtp.Host, "smtphost", "", "SMTP Host")
+	flag.IntVar(&config.smtp.Port, "smtpport", 0, "SMTP Port")
+	flag.StringVar(&config.smtp.User, "smtpuser", "", "SMTP User")
+	flag.StringVar(&config.smtp.Pass, "smtppass", "", "SMTP Password")
+	flag.StringVar(&config.smtp.Sender, "smtpsender", "digitalservices@virginia.edu", "SMTP sender email")
+
 	// dev setup
-	flag.StringVar(&config.devAuthUser, "devuser", "", "Authorized computing id for dev")
+	flag.StringVar(&config.dev.authUser, "devuser", "", "Authorized computing id for dev")
+	flag.BoolVar(&config.dev.fakeSMTP, "stubsmtp", false, "Log email insted of sending (dev mode)")
 
 	flag.Parse()
 
@@ -56,8 +78,11 @@ func getConfiguration() *configData {
 	log.Printf("[CONFIG] dbport        = [%d]", config.db.Port)
 	log.Printf("[CONFIG] dbname        = [%s]", config.db.Name)
 	log.Printf("[CONFIG] dbuser        = [%s]", config.db.User)
-	if config.devAuthUser != "" {
-		log.Printf("[CONFIG] devuser       = [%s]", config.devAuthUser)
+	if config.dev.authUser != "" {
+		log.Printf("[CONFIG] devuser       = [%s]", config.dev.authUser)
+	}
+	if config.dev.fakeSMTP {
+		log.Printf("[CONFIG] stubsmtp      = [YES]")
 	}
 
 	return &config
