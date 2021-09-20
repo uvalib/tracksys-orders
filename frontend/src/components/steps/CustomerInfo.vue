@@ -50,7 +50,7 @@ export default {
       },
       nextClicked() {
          if (this.computeID.length == 0) {
-            this.academicStatusID = "1"
+            this.academicStatusID = 1
          }
          if ( this.email.length == 0) {
             this.$store.commit("setError", "Customer email is required")
