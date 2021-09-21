@@ -12,18 +12,19 @@ import (
 )
 
 type addressRec struct {
-	ID        int64          `db:"id"`
-	UserID    int64          `db:"addressable_id"`
-	Type      string         `db:"address_type"` // primary or billable_address
-	Address1  sql.NullString `db:"address_1"`
-	Address2  sql.NullString `db:"address_2"`
-	City      sql.NullString `db:"city"`
-	State     sql.NullString `db:"state"`
-	Zip       sql.NullString `db:"post_code"`
-	Country   sql.NullString `db:"country"`
-	Phone     sql.NullString `db:"phone"`
-	CreatedAt time.Time      `db:"created_at"`
-	UpdatedAt time.Time      `db:"updated_at"`
+	ID              int64          `db:"id"`
+	UserID          int64          `db:"addressable_id"`
+	AddressableType string         `db:"addressable_type"`
+	Type            string         `db:"address_type"` // primary or billable_address
+	Address1        sql.NullString `db:"address_1"`
+	Address2        sql.NullString `db:"address_2"`
+	City            sql.NullString `db:"city"`
+	State           sql.NullString `db:"state"`
+	Zip             sql.NullString `db:"post_code"`
+	Country         sql.NullString `db:"country"`
+	Phone           sql.NullString `db:"phone"`
+	CreatedAt       time.Time      `db:"created_at"`
+	UpdatedAt       time.Time      `db:"updated_at"`
 }
 
 // TableName sets the name of the table in the DB that this struct binds to
@@ -146,7 +147,7 @@ func (svc *serviceContext) updateUserAddress(c *gin.Context) {
 	}
 	if addr.ID > 0 {
 		log.Printf("INFO: updating user %s address %d", uidStr, addr.ID)
-		upErr := svc.DB.Model(&addrRec).Exclude("CreatedAt", "UserID").Update()
+		upErr := svc.DB.Model(&addrRec).Exclude("CreatedAt", "UserID", "AddressableType").Update()
 		if upErr != nil {
 			log.Printf("ERROR: unable to update address for customer %s: %s", uidStr, upErr.Error())
 			c.String(http.StatusInternalServerError, upErr.Error())
@@ -158,6 +159,7 @@ func (svc *serviceContext) updateUserAddress(c *gin.Context) {
 
 	log.Printf("INFO: create new address for user %s", uidStr)
 	addrRec.CreatedAt = time.Now()
+	addrRec.AddressableType = "Customer"
 	addErr := svc.DB.Model(&addrRec).Insert()
 	if addErr != nil {
 		log.Printf("ERROR: unable to add address for customer %s: %s", uidStr, addErr.Error())

@@ -24,6 +24,7 @@ export default createStore({
          lastName: "",
          email: "",
          academicStatusID: 0,
+         academicStatus: ""
       },
       currAddressIdx: 0,
       addresses: [],
@@ -116,6 +117,7 @@ export default createStore({
          state.customer.lastName = ""
          state.customer.email = ""
          state.customer.academicStatusID = 0
+         state.customer.academicStatus = ""
          state.addresses.splice(0, state.addresses.length)
          state.currAddressIdx = 0
          state.items.splice(0, state.items.length)
@@ -172,6 +174,11 @@ export default createStore({
          state.customer.lastName = data.lastName
          state.customer.email = data.email
          state.customer.academicStatusID = data.academicStatusID
+         let vals = state.constants['academicStatus']
+         let as = vals.find( item => item.id == data.academicStatusID)
+         if (as) {
+            state.customer.academicStatus = as.name
+         }
       },
       setWorking(state, flag) {
          state.working = flag

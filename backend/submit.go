@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	dbx "github.com/go-ozzo/ozzo-dbx"
 )
 
 type itemInfo struct {
@@ -27,6 +28,9 @@ type requestInfo struct {
 	DueDate       time.Time `json:"dueDate"`
 	Instructions  string    `json:"specialInstructions"`
 	IntendedUseID int64     `json:"intendedUseID"`
+	IntendedUse   string    `json:"-"`
+	Format        string    `json:"-"`
+	Resolution    string    `json:"-"`
 }
 
 type submission struct {
@@ -34,7 +38,7 @@ type submission struct {
 	Addresses []addressJSON `json:"addresses"`
 	Request   requestInfo   `json:"request"`
 	Items     []itemInfo    `json:"items"`
-	OrderID   int64
+	OrderID   int64         `json:"-"`
 }
 
 type orderRec struct {
@@ -82,6 +86,37 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 		return
 	}
 
+	log.Printf("INFO: lookup intended use %d", req.Request.IntendedUseID)
+	q := svc.DB.NewQuery("select id,description,deliverable_format,deliverable_resolution from intended_uses where id={:id}")
+	q.Bind(dbx.Params{"id": req.Request.IntendedUseID})
+	var useRec intendedUseRec
+	dbErr := q.One(&useRec)
+	if dbErr != nil {
+		log.Printf("ERROR: unable to get intended use %d: %s", req.Request.IntendedUseID, dbErr.Error())
+		c.String(http.StatusInternalServerError, dbErr.Error())
+		return
+	}
+	req.Request.IntendedUse = useRec.Name
+	req.Request.Format = useRec.Format
+	req.Request.Resolution = useRec.Resolution.String
+
+	log.Printf("INFO: load confirmation email template")
+	funcMap := template.FuncMap{
+		"inc": func(i int) int {
+			return i + 1
+		},
+		"dateFmt": func(d time.Time) string {
+			return d.Format("2006-01-02")
+		},
+	}
+	tpl, err := template.New("confirmation.html").Funcs(funcMap).ParseFiles("./templates/confirmation.html")
+	if err != nil {
+		log.Printf("ERROR: unable to load confirmation template: %s", err.Error())
+		c.String(http.StatusOK, "ok")
+		return
+	}
+
+	log.Printf("INFO: create order and order items")
 	order := orderRec{CustomeerID: req.User.ID, DateDue: req.Request.DueDate, Instructions: req.Request.Instructions,
 		DateSubmitted: time.Now(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Status: "requested"}
 	log.Printf("INFO: create order %+v", order)
@@ -128,15 +163,7 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 	}
 	log.Printf("INFO: all items created")
 
-	log.Printf("INFO: generating confirmation email")
-	tpl, err := template.ParseFiles("./templates/confirmation.html")
-	if err != nil {
-		log.Printf("ERROR: unable to load confirmation template: %s", err.Error())
-		c.String(http.StatusOK, "ok")
-		return
-
-	}
-
+	log.Printf("INFO: generate confirmation email for %s", req.User.Email)
 	req.OrderID = order.ID
 	var renderedEmail bytes.Buffer
 	err = tpl.Execute(&renderedEmail, req)
@@ -145,7 +172,7 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 	} else {
 		to := make([]string, 0)
 		to = append(to, req.User.Email)
-		sub := fmt.Sprintf("UVA Digital Production Group - Request #%d Confirmation", order.ID)
+		sub := fmt.Sprintf("UVA Digital Production Group - Request #%d Confirmation", req.OrderID)
 		eRequest := emailRequest{Subject: sub, To: to, From: svc.SMTP.Sender, CC: svc.SMTP.Sender, Body: renderedEmail.String()}
 		sendErr := svc.SendEmail(&eRequest)
 		if sendErr != nil {

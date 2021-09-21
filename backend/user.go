@@ -34,6 +34,7 @@ type customerJSON struct {
 	LastName         string `json:"lastName"`
 	Email            string `json:"email"`
 	AcademicStatusID int64  `json:"academicStatusID"`
+	AcademicStatus   string `json:"academicStatus"`
 }
 
 func (svc *serviceContext) getUser(c *gin.Context) {

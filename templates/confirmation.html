@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
-
+<head>
+   <style>
+      .label {display:inline-block;width:150px;text-align: right;font-weight:bold;}
+   </style>
+</head>
 <body>
    <div>
       <div><img src='http://digiservdelivery.lib.virginia.edu/lib_letterhead.jpg' width='640' height='64'></div>
@@ -11,14 +15,136 @@
          <h2>Order Summary</h2>
          <div>
             <h3>Customer Information</h3>
-            <label>First Name:&nbsp;</label>
-            <span>{{.User.FirstName}}</span>
-            <label>Last Name:&nbsp;</label>
-            <span>{{.User.LastName}}</span>
-            <label>Email:&nbsp;</label>
-            <span>{{.User.Email}}</span>
-            <label>Academic Status:&nbsp;</label>
-            <span>{{.User.AcademicStatusID}}</span>
+            <div>
+               <label class="label">First Name:&nbsp;</label>
+               <span>{{.User.FirstName}}</span>
+            </div>
+            <div>
+               <label class="label">Last Name:&nbsp;</label>
+               <span>{{.User.LastName}}</span>
+            </div>
+            <div>
+               <label class="label">Email:&nbsp;</label>
+               <span>{{.User.Email}}</span>
+            </div>
+            <div>
+               <label class="label">Academic Status:&nbsp;</label>
+               <span>{{.User.AcademicStatus}}</span>
+            </div>
+         </div>
+         {{range .Addresses}}
+         <div>
+            {{if eq .Type "primary"}}
+            <h3>Primary Address</h3>
+            {{else}}
+            <h3>Billing Address</h3>
+            {{end}}
+            <div>
+               <label class="label">Address 1:&nbsp;</label>
+               <span>{{.Address1}}</span>
+            </div>
+            <div>
+               <label class="label">Address 2:&nbsp;</label>
+               <span>{{.Address2}}</span>
+            </div>
+            <div>
+               <label class="label">City:&nbsp;</label>
+               <span>{{.City}}</span>
+            </div>
+            <div>
+               <label class="label">State:&nbsp;</label>
+               <span>{{.State}}</span>
+            </div>
+            <div>
+               <label class="label">Zip:&nbsp;</label>
+               <span>{{.Zip}}</span>
+            </div>
+            <div>
+               <label class="label">Country:&nbsp;</label>
+               <span>{{.Country}}</span>
+            </div>
+            <div>
+               <label class="label">Phone:&nbsp;</label>
+               <span>{{.Phone}}</span>
+            </div>
+         </div>
+         {{end}}
+         <div>
+            <h3>Request Information</h3>
+            <div>
+               <label class="label">Due Date:&nbsp;</label>
+               <span>{{dateFmt .Request.DueDate}}</span>
+            </div>
+            <div>
+               <label class="label">Intended Use:&nbsp;</label>
+               <span>{{.Request.IntendedUse}}</span>
+            </div>
+            <div>
+               <label class="label">Format:&nbsp;</label>
+               <span>{{.Request.Format}}</span>
+            </div>
+            {{if ne .Request.Resolution ""}}
+            <div>
+               <label class="label">Resolution:&nbsp;</label>
+               <span>{{.Request.Resolution}}</span>
+            </div>
+            {{end}}
+            <div>
+               <label class="label">Instructions:&nbsp;</label>
+               <span>{{.Request.Instructions}}</span>
+            </div>
+         </div>
+         <div>
+            <h3>Item Information</h3>
+            {{range $index, $item := .Items}}
+            <div>
+               <h4>Item #{{inc $index}}</h4>
+               <div>
+                  <label class="label">Title:&nbsp;</label>
+                  <span>{{$item.Title}}</span>
+               </div>
+               <div>
+                  <label class="label">Pages:&nbsp;</label>
+                  <span>{{$item.Pages}}</span>
+               </div>
+               {{if ne $item.CallNumber ""}}
+               <div>
+                  <label class="label">Call Number:&nbsp;</label>
+                  <span>{{$item.CallNumber}}</span>
+               </div>
+               {{end}}
+               {{if ne $item.Author ""}}
+               <div>
+                  <label class="label">Author:&nbsp;</label>
+                  <span>{{$item.Author}}</span>
+               </div>
+               {{end}}
+               {{if ne $item.Published ""}}
+               <div>
+                  <label class="label">Year Published:&nbsp;</label>
+                  <span>{{$item.Published}}</span>
+               </div>
+               {{end}}
+               {{if ne $item.Location ""}}
+               <div>
+                  <label class="label">Location:&nbsp;</label>
+                  <span>{{$item.Location}}</span>
+               </div>
+               {{end}}
+               {{if ne $item.Link ""}}
+               <div>
+                  <label class="label">Web Link:&nbsp;</label>
+                  <span>{{$item.Link}}</span>
+               </div>
+               {{end}}
+               {{if ne $item.Description ""}}
+               <div>
+                  <label class="label">Additional Info:&nbsp;</label>
+                  <span>{{$item.Description}}</span>
+               </div>
+               {{end}}
+            </div>
+            {{end}}
          </div>
       </div>
       <div>
