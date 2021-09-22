@@ -120,10 +120,10 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 	order := orderRec{CustomeerID: req.User.ID, DateDue: req.Request.DueDate, Instructions: req.Request.Instructions,
 		DateSubmitted: time.Now(), CreatedAt: time.Now(), UpdatedAt: time.Now(), Status: "requested"}
 	log.Printf("INFO: create order %+v", order)
-	err = svc.DB.Model(&order).Insert()
-	if err != nil {
-		log.Printf("ERROR: unable to create order: %s", err.Error())
-		c.String(http.StatusInternalServerError, err.Error())
+	addErr := svc.DB.Model(&order).Insert()
+	if addErr != nil {
+		log.Printf("ERROR: unable to create order: %s", addErr.Error())
+		c.String(http.StatusInternalServerError, addErr.Error())
 		return
 	}
 
@@ -155,7 +155,7 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 			rec.Description.Valid = true
 		}
 		itemErr := svc.DB.Model(&rec).Insert()
-		if err != nil {
+		if itemErr != nil {
 			log.Printf("ERROR: unable to add items to order: %s", itemErr.Error())
 			c.String(http.StatusInternalServerError, itemErr.Error())
 			return
