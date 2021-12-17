@@ -140,6 +140,9 @@ export default createStore({
       },
       nextAddress(state) {
          state.currAddressIdx++
+         if ( state.addresses.length < state.currAddressIdx+1) {
+            state.addresses.push( {addressType: "business", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: ""})
+         }
       },
       setComputeID(state, cid) {
          state.computeID = cid
