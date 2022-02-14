@@ -7,20 +7,24 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"text/template"
+	"time"
 
 	"github.com/gin-gonic/gin"
-	dbx "github.com/go-ozzo/ozzo-dbx"
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/gomail.v2"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // ServiceContext contains common data used by all handlers
 type serviceContext struct {
-	Version     string
-	TrackSysURL string
-	DB          *dbx.DB
-	SMTP        smtpConfig
-	Dev         devConfig
+	Version         string
+	TrackSysURL     string
+	GDB             *gorm.DB
+	ConfirmTemplate *template.Template
+	SMTP            smtpConfig
+	Dev             devConfig
 }
 
 // InitializeService sets up the service context for all API handlers
@@ -30,16 +34,30 @@ func initializeService(version string, cfg *configData) *serviceContext {
 		Dev:         cfg.dev,
 		SMTP:        cfg.smtp}
 
-	log.Printf("INFO: connecting to DB...")
+	log.Printf("INFO: connecting to db...")
 	connectStr := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
 		cfg.db.User, cfg.db.Pass, cfg.db.Host, cfg.db.Name)
-	db, err := dbx.Open("mysql", connectStr)
+	gdb, err := gorm.Open(mysql.Open(connectStr), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	ctx.DB = db
-	db.LogFunc = log.Printf
-	log.Printf("INFO: DB Connection established")
+	ctx.GDB = gdb
+	log.Printf("INFO: db connection established")
+
+	log.Printf("INFO: load confirmation email template")
+	funcMap := template.FuncMap{
+		"inc": func(i int) int {
+			return i + 1
+		},
+		"dateFmt": func(d time.Time) string {
+			return d.Format("2006-01-02")
+		},
+	}
+	tpl, err := template.New("confirmation.html").Funcs(funcMap).ParseFiles("./templates/confirmation.html")
+	if err != nil {
+		log.Fatal(fmt.Sprintf("unable to load confirmation template: %s", err.Error()))
+	}
+	ctx.ConfirmTemplate = tpl
 
 	return &ctx
 }
@@ -76,11 +94,15 @@ func (svc *serviceContext) healthCheck(c *gin.Context) {
 	hcMap := make(map[string]hcResp)
 	hcMap["ts-orders"] = hcResp{Healthy: true}
 
-	err := svc.DB.DB().Ping()
+	hcMap["ts-database"] = hcResp{Healthy: true}
+	sqlDB, err := svc.GDB.DB()
 	if err != nil {
 		hcMap["ts-database"] = hcResp{Healthy: false, Message: err.Error()}
 	} else {
-		hcMap["ts-database"] = hcResp{Healthy: true}
+		err := sqlDB.Ping()
+		if err != nil {
+			hcMap["ts-database"] = hcResp{Healthy: false, Message: err.Error()}
+		}
 	}
 
 	c.JSON(http.StatusOK, hcMap)

@@ -4,12 +4,12 @@
          <dl>
             <dt>Date Due:</dt>
             <dd>{{formattedDueDate}}</dd>
-            <template v-if="request.specialInstructions">
+            <template v-if="specialInstructions">
                <dt>Special Instructions:</dt>
-               <dd>{{request.specialInstructions}}</dd>
+               <dd>{{specialInstructions}}</dd>
             </template>
             <dt>Intended Use:</dt>
-            <dd>{{intendedUse(request.intendedUseID)}}</dd>
+            <dd>{{intendedUse(intendedUseID)}}</dd>
          </dl>
       </div>
       <div class="items">
@@ -69,15 +69,17 @@ export default {
       ...mapState({
          error: state => state.error,
          items: state => state.items,
-         request: state => state.request
+         dateDue: state => state.dateDue,
+         specialInstructions: state => state.specialInstructions,
+         intendedUseID: state => state.intendedUseID,
       }),
       ...mapGetters([
          'intendedUse'
       ]),
       formattedDueDate() {
-         const day = `${this.request.dueDate.getDate()}`
-         const month = `${this.request.dueDate.getMonth()+1}`
-         const year = this.request.dueDate.getFullYear()
+         const day = `${this.dateDue.getDate()}`
+         const month = `${this.dateDue.getMonth()+1}`
+         const year = this.dateDue.getFullYear()
          return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
       },
    },

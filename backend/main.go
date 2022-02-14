@@ -10,7 +10,7 @@ import (
 )
 
 // Version of the service
-const Version = "1.0.1"
+const Version = "1.2.0"
 
 func main() {
 	// Load cfg
@@ -35,7 +35,7 @@ func main() {
 		api.POST("/users", svc.updateUser)
 		api.GET("/users/:id/address", svc.getUserAddress)
 		api.POST("/users/:id/address", svc.updateUserAddress)
-		api.POST("/submit", svc.submitRequest)
+		api.POST("/users/:id/submit", svc.submitRequest)
 	}
 
 	// Note: in dev mode, this is never actually used. The front end is served

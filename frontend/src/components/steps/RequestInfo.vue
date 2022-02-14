@@ -6,7 +6,7 @@
             Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it.
             <span class="important">Starting mid-November through mid-January additional turnaround time is required due to the holiday season.</span>
          </div>
-         <datepicker v-model="dueDate" class="picker"/>
+         <datepicker v-model="dateDue" class="picker"/>
       </div>
       <div class="form-row">
          <label for="instruct">Special Instructions</label>
@@ -76,7 +76,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
    computed: {
       ...mapFields([
-         'request.dueDate', 'request.specialInstructions', 'request.intendedUseID'
+         'dateDue', 'specialInstructions', 'intendedUseID'
       ]),
       ...mapState({
          error: state => state.error,
@@ -97,7 +97,7 @@ export default {
          this.$router.push("/")
       },
       nextClicked() {
-         if (this.dueDate == "" || this.dueDate == null) {
+         if (this.dateDue == "" || this.dateDue == null) {
             this.$store.commit("setError", "Due date is required")
             return
          }

@@ -29,12 +29,12 @@
             </div>
             <div>
                <label class="label">Academic Status:&nbsp;</label>
-               <span>{{.User.AcademicStatus}}</span>
+               <span>{{.User.AcademicStatus.Name}}</span>
             </div>
          </div>
-         {{range .Addresses}}
+         {{range .User.Addresses}}
          <div>
-            {{if eq .Type "primary"}}
+            {{if eq .AddressType "primary"}}
             <h3>Primary Address</h3>
             {{else}}
             <h3>Billing Address</h3>
@@ -57,7 +57,7 @@
             </div>
             <div>
                <label class="label">Zip:&nbsp;</label>
-               <span>{{.Zip}}</span>
+               <span>{{.PostCode}}</span>
             </div>
             <div>
                <label class="label">Country:&nbsp;</label>
@@ -73,25 +73,25 @@
             <h3>Request Information</h3>
             <div>
                <label class="label">Due Date:&nbsp;</label>
-               <span>{{dateFmt .Request.DueDate}}</span>
+               <span>{{dateFmt .DueDate}}</span>
             </div>
             <div>
                <label class="label">Intended Use:&nbsp;</label>
-               <span>{{.Request.IntendedUse}}</span>
+               <span>{{.IntendedUse.Description}}</span>
             </div>
             <div>
                <label class="label">Format:&nbsp;</label>
-               <span>{{.Request.Format}}</span>
+               <span>{{.IntendedUse.DeliverableFormat}}</span>
             </div>
-            {{if ne .Request.Resolution ""}}
+            {{if ne .IntendedUse.DeliverableResolution ""}}
             <div>
                <label class="label">Resolution:&nbsp;</label>
-               <span>{{.Request.Resolution}}</span>
+               <span>{{.IntendedUse.DeliverableResolution}}</span>
             </div>
             {{end}}
             <div>
                <label class="label">Instructions:&nbsp;</label>
-               <span>{{.Request.Instructions}}</span>
+               <span>{{.SpecialInstructions}}</span>
             </div>
          </div>
          <div>
@@ -119,10 +119,10 @@
                   <span>{{$item.Author}}</span>
                </div>
                {{end}}
-               {{if ne $item.Published ""}}
+               {{if ne $item.Year ""}}
                <div>
                   <label class="label">Year Published:&nbsp;</label>
-                  <span>{{$item.Published}}</span>
+                  <span>{{$item.Year}}</span>
                </div>
                {{end}}
                {{if ne $item.Location ""}}
@@ -131,10 +131,10 @@
                   <span>{{$item.Location}}</span>
                </div>
                {{end}}
-               {{if ne $item.Link ""}}
+               {{if ne $item.SourceURL ""}}
                <div>
                   <label class="label">Web Link:&nbsp;</label>
-                  <span>{{$item.Link}}</span>
+                  <span>{{$item.SourceURL}}</span>
                </div>
                {{end}}
                {{if ne $item.Description ""}}

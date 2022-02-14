@@ -10,11 +10,11 @@ export default createStore({
       constants: {},
       currStepIdx: 0,
       steps: [
-         {name: "Customer Information", component: "CustomerInfo", page: 1},
-         {name: "Address Information", component: "AddressInfo", page: 2},
-         {name: "General Request Information", component: "RequestInfo", page: 3},
-         {name: "Item Information", component: "ItemInfo", page: 4},
-         {name: "Review Order", component: "ReviewOrder", page: 5},
+         { name: "Customer Information", component: "CustomerInfo", page: 1 },
+         { name: "Address Information", component: "AddressInfo", page: 2 },
+         { name: "General Request Information", component: "RequestInfo", page: 3 },
+         { name: "Item Information", component: "ItemInfo", page: 4 },
+         { name: "Review Order", component: "ReviewOrder", page: 5 },
       ],
       computeID: "",
       differentBillingAddress: false,
@@ -24,16 +24,13 @@ export default createStore({
          lastName: "",
          email: "",
          academicStatusID: 0,
-         academicStatus: ""
       },
       currAddressIdx: 0,
       addresses: [],
-      request: {
-         dueDate: "",
-         specialInstructions: "",
-         intendedUseID: 0
-      },
       currItemIdx: -1,
+      dateDue: "",
+      specialInstructions: "",
+      intendedUseID: 0,
       items: [],
       origItem: {},
       itemMode: "add",
@@ -52,7 +49,7 @@ export default createStore({
       },
       academicStatusName: state => (id) => {
          let vals = state.constants['academicStatus']
-         let v = vals.find( item => item.id == id)
+         let v = vals.find(item => item.id == id)
          if (v) {
             return v.name
          }
@@ -63,7 +60,7 @@ export default createStore({
       },
       intendedUse: state => (id) => {
          let uses = state.constants['intendedUse']
-         let v = uses.find( item => item.id == id)
+         let v = uses.find(item => item.id == id)
          if (v) {
             return v.name
          }
@@ -78,32 +75,32 @@ export default createStore({
       editItem(state, idx) {
          state.currItemIdx = idx
          state.currStepIdx = 3
-         state.itemMode =  "edit"
+         state.itemMode = "edit"
          state.origItem = Object.assign({}, state.items[state.currItemIdx])
       },
       itemEditCanceled(state) {
-         state.items.splice(state.currItemIdx, 1,  state.origItem )
+         state.items.splice(state.currItemIdx, 1, state.origItem)
          state.currStepIdx = 4
-         state.itemMode =  "add"
+         state.itemMode = "add"
          state.origItem = {}
       },
       itemEditDone(state) {
-         state.itemMode =  "add"
+         state.itemMode = "add"
          state.currStepIdx = 4
          state.origItem = {}
       },
       addItem(state) {
-         state.items.push( {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""} )
-         state.currItemIdx = state.items.length -1
+         state.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
+         state.currItemIdx = state.items.length - 1
       },
       addMoreItems(state) {
-         state.items.push( {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""} )
-         state.currItemIdx = state.items.length -1
-         state.itemMode =  "add"
+         state.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
+         state.currItemIdx = state.items.length - 1
+         state.itemMode = "add"
          state.currStepIdx = 3
       },
       removeItem(state, idx) {
-         if (idx < 0 || idx > state.items.length-1) return
+         if (idx < 0 || idx > state.items.length - 1) return
          state.items.splice(idx, 1)
       },
       clearError(state) {
@@ -117,7 +114,6 @@ export default createStore({
          state.customer.lastName = ""
          state.customer.email = ""
          state.customer.academicStatusID = 0
-         state.customer.academicStatus = ""
          state.addresses.splice(0, state.addresses.length)
          state.currAddressIdx = 0
          state.items.splice(0, state.items.length)
@@ -133,15 +129,15 @@ export default createStore({
          state.addresses.splice(0, state.addresses.length)
       },
       setAddresses(state, data) {
-         data.forEach( addr => state.addresses.push( Object.assign({}, addr) ))
+         data.forEach(addr => state.addresses.push(Object.assign({}, addr)))
          if (state.addresses.length == 0) {
-            state.addresses.push( {addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: ""})
+            state.addresses.push({ addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" })
          }
       },
       nextAddress(state) {
          state.currAddressIdx++
-         if ( state.addresses.length < state.currAddressIdx+1) {
-            state.addresses.push( {addressType: "business", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: ""})
+         if (state.addresses.length < state.currAddressIdx + 1) {
+            state.addresses.push({ addressType: "business", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" })
          }
       },
       setComputeID(state, cid) {
@@ -154,9 +150,9 @@ export default createStore({
       initRequest(state) {
          let sd = new Date()
          sd.setDate(sd.getDate() + 29)
-         state.request.dueDate = sd
+         state.dateDue = sd
          state.items.splice(0, state.items.length)
-         state.items.push( {title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: ""} )
+         state.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
          state.currItemIdx = 0
       },
       setError(state, err) {
@@ -177,11 +173,6 @@ export default createStore({
          state.customer.lastName = data.lastName
          state.customer.email = data.email
          state.customer.academicStatusID = data.academicStatusID
-         let vals = state.constants['academicStatus']
-         let as = vals.find( item => item.id == data.academicStatusID)
-         if (as) {
-            state.customer.academicStatus = as.name
-         }
       },
       setWorking(state, flag) {
          state.working = flag
@@ -191,14 +182,14 @@ export default createStore({
       getVersion(ctx) {
          axios.get("/version").then(response => {
             ctx.commit('setVersion', response.data)
-         }).catch( _e => {
+         }).catch(_e => {
             // NO-OP
          })
       },
       getConstants(ctx) {
          axios.get(`/api/constants`).then(response => {
             ctx.commit("setConstants", response.data)
-         }).catch( _e => {
+         }).catch(_e => {
             // NO-OP, there is just no constants
          })
       },
@@ -209,7 +200,7 @@ export default createStore({
             axios.get(`/api/users/${ctx.state.computeID}`).then(response => {
                ctx.commit("setUserData", response.data)
                ctx.commit("setWorking", false)
-            }).catch( _e => {
+            }).catch(_e => {
                // NO-OP, there is just no user data pre-populated
                ctx.commit("setWorking", false)
             })
@@ -222,7 +213,7 @@ export default createStore({
             ctx.commit("setAddresses", response.data)
             ctx.commit("setWorking", false)
             ctx.commit("nextStep")
-         }).catch( _e => {
+         }).catch(_e => {
             // NO-OP, there is just no user data pre-populated
             ctx.commit("setWorking", false)
          })
@@ -232,15 +223,15 @@ export default createStore({
          axios.post(`/api/users`, ctx.state.customer).then(response => {
             ctx.commit("setUserData", response.data)
             ctx.dispatch("getAddressInfo")
-         }).catch( err => {
+         }).catch(err => {
             ctx.commit("setError", err)
             ctx.commit("setWorking", false)
          })
       },
       updateAddress(ctx) {
          ctx.commit("setWorking", true)
-         let currAddr = ctx.state.addresses[ ctx.state.currAddressIdx ]
-         axios.post(`/api/users/${ctx.state.customer.id}/address`, currAddr).then( _response => {
+         let currAddr = ctx.state.addresses[ctx.state.currAddressIdx]
+         axios.post(`/api/users/${ctx.state.customer.id}/address`, currAddr).then(_response => {
             if (ctx.state.differentBillingAddress && ctx.state.currAddressIdx == 0) {
                ctx.commit("nextAddress")
                ctx.commit("setWorking", false)
@@ -249,7 +240,7 @@ export default createStore({
                ctx.commit("nextStep")
                ctx.commit("setWorking", false)
             }
-         }).catch( err => {
+         }).catch(err => {
             ctx.commit("setError", err)
             ctx.commit("setWorking", false)
          })
@@ -257,20 +248,15 @@ export default createStore({
       submitOrder(ctx) {
          ctx.commit("setWorking", true)
          let req = {
-            user: ctx.state.customer,
-            addresses: [],
-            request: ctx.state.request,
+            dateDue: ctx.state.dateDue,
+            intendedUseID: ctx.state.intendedUseID,
+            specialInstructions: ctx.state.specialInstructions,
             items: ctx.state.items,
          }
-         if (ctx.state.differentBillingAddress == false) {
-            req.addresses.push(ctx.state.addresses[0])
-         } else {
-            req.addresses = ctx.state.addresses
-         }
-         axios.post(`/api/submit`, req).then( _response => {
+         axios.post(`/api/users/${ctx.state.customer.id}/submit`, req).then(_response => {
             this.router.push("/thanks")
             ctx.commit("setWorking", false)
-         }).catch( err => {
+         }).catch(err => {
             ctx.commit("setError", err)
             ctx.commit("setWorking", false)
          })
