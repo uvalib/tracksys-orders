@@ -21,6 +21,20 @@
             </span>
          </p>
          <p>
+            <span class="warn">Notice: Sales Tax Collection</span>
+            <span class="dash">—</span>
+            The University of Virginia is required to collect sales tax for online sales delivered to the following states:
+            District of Colombia, North Carolina, New Jersey, Ohio, Pennsylvania, and Virginia. If you are in one of these localities your payment
+            total will include the original asking price plus the total of any sales tax owed on the purchase. If you are not located in one of these states,
+            you will not have sales tax added to your purchase.
+         </p>
+         <p>
+            <span class="warn">Notice: Sales Tax Exemption</span>
+            <span class="dash">—</span>
+            If you represent a tax-exempt organization, please contact <a href="mailto:digitalservices@virginia.edu">digitalservices@virginia.edu</a>
+            to provide a sales tax exemption certificate. Upon reception of a valid exemption certificate, the Library will provide instructions for payment.
+         </p>
+         <p>
             <span class="warn">Notice: Digitizing Personal Items</span>
             <span class="dash">—</span>
             <span>
