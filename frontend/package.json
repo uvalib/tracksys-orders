@@ -1,18 +1,15 @@
 {
   "name": "tracksys-orders",
   "version": "1.0.0",
-  "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5050",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "axios": "^0.21.4",
-    "core-js": "^3.6.5",
-    "sass": "^1.39.2",
-    "sass-loader": "^10",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-country-region-select": "^1.0.0",
@@ -21,14 +18,10 @@
     "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0"
+    "@vitejs/plugin-vue": "^2.2.2",
+    "eslint": "^8.5.0",
+    "eslint-plugin-vue": "^8.2.0",
+    "sass": "^1.49.9",
+    "vite": "^2.8.4"
   }
 }

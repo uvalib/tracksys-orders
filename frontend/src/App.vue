@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import UvaLibraryLogo from "@/components/UvaLibraryLogo"
-import UvaLibraryFooter from "@/components/UvaLibraryFooter"
+import UvaLibraryLogo from "@/components/UvaLibraryLogo.vue"
+import UvaLibraryFooter from "@/components/UvaLibraryFooter.vue"
 export default {
    components: {
       UvaLibraryLogo, UvaLibraryFooter

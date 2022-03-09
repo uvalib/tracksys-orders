@@ -13,11 +13,11 @@
 
 <script>
 import { mapState, mapGetters } from "vuex"
-import CustomerInfo from "@/components/steps/CustomerInfo"
-import AddressInfo from "@/components/steps/AddressInfo"
-import RequestInfo from "@/components/steps/RequestInfo"
-import ItemInfo from "@/components/steps/ItemInfo"
-import ReviewOrder from "@/components/steps/ReviewOrder"
+import CustomerInfo from "@/components/steps/CustomerInfo.vue"
+import AddressInfo from "@/components/steps/AddressInfo.vue"
+import RequestInfo from "@/components/steps/RequestInfo.vue"
+import ItemInfo from "@/components/steps/ItemInfo.vue"
+import ReviewOrder from "@/components/steps/ReviewOrder.vue"
 export default {
    name: 'Request',
    components: {

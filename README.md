@@ -1,6 +1,6 @@
 # TrackSys Orders
 
-TrackSys orders is thepublic facing page used to place orders in TrackSys
+TrackSys orders is the public facing page used to place orders in TrackSys
 
 
 ### System Requirements

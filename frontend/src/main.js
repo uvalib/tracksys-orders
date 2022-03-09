@@ -13,10 +13,10 @@ router.store = store
 app.use(store)
 app.use(router)
 
-import UvaButton from "@/components/UvaButton"
+import UvaButton from "@/components/UvaButton.vue"
 app.component('UvaButton', UvaButton)
 
-import WaitSpinner from "@/components/WaitSpinner"
+import WaitSpinner from "@/components/WaitSpinner.vue"
 app.component('WaitSpinner', WaitSpinner)
 
 import vueCountryRegionSelect from 'vue3-country-region-select'
