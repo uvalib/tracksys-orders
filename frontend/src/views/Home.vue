@@ -92,43 +92,36 @@
          </div>
       </div>
       <div class="button-bar">
-         <uva-button @click="createReequestClicked">Create Request</uva-button>
+         <uva-button @click="createRequestClicked">Create Request</uva-button>
       </div>
    </div>
 </template>
 
-<script>
+<script setup>
 import {useOrderStore} from '@/stores/order'
-export default {
-   name: 'Home',
-   setup() {
-      const orderStore = useOrderStore()
-      return { orderStore }
-   },
-   data() {
-      return {
-         termsAgree: false,
-         isUVA: true,
-         termsError: false
-      }
-   },
-   methods: {
-      createReequestClicked() {
-         this.termsError = false
-         if ( this.termsAgree == false) {
-            this.termsError = true
-            return
-         }
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
-         this.orderStore.clearRequest()
-         if (this.isUVA ) {
-            window.location.href = "/authenticate"
-         } else {
-            this.orderStore.startRequest()
-            this.$router.push("/request")
-         }
-      }
-   },
+const router = useRouter()
+const orderStore = useOrderStore()
+const termsAgree = ref(false)
+const isUVA = ref(true)
+const termsError = ref(false)
+
+function createRequestClicked() {
+   termsError.value = false
+   if ( termsAgree.value == false) {
+      termsError.value = true
+      return
+   }
+
+   orderStore.clearRequest()
+   if (isUVA.value ) {
+      window.location.href = "/authenticate"
+   } else {
+      orderStore.startRequest()
+      router.push("/request")
+   }
 }
 </script>
 

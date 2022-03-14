@@ -127,5 +127,5 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 		}
 	}
 
-	c.String(http.StatusOK, "ok")
+	c.String(http.StatusOK, fmt.Sprintf("%d", newOrder.ID))
 }

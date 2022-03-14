@@ -3,7 +3,7 @@
       <div class="request">
          <dl>
             <dt>Date Due:</dt>
-            <dd>{{formattedDueDate}}</dd>
+            <dd>{{formattedDueDate()}}</dd>
             <template v-if="orderStore.specialInstructions">
                <dt>Special Instructions:</dt>
                <dd>{{orderStore.specialInstructions}}</dd>
@@ -62,40 +62,35 @@
    </div>
 </template>
 
-<script>
+<script setup>
 import {useOrderStore} from '@/stores/order'
-export default {
-   setup() {
-      const orderStore = useOrderStore()
-      return { orderStore }
-   },
-   computed: {
-      formattedDueDate() {
-         const day = `${this.orderStore.dateDue.getDate()}`
-         const month = `${this.orderStore.dateDue.getMonth()+1}`
-         const year = this.orderStore.dateDue.getFullYear()
-         return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
-      },
-   },
-   methods: {
-      cancelClicked() {
-         this.orderStore.clearRequest()
-         this.$router.push("/")
-      },
-      editClicked(idx) {
-         this.orderStore.editItem(idx)
-      },
-      deleteClicked(idx) {
-         this.orderStore.removeItem(idx)
-      },
-      addClicked() {
-         this.orderStore.addMoreItems()
-      },
-      submitClicked() {
-         this.orderStore.submitOrder()
-      }
-   }
-};
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const orderStore = useOrderStore()
+
+function formattedDueDate() {
+   const day = `${orderStore.dateDue.getDate()}`
+   const month = `${orderStore.dateDue.getMonth()+1}`
+   const year = orderStore.dateDue.getFullYear()
+   return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
+}
+function cancelClicked() {
+   orderStore.clearRequest()
+   router.push("/")
+}
+function editClicked(idx) {
+   orderStore.editItem(idx)
+}
+function deleteClicked(idx) {
+   orderStore.removeItem(idx)
+}
+function addClicked() {
+   orderStore.addMoreItems()
+}
+function submitClicked() {
+   orderStore.submitOrder()
+}
 </script>
 
 <style scoped lang="scss">

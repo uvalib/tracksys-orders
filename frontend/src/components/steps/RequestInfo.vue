@@ -70,37 +70,29 @@
    </div>
 </template>
 
-<script>
+<script setup>
 import {useOrderStore} from '@/stores/order'
-export default {
-   setup() {
-      const orderStore = useOrderStore()
-      return { orderStore }
-   },
-   methods: {
-      formatDate(date) {
-         const day = `${date.getDate()}`
-         const month = `${date.getMonth()+1}`
-         const year = date.getFullYear()
-         return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
-      },
-      cancelClicked() {
-         this.orderStore.clearRequest()
-         this.$router.push("/")
-      },
-      nextClicked() {
-         if (this.orderStore.dateDue == "" || this.orderStore.dateDue == null) {
-            this.orderStore.setError("Due date is required")
-            return
-         }
-         if (this.orderStore.intendedUseID == 0) {
-            this.orderStore.setError("Intended use is required")
-            return
-         }
-         this.orderStore.nextStep()
-      }
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const orderStore = useOrderStore()
+
+function cancelClicked() {
+   orderStore.clearRequest()
+   router.push("/")
+}
+
+function nextClicked() {
+   if (orderStore.dateDue == "" || orderStore.dateDue == null) {
+      orderStore.setError("Due date is required")
+      return
    }
-};
+   if (orderStore.intendedUseID == 0) {
+      orderStore.setError("Intended use is required")
+      return
+   }
+   orderStore.nextStep()
+}
 </script>
 
 <style scoped lang="scss">

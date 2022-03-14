@@ -81,24 +81,9 @@
    </footer>
 </template>
 
-<script>
-import { mapStores } from 'pinia'
+<script setup>
 import {useOrderStore} from '@/stores/order'
-export default {
-   computed: {
-      ...mapStores(useOrderStore),
-   },
-   data: function() {
-      return {
-         showFeedbackLinks: false,
-      }
-   },
-   methods: {
-   },
-   mounted() {
-      this.orderStore.getVersion()
-   }
-}
+const orderStore = useOrderStore()
 </script>
 
 <style scoped lang="scss">

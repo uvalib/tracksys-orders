@@ -55,48 +55,45 @@
    </div>
 </template>
 
-<script>
+<script setup>
 import {useOrderStore} from '@/stores/order'
-export default {
-   setup() {
-      const orderStore = useOrderStore()
-      return { orderStore }
-   },
-   computed: {
-      item() {
-         return this.orderStore.items[this.orderStore.currItemIdx]
-      }
-   },
-   methods: {
-      cancelEditClicked() {
-         this.orderStore.itemEditCanceled()
-      },
-      updateClicked() {
-         this.orderStore.itemEditDone()
-      },
-      cancelClicked() {
-         this.orderStore.clearRequest()
-         this.$router.push("/")
-      },
-      addClicked() {
-         if ( this.item.title == "" || this.item.pages == "") {
-            this.orderStore.setError("Title and Image/Pages are are required.")
-            return
-         }
-         this.$store.commit("addItem")
-         this.$nextTick( () => {
-            let titleInput = document.getElementById("title")
-            titleInput.focus()
-         })
-      },
-      completeClicked() {
-         if ( this.item.title == "" || this.item.pages == "") {
-            this.orderStore.setError("Title and Image/Pages are are required.")
-            return
-         }
-         this.orderStore.nextStep()
-      },
-   },
+import {useRouter} from 'vue-router'
+import { computed, nextTick } from 'vue'
+
+const router = useRouter()
+const orderStore = useOrderStore()
+
+const item = computed(() => {
+   return orderStore.items[orderStore.currItemIdx]
+})
+
+function cancelEditClicked() {
+   orderStore.itemEditCanceled()
+}
+function updateClicked() {
+   orderStore.itemEditDone()
+}
+function cancelClicked() {
+   orderStore.clearRequest()
+   router.push("/")
+}
+function addClicked() {
+   if ( item.value.title == "" || item.value.pages == "") {
+      orderStore.setError("Title and Image/Pages are are required.")
+      return
+   }
+   orderStore.addItem()
+   nextTick( () => {
+      let titleInput = document.getElementById("title")
+      titleInput.focus()
+   })
+}
+function completeClicked() {
+   if ( item.value.title == "" || item.value.pages == "") {
+      orderStore.setError("Title and Image/Pages are are required.")
+      return
+   }
+   orderStore.nextStep()
 }
 </script>
 

@@ -27,34 +27,32 @@
    </div>
 </template>
 
-<script>
+<script setup>
 import {useOrderStore} from '@/stores/order'
-export default {
-   setup() {
-      const orderStore = useOrderStore()
-      return { orderStore }
-   },
-   methods: {
-      cancelClicked() {
-         this.orderStore.clearRequest()
-         this.$router.push("/")
-      },
-      nextClicked() {
-         if (this.orderStore.computeID.length == 0) {
-            this.orderStore.customer.academicStatusID = 1
-         }
-         if ( this.orderStore.customer.email.length == 0) {
-            this.orderStore.setError("Customer email is required")
-            return
-         }
-         if ( this.orderStore.customer.academicStatusID == 0) {
-            this.orderStore.setError("Academic status is required")
-            return
-         }
-         this.orderStore.updateCustomer()
-      }
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const orderStore = useOrderStore()
+
+function cancelClicked() {
+   orderStore.clearRequest()
+   router.push("/")
+}
+
+function nextClicked() {
+   if (orderStore.computeID.length == 0) {
+      orderStore.customer.academicStatusID = 1
    }
-};
+   if ( orderStore.customer.email.length == 0) {
+      orderStore.setError("Customer email is required")
+      return
+   }
+   if ( orderStore.customer.academicStatusID == 0) {
+      orderStore.setError("Academic status is required")
+      return
+   }
+   orderStore.updateCustomer()
+}
 </script>
 
 <style scoped lang="scss">

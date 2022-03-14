@@ -42,31 +42,28 @@
    </div>
 </template>
 
-<script>
+<script setup>
 import {useOrderStore} from '@/stores/order'
-export default {
-   setup() {
-      const orderStore = useOrderStore()
-      return { orderStore }
-   },
-   computed: {
-      address() {
-         return this.orderStore.currAddress
-      },
-      addressType() {
-         return this.address.addressType
-      }
-   },
-   methods: {
-      cancelClicked() {
-         this.orderStore.clearRequest()
-         this.$router.push("/")
-      },
-      nextClicked() {
-         this.orderStore.updateAddress()
-      }
-   },
-};
+import { useRouter } from 'vue-router'
+import {computed} from 'vue'
+
+const router = useRouter()
+const orderStore = useOrderStore()
+
+const address = computed(() => {
+   return orderStore.currAddress
+})
+const addressType = computed(() => {
+   return  orderStore.currAddress.addressType
+})
+
+function cancelClicked() {
+   orderStore.clearRequest()
+   router.push("/")
+}
+function nextClicked() {
+  orderStore.updateAddress()
+}
 </script>
 
 <style scoped lang="scss">

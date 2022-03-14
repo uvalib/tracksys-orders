@@ -15,14 +15,17 @@
    </div>
 </template>
 
-<script>
+<script setup>
 import UvaLibraryLogo from "@/components/UvaLibraryLogo.vue"
 import UvaLibraryFooter from "@/components/UvaLibraryFooter.vue"
-export default {
-   components: {
-      UvaLibraryLogo, UvaLibraryFooter
-   }
-}
+import {useOrderStore} from '@/stores/order'
+import { onMounted } from 'vue'
+
+const orderStore = useOrderStore()
+
+onMounted( () => {
+   orderStore.getVersion()
+})
 </script>
 
 <style lang="scss">

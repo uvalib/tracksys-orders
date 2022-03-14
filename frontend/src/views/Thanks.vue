@@ -20,7 +20,7 @@
                   <dt>Email</dt>
                   <dd>{{orderStore.customer.email}}</dd>
                   <dt>Academic Status</dt>
-                  <dd>{{orderStore.academicStatus}}</dd>
+                  <dd>{{academicStatus}}</dd>
                </dl>
             </div>
             <div class="subsection">
@@ -42,7 +42,7 @@
                   <dd>{{orderStore.addresses[0].phone}}</dd>
                </dl>
             </div>
-            <div class="subsection" v-if="differentBillingAddress">
+            <div class="subsection" v-if="orderStore.differentBillingAddress">
                <h3>Billing Address</h3>
                <dl class="fields">
                   <dt>Address Line 1</dt>
@@ -120,7 +120,7 @@
                <dt>Further Questions?</dt>
                <dd>
                   If you have questions about your request, contact
-                  <a href="digitalservices@virginia.edu" target="_blank">digitalservices@virginia.edu</a> and include the following request number: <strong>{{requestID}}</strong>
+                  <a href="digitalservices@virginia.edu" target="_blank">digitalservices@virginia.edu</a> and include the following request number: <strong>{{orderStore.requestID}}</strong>
                </dd>
             </dl>
          </div>
@@ -131,25 +131,20 @@
    </div>
 </template>
 
-<script>
-import {useOrderStore} from '@/stores/order'
+<script setup>
+import { useOrderStore } from '@/stores/order'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
-   name: 'Thanks',
-   setup() {
-      const orderStore = useOrderStore()
-      return { orderStore }
-   },
-   computed: {
-      academicStatus() {
-         return this.orderStore.academicStatusName(this.orderStorecustomer.academicStatusID)
-      }
-   },
-   methods: {
-      createAnother() {
-         this.$router.push("/")
-      }
-   },
+const router = useRouter()
+const orderStore = useOrderStore()
+
+const academicStatus = computed(() => {
+   return orderStore.academicStatusName(orderStore.customer.academicStatusID)
+})
+
+function createAnother() {
+   router.push("/")
 }
 </script>
 

@@ -144,7 +144,8 @@ export const useOrderStore = defineStore('order', {
             specialInstructions: this.specialInstructions,
             items: this.items,
          }
-         axios.post(`/api/users/${this.customer.id}/submit`, req).then(_response => {
+         axios.post(`/api/users/${this.customer.id}/submit`, req).then(response => {
+            this.requestID = parseInt(response.data, 10)
             this.router.push("/thanks")
             this.working = false
          }).catch(err => {
