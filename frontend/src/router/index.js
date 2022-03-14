@@ -5,6 +5,8 @@ import Thanks from '../views/Thanks.vue'
 import Forbidden from '../views/Forbidden.vue'
 import NotFound from '../views/NotFound.vue'
 
+import { useOrderStore } from '@/stores/order'
+
 const routes = [
    {
       path: '/',
@@ -40,9 +42,10 @@ const router = createRouter({
 
 router.beforeEach((to, _from) => {
    if (to.path === '/granted') {
+      const orderStore = useOrderStore()
       console.log(`User ${to.query.user} authenticated`)
-      router.store.commit("setComputeID", to.query.user)
-      router.store.dispatch("startRequest")
+      orderStore.setComputeID(to.query.user)
+      orderStore.startRequest()
       return  "/request"
    }
 })

@@ -6,14 +6,14 @@
             Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it.
             <span class="important">Starting mid-November through mid-January additional turnaround time is required due to the holiday season.</span>
          </div>
-         <datepicker v-model="dateDue" class="picker"/>
+         <datepicker v-model="orderStore.dateDue" class="picker"/>
       </div>
       <div class="form-row">
          <label for="instruct">Special Instructions</label>
          <div class="note">
             Include any additional information required to fulfill this request.
          </div>
-         <textarea rows="5" id="instruct" v-model="specialInstructions"></textarea>
+         <textarea rows="5" id="instruct" v-model="orderStore.specialInstructions"></textarea>
       </div>
       <div class="form-row">
          <label for="intended-use">How do you intend to use items in this order? (required)</label>
@@ -24,37 +24,37 @@
             <a href="https://small.library.virginia.edu/services/publishing/" target="_blank">Permissions and Publishing</a>
             page for more information.
          </div>
-         <select id="intended-use" v-model="intendedUseID">
+         <select id="intended-use" v-model="orderStore.intendedUseID">
             <option disabled value="0">Select an intended use</option>
-            <option v-for="opt in intendedUses" :key="`u-${opt.id}`" :value="opt.id">{{opt.name}}</option>
+            <option v-for="opt in orderStore.intendedUses" :key="`u-${opt.id}`" :value="opt.id">{{opt.name}}</option>
          </select>
       </div>
 
-      <div class="intended-use-info" v-if="intendedUseID=='100' || intendedUseID=='104' || intendedUseID=='106'">
+      <div class="intended-use-info" v-if="orderStore.intendedUseID=='100' || orderStore.intendedUseID=='104' || orderStore.intendedUseID=='106'">
          <p>
             For this use Digital Production Group will deliver <strong>300dpi JPEG</strong> images suitable for your needs.
             These images will include a copyright statment within a surrounding gray border that states:
          </p>
-         <blockquote class="copyright-note" v-if="intendedUseID=='100'" >
+         <blockquote class="copyright-note" v-if="orderStore.intendedUseID=='100'" >
             This single copy was produced for the purposes of classroom teaching pursuant to 17 USC § 107 (fair use).
             Copyright and other legal restrictions may apply to further uses. Special Collections, University of Virginia Library.
          </blockquote>
-         <blockquote class="copyright-note" v-if="intendedUseID=='104' || intendedUseID=='106'" >
+         <blockquote class="copyright-note" v-if="orderStore.intendedUseID=='104' || orderStore.intendedUseID=='106'" >
             This single copy was produced for the purposes of private study, scholarship, or research pursuant to 17 USC § 107 and/or 108.
             Copyright and other legal restrictions may apply to further uses. Special Collections, University of Virginia Library.
          </blockquote>
          <p>If you require special formats such as TIFF or higher resolutions, please add a note in the Special Instructions field (above.)</p>
       </div>
 
-      <div class="intended-use-info" v-if="intendedUseID=='103' || intendedUseID=='109'" >
+      <div class="intended-use-info" v-if="orderStore.intendedUseID=='103' || orderStore.intendedUseID=='109'" >
          <p>For this use Digital Production Group will deliver <strong>300dpi JPEG</strong> images suitable for your needs.</p>
       </div>
 
-      <div class="intended-use-info" v-if="intendedUseID=='113'" >
+      <div class="intended-use-info" v-if="orderStore.intendedUseID=='113'" >
          <p>For this use Digital Production Group will deliver a <strong>PDF Document</strong> containing images suitable for your needs.</p>
       </div>
 
-      <div class="intended-use-info"  v-if="intendedUseID=='102' || intendedUseID=='105' || intendedUseID=='112' " >
+      <div class="intended-use-info"  v-if="orderStore.intendedUseID=='102' || orderStore.intendedUseID=='105' || orderStore.intendedUseID=='112' " >
          <p>For this use Digital Production Group will deliver <strong>Highest possible dpi TIFF</strong>
             images suitable for your needs.  The resolution of the images is dependent on the size of the physical object.
             Generally, if the item is smaller than 11" on the longest side, the resolution will be 600dpi.
@@ -62,7 +62,7 @@
             Any item larger than 14" on the long side will generally have a resolution of 300dpi.
          </p>
       </div>
-      <p class="error">{{error}}</p>
+      <p class="error">{{orderStore.error}}</p>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
@@ -71,19 +71,11 @@
 </template>
 
 <script>
-import { mapFields } from 'vuex-map-fields'
-import { mapState, mapGetters } from 'vuex'
+import {useOrderStore} from '@/stores/order'
 export default {
-   computed: {
-      ...mapFields([
-         'dateDue', 'specialInstructions', 'intendedUseID'
-      ]),
-      ...mapState({
-         error: state => state.error,
-      }),
-      ...mapGetters([
-        'intendedUses'
-      ])
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
    },
    methods: {
       formatDate(date) {
@@ -93,19 +85,19 @@ export default {
          return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
       },
       cancelClicked() {
-         this.$store.commit("clearRequest")
+         this.orderStore.clearRequest()
          this.$router.push("/")
       },
       nextClicked() {
-         if (this.dateDue == "" || this.dateDue == null) {
-            this.$store.commit("setError", "Due date is required")
+         if (this.orderStore.dateDue == "" || this.orderStore.dateDue == null) {
+            this.orderStore.setError("Due date is required")
             return
          }
-         if (this.intendedUseID == 0) {
-            this.$store.commit("setError", "Intended use is required")
+         if (this.orderStore.intendedUseID == 0) {
+            this.orderStore.setError("Intended use is required")
             return
          }
-         this.$store.commit("nextStep")
+         this.orderStore.nextStep()
       }
    }
 };

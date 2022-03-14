@@ -2,24 +2,24 @@
    <div class="customer">
       <div class="form-row">
          <label for="fname">First Name</label>
-         <input id="fname" type="text" v-model="firstName">
+         <input id="fname" type="text" v-model="orderStore.customer.firstName">
       </div>
       <div class="form-row">
          <label for="lname">Last Name</label>
-         <input id="lname" type="text" v-model="lastName">
+         <input id="lname" type="text" v-model="orderStore.customer.lastName">
       </div>
       <div class="form-row">
          <label for="email">Email</label>
-         <input id="email" type="text" v-model="email" :disabled="computeID.length > 0">
+         <input id="email" type="text" v-model="orderStore.customer.email" :disabled="orderStore.computeID.length > 0">
       </div>
-      <div class="form-row" v-if="computeID.length > 0">
+      <div class="form-row" v-if="orderStore.computeID.length > 0">
          <label for="academic-status">Academic Status</label>
-         <select id="academic-status" v-model="academicStatusID">
+         <select id="academic-status" v-model="orderStore.customer.academicStatusID">
             <option disabled value="0">Select an academic status</option>
-            <option v-for="opt in academicStatuses" :key="`as-${opt.id}`" :value="opt.id">{{opt.name}}</option>
+            <option v-for="opt in orderStore.academicStatuses" :key="`as-${opt.id}`" :value="opt.id">{{opt.name}}</option>
          </select>
       </div>
-      <p class="error">{{error}}</p>
+      <p class="error">{{orderStore.error}}</p>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
@@ -28,39 +28,30 @@
 </template>
 
 <script>
-import { mapFields } from 'vuex-map-fields'
-import { mapState, mapGetters } from 'vuex'
+import {useOrderStore} from '@/stores/order'
 export default {
-   computed: {
-      ...mapFields([
-         'customer.firstName', 'customer.lastName', 'customer.email', 'customer.academicStatusID'
-      ]),
-      ...mapState({
-         error: state => state.error,
-         computeID: state => state.computeID
-      }),
-      ...mapGetters([
-        'academicStatuses'
-      ])
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
    },
    methods: {
       cancelClicked() {
-         this.$store.commit("clearRequest")
+         this.orderStore.clearRequest()
          this.$router.push("/")
       },
       nextClicked() {
-         if (this.computeID.length == 0) {
-            this.academicStatusID = 1
+         if (this.orderStore.computeID.length == 0) {
+            this.orderStore.customer.academicStatusID = 1
          }
-         if ( this.email.length == 0) {
-            this.$store.commit("setError", "Customer email is required")
+         if ( this.orderStore.customer.email.length == 0) {
+            this.orderStore.setError("Customer email is required")
             return
          }
-         if ( this.academicStatusID == 0) {
-            this.$store.commit("setError", "Academic status is required")
+         if ( this.orderStore.customer.academicStatusID == 0) {
+            this.orderStore.setError("Academic status is required")
             return
          }
-         this.$store.dispatch("updateCustomer")
+         this.orderStore.updateCustomer()
       }
    }
 };

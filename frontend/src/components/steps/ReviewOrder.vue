@@ -4,16 +4,16 @@
          <dl>
             <dt>Date Due:</dt>
             <dd>{{formattedDueDate}}</dd>
-            <template v-if="specialInstructions">
+            <template v-if="orderStore.specialInstructions">
                <dt>Special Instructions:</dt>
-               <dd>{{specialInstructions}}</dd>
+               <dd>{{orderStore.specialInstructions}}</dd>
             </template>
             <dt>Intended Use:</dt>
-            <dd>{{intendedUse(intendedUseID)}}</dd>
+            <dd>{{orderStore.intendedUse(orderStore.intendedUseID)}}</dd>
          </dl>
       </div>
       <div class="items">
-         <div class="item" v-for="(item,idx) in items" :key="`item-${idx}`">
+         <div class="item" v-for="(item,idx) in orderStore.items" :key="`item-${idx}`">
             <div class="item-bar">
                <span>Item #{{idx+1}}</span>
                <span class="buttons">
@@ -53,7 +53,7 @@
             </dl>
          </div>
       </div>
-      <p class="error">{{error}}</p>
+      <p class="error">{{orderStore.error}}</p>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="addClicked" class="pad-left">Add Items</uva-button>
@@ -63,42 +63,36 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import {useOrderStore} from '@/stores/order'
 export default {
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
+   },
    computed: {
-      ...mapState({
-         error: state => state.error,
-         items: state => state.items,
-         dateDue: state => state.dateDue,
-         specialInstructions: state => state.specialInstructions,
-         intendedUseID: state => state.intendedUseID,
-      }),
-      ...mapGetters([
-         'intendedUse'
-      ]),
       formattedDueDate() {
-         const day = `${this.dateDue.getDate()}`
-         const month = `${this.dateDue.getMonth()+1}`
-         const year = this.dateDue.getFullYear()
+         const day = `${this.orderStore.dateDue.getDate()}`
+         const month = `${this.orderStore.dateDue.getMonth()+1}`
+         const year = this.orderStore.dateDue.getFullYear()
          return `${year}-${month.padStart(2,"0")}-${day.padStart(2,"0")}`
       },
    },
    methods: {
       cancelClicked() {
-         this.$store.commit("clearRequest")
+         this.orderStore.clearRequest()
          this.$router.push("/")
       },
       editClicked(idx) {
-         this.$store.commit("editItem", idx)
+         this.orderStore.editItem(idx)
       },
       deleteClicked(idx) {
-         this.$store.commit("removeItem", idx)
+         this.orderStore.removeItem(idx)
       },
       addClicked() {
-         this.$store.commit("addMoreItems")
+         this.orderStore.addMoreItems()
       },
       submitClicked() {
-         this.$store.dispatch("submitOrder")
+         this.orderStore.submitOrder()
       }
    }
 };

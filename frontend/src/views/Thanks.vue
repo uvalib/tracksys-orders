@@ -14,56 +14,56 @@
                <h3>Customer Information</h3>
                <dl class="fields">
                   <dt>First Name</dt>
-                  <dd>{{customer.firstName}}</dd>
+                  <dd>{{orderStore.customer.firstName}}</dd>
                   <dt>Last Name</dt>
-                  <dd>{{customer.lastName}}</dd>
+                  <dd>{{orderStore.customer.lastName}}</dd>
                   <dt>Email</dt>
-                  <dd>{{customer.email}}</dd>
+                  <dd>{{orderStore.customer.email}}</dd>
                   <dt>Academic Status</dt>
-                  <dd>{{academicStatus}}</dd>
+                  <dd>{{orderStore.academicStatus}}</dd>
                </dl>
             </div>
             <div class="subsection">
                <h3>Primary Address</h3>
                <dl class="fields">
                   <dt>Address Line 1</dt>
-                  <dd>{{addresses[0].address1}}</dd>
+                  <dd>{{orderStore.addresses[0].address1}}</dd>
                   <dt>Address Line 2</dt>
-                  <dd>{{addresses[0].address2}}</dd>
+                  <dd>{{orderStore.addresses[0].address2}}</dd>
                   <dt>City</dt>
-                  <dd>{{addresses[0].city}}</dd>
+                  <dd>{{orderStore.addresses[0].city}}</dd>
                   <dt>State</dt>
-                  <dd>{{addresses[0].state}}</dd>
+                  <dd>{{orderStore.addresses[0].state}}</dd>
                   <dt>Zip Code</dt>
-                  <dd>{{addresses[0].zip}}</dd>
+                  <dd>{{orderStore.addresses[0].zip}}</dd>
                   <dt>Country</dt>
-                  <dd>{{addresses[0].country}}</dd>
+                  <dd>{{orderStore.addresses[0].country}}</dd>
                   <dt>Phone</dt>
-                  <dd>{{addresses[0].phone}}</dd>
+                  <dd>{{orderStore.addresses[0].phone}}</dd>
                </dl>
             </div>
             <div class="subsection" v-if="differentBillingAddress">
                <h3>Billing Address</h3>
                <dl class="fields">
                   <dt>Address Line 1</dt>
-                  <dd>{{addresses[1].address1}}</dd>
+                  <dd>{{orderStore.addresses[1].address1}}</dd>
                   <dt>Address Line 2</dt>
-                  <dd>{{addresses[1].address2}}</dd>
+                  <dd>{{orderStore.addresses[1].address2}}</dd>
                   <dt>City</dt>
-                  <dd>{{addresses[1].city}}</dd>
+                  <dd>{{orderStore.addresses[1].city}}</dd>
                   <dt>State</dt>
-                  <dd>{{addresses[1].state}}</dd>
+                  <dd>{{orderStore.addresses[1].state}}</dd>
                   <dt>Zip Code</dt>
-                  <dd>{{addresses[1].zip}}</dd>
+                  <dd>{{orderStore.addresses[1].zip}}</dd>
                   <dt>Country</dt>
-                  <dd>{{addresses[1].country}}</dd>
+                  <dd>{{orderStore.addresses[1].country}}</dd>
                   <dt>Phone</dt>
-                  <dd>{{addresses[1].phone}}</dd>
+                  <dd>{{orderStore.addresses[1].phone}}</dd>
                </dl>
             </div>
             <div class="subsection">
                <h3>Item Information</h3>
-               <div v-for="item,idx in items" class="item" :key="`item-${idx}`">
+               <div v-for="item,idx in orderStore.items" class="item" :key="`item-${idx}`">
                   <div class="item-num">Item #{{idx+1}}</div>
                   <dl class="fields indent">
                      <dt>Title</dt>
@@ -132,24 +132,17 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from "vuex"
+import {useOrderStore} from '@/stores/order'
+
 export default {
    name: 'Thanks',
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
+   },
    computed: {
-      ...mapState({
-         error: state => state.error,
-         items: state => state.items,
-         request: state => state.request,
-         customer: state => state.customer,
-         addresses: state => state.addresses,
-         differentBillingAddress: state => state.differentBillingAddress,
-         requestID: state => state.requestID,
-      }),
-      ...mapGetters([
-        'academicStatusName'
-      ]),
       academicStatus() {
-         return this.academicStatusName(this.customer.academicStatusID)
+         return this.orderStore.academicStatusName(this.orderStorecustomer.academicStatusID)
       }
    },
    methods: {

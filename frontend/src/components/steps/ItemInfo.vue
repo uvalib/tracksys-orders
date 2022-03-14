@@ -39,11 +39,11 @@
          </div>
          <textarea rows="2" id="description" v-model="item.description"></textarea>
       </div>
-      <p class="error">{{error}}</p>
+      <p class="error">{{orderStore.error}}</p>
       <div class="help">
          Use the Add Item button to add addtional items to your order. When complete, click Complete Order to review and submit your order.
       </div>
-      <div class="button-bar" v-if="itemMode == 'add'">
+      <div class="button-bar" v-if="orderStore.itemMode == 'add'">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="addClicked" class="pad-left">Add Item</uva-button>
          <uva-button @click="completeClicked" class="pad-left">Complete Order</uva-button>
@@ -56,36 +56,31 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mapMultiRowFields } from 'vuex-map-fields'
+import {useOrderStore} from '@/stores/order'
 export default {
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
+   },
    computed: {
-      ...mapState({
-         error: state => state.error,
-         computeID: state => state.computeID,
-         items: state => state.items,
-         currItemIdx: state => state.currItemIdx,
-         itemMode: state => state.itemMode,
-      }),
-      ...mapMultiRowFields(['items']),
       item() {
-         return this.items[this.currItemIdx]
+         return this.orderStore.items[this.orderStore.currItemIdx]
       }
    },
    methods: {
       cancelEditClicked() {
-         this.$store.commit("itemEditCanceled")
+         this.orderStore.itemEditCanceled()
       },
       updateClicked() {
-         this.$store.commit("itemEditDone")
+         this.orderStore.itemEditDone()
       },
       cancelClicked() {
-         this.$store.commit("clearRequest")
+         this.orderStore.clearRequest()
          this.$router.push("/")
       },
       addClicked() {
          if ( this.item.title == "" || this.item.pages == "") {
-            this.$store.commit("setError", "Title and Image/Pages are are required.")
+            this.orderStore.setError("Title and Image/Pages are are required.")
             return
          }
          this.$store.commit("addItem")
@@ -96,10 +91,10 @@ export default {
       },
       completeClicked() {
          if ( this.item.title == "" || this.item.pages == "") {
-            this.$store.commit("setError", "Title and Image/Pages are are required.")
+            this.orderStore.setError("Title and Image/Pages are are required.")
             return
          }
-         this.$store.commit("nextStep")
+         this.orderStore.nextStep()
       },
    },
 }

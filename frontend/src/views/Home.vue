@@ -98,8 +98,13 @@
 </template>
 
 <script>
+import {useOrderStore} from '@/stores/order'
 export default {
    name: 'Home',
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
+   },
    data() {
       return {
          termsAgree: false,
@@ -115,11 +120,11 @@ export default {
             return
          }
 
-         this.$store.commit("clearRequest")
+         this.orderStore.clearRequest()
          if (this.isUVA ) {
             window.location.href = "/authenticate"
          } else {
-            this.$store.dispatch("startRequest")
+            this.orderStore.startRequest()
             this.$router.push("/request")
          }
       }

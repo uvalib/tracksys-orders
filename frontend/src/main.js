@@ -1,17 +1,17 @@
-import { createApp } from 'vue'
+import { createApp, markRaw } from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
+pinia.use(({ store }) => {
+   store.router = markRaw(router)
+})
 
 const app = createApp(App)
 
-// provide store access to the rouer
-store.router = router
-router.store = store
-
-// bind store and router to all componens as $store and $router
-app.use(store)
-app.use(router)
+app.use( pinia )
+app.use( router )
 
 import UvaButton from "@/components/UvaButton.vue"
 app.component('UvaButton', UvaButton)

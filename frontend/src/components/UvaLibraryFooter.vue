@@ -74,7 +74,7 @@
         <p class="copy">
            <span>Copyright {{ new Date().getFullYear() }} by the Rector and Visitors of the
               <a href="http://www.virginia.edu/">University of Virginia</a></span>
-           <span class="version">&nbsp;-&nbsp;v{{version}}</span>
+           <span class="version">&nbsp;-&nbsp;v{{orderStore.version}}</span>
         </p>
      </div>
    </div>
@@ -82,12 +82,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapStores } from 'pinia'
+import {useOrderStore} from '@/stores/order'
 export default {
    computed: {
-      ...mapState({
-         version: state => state.version
-      })
+      ...mapStores(useOrderStore),
    },
    data: function() {
       return {
@@ -97,7 +96,7 @@ export default {
    methods: {
    },
    mounted() {
-      this.$store.dispatch("getVersion")
+      this.orderStore.getVersion()
    }
 }
 </script>

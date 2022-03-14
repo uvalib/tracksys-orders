@@ -24,7 +24,7 @@
       </div>
       <div class="form-row">
          <label for="country">Country</label>
-         <country-select id="country" v-model="address.country" :country="address.country" topCountry="US" :countryName="true" :usei18n="false" />
+         <country-select id="country" v-model="address.country" :country="address.country" topCountry="US" :countryName="true"/>
       </div>
       <div class="form-row">
          <label for="phone">Phone</label>
@@ -32,9 +32,9 @@
       </div>
       <div class="form-row bill" v-if="addressType=='primary'">
          <label for="billing">Do you have a different billing address?</label>
-         <span class="checkbox"><input id="billing" type="checkbox" v-model="differentBillingAddress"><span>Yes</span></span>
+         <span class="checkbox"><input id="billing" type="checkbox" v-model="orderStore.differentBillingAddress"><span>Yes</span></span>
       </div>
-      <p class="error">{{error}}</p>
+      <p class="error">{{orderStore.error}}</p>
       <div class="button-bar">
          <uva-button @click="cancelClicked">Cancel</uva-button>
          <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
@@ -43,19 +43,15 @@
 </template>
 
 <script>
-import { mapFields } from 'vuex-map-fields'
-import { mapMultiRowFields } from 'vuex-map-fields'
-import { mapState } from 'vuex'
+import {useOrderStore} from '@/stores/order'
 export default {
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
+   },
    computed: {
-      ...mapFields([ 'differentBillingAddress' ]),
-      ...mapState({
-         error: state => state.error,
-         currAddressIdx: state => state.currAddressIdx
-      }),
-      ...mapMultiRowFields(['addresses']),
       address() {
-         return this.addresses[this.currAddressIdx]
+         return this.orderStore.currAddress
       },
       addressType() {
          return this.address.addressType
@@ -63,11 +59,11 @@ export default {
    },
    methods: {
       cancelClicked() {
-         this.$store.commit("clearRequest")
+         this.orderStore.clearRequest()
          this.$router.push("/")
       },
       nextClicked() {
-         this.$store.dispatch("updateAddress")
+         this.orderStore.updateAddress()
       }
    },
 };

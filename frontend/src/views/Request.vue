@@ -2,17 +2,17 @@
    <h1>Digital Production Group Request Form</h1>
    <div class="content">
       <div class="step">
-         <span class="name" v-if="currStep.component != 'ItemInfo'">{{currStep.name}}</span>
-         <span class="name" v-else>Item {{items.length+1}} Information</span>
-         <span class="sequence">Section {{currStep.page}} of {{numSteps}}</span>
+         <span class="name" v-if="orderStore.currStep.component != 'ItemInfo'">{{orderStore.currStep.name}}</span>
+         <span class="name" v-else>Item {{orderStore.items.length+1}} Information</span>
+         <span class="sequence">Section {{orderStore.currStep.page}} of {{orderStore.numSteps}}</span>
       </div>
-      <component :is="currStep.component"></component>
+      <component :is="orderStore.currStep.component"></component>
    </div>
-   <wait-spinner message="Processing..." :overlay="true" v-if="working"/>
+   <wait-spinner message="Processing..." :overlay="true" v-if="orderStore.working"/>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex"
+import {useOrderStore} from '@/stores/order'
 import CustomerInfo from "@/components/steps/CustomerInfo.vue"
 import AddressInfo from "@/components/steps/AddressInfo.vue"
 import RequestInfo from "@/components/steps/RequestInfo.vue"
@@ -23,17 +23,10 @@ export default {
    components: {
        CustomerInfo, AddressInfo, RequestInfo, ItemInfo, ReviewOrder
    },
-   computed: {
-      ...mapState({
-         working : state => state.working,
-         items: state => state.items
-      }),
-      ...mapGetters([
-        'currStep', 'numSteps'
-      ])
+   setup() {
+      const orderStore = useOrderStore()
+      return { orderStore }
    },
-   methods: {
-   }
 }
 </script>
 
