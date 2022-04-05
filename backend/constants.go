@@ -36,7 +36,7 @@ func (svc *serviceContext) getConstants(c *gin.Context) {
 	}
 
 	var uses []intendedUse
-	dbResp = svc.GDB.Where("is_approved = ? and id != ?", 1, 110).Order("description asc").Find(&uses)
+	dbResp = svc.GDB.Where("is_approved = ? and id != ? and id != ?", 1, 101, 110).Order("description asc").Find(&uses)
 	if dbResp.Error != nil {
 		log.Printf("ERROR: unable to get intended uses: %s", dbResp.Error.Error())
 		c.String(http.StatusInternalServerError, dbResp.Error.Error())
