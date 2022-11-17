@@ -135,11 +135,9 @@ type emailRequest struct {
 // SendEmail will and send an email to the specified recipients
 func (svc *serviceContext) SendEmail(request *emailRequest) error {
 	mail := gomail.NewMessage()
-	mail.SetHeader("MIME-version", "1.0")
 	mail.SetHeader("Subject", request.Subject)
 	mail.SetHeader("To", request.To...)
 	mail.SetHeader("From", request.From)
-	mail.SetHeader("Content-Transfer-Encoding", "BASE64")
 	if request.ReplyTo != "" {
 		mail.SetHeader("Reply-To", request.ReplyTo)
 	}
