@@ -33,7 +33,9 @@ export const useOrderStore = defineStore('order', {
       items: [],
       origItem: {},
       itemMode: "add",
-      requestID: ""
+      requestID: "",
+      termsAgreed: false,
+      isUVA: false
    }),
    getters: {
       currAddress: state => {

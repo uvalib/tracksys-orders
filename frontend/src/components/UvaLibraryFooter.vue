@@ -73,8 +73,8 @@
      <div class="legal">
         <p class="copy">
            <span>Copyright {{ new Date().getFullYear() }} by the Rector and Visitors of the
-              <a href="http://www.virginia.edu/">University of Virginia</a></span>
-           <span class="version">&nbsp;-&nbsp;v{{orderStore.version}}</span>
+              <a href="http://www.virginia.edu/">University of Virginia</a>
+          </span>
         </p>
      </div>
    </div>
@@ -82,8 +82,6 @@
 </template>
 
 <script setup>
-import {useOrderStore} from '@/stores/order'
-const orderStore = useOrderStore()
 </script>
 
 <style scoped lang="scss">

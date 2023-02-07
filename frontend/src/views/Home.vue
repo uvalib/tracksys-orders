@@ -70,7 +70,7 @@
          <h2>Terms of Agreement</h2>
          <div class="sect">
             <label class="terms" id="terms-agree" >
-               <input type="checkbox" v-model="termsAgree">
+               <input type="checkbox" v-model="orderStore.termsAgreed">
                <span>
                   I understand and agree to the above copyright statement and will only use the digitized resources as I indicate in my online request.
                   I also understand it is my responsibility to determine who owns the copyright of these materials unless otherwise noted.
@@ -81,12 +81,12 @@
          <h2>UVA Status</h2>
          <div class="sect">
             <label for="is_uva_yes" class="radio">
-                <input type="radio" name="is_uva" id="is_uva_yes" :value="true" v-model="isUVA" class="uva-radio">
+                <input type="radio" name="is_uva" id="is_uva_yes" :value="true" v-model="orderStore.isUVA" class="uva-radio">
                 I am UVA faculty, staff, or student.  <span style="font-style: italic;">(You will be asked to verify your identity using
                <a target="_blank" href="http://itc.virginia.edu/netbadge/">NetBadge</a>.)</span>
             </label>
             <label for="is_uva_no" class="radio">
-               <input type="radio" name="is_uva" id="is_uva_no" :value="false" v-model="isUVA" class="uva-radio">
+               <input type="radio" name="is_uva" id="is_uva_no" :value="false" v-model="orderStore.isUVA" class="uva-radio">
                I am not affiliated with UVA.
             </label>
          </div>
@@ -104,19 +104,17 @@ import { ref } from 'vue'
 
 const router = useRouter()
 const orderStore = useOrderStore()
-const termsAgree = ref(false)
-const isUVA = ref(true)
 const termsError = ref(false)
 
 function createRequestClicked() {
    termsError.value = false
-   if ( termsAgree.value == false) {
+   if ( orderStore.termsAgreed == false) {
       termsError.value = true
       return
    }
 
    orderStore.clearRequest()
-   if (isUVA.value ) {
+   if (orderStore.isUVA ) {
       window.location.href = "/authenticate"
    } else {
       orderStore.startRequest()

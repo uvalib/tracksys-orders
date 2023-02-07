@@ -7,7 +7,8 @@
             </a>
          </div>
          <div class="site-link">
-           <router-link to="/">Digitization Request Form</router-link>
+            <router-link to="/">Digitization Request Form</router-link>
+            <p class="version">v{{ orderStore.version }}</p>
          </div>
       </div>
       <router-view />
@@ -155,6 +156,11 @@ div.header {
          &:hover {
             text-decoration: underline;
          }
+      }
+      p.version {
+         margin: 5px 0 0 0;
+         font-size: 0.5em;
+         text-align: right;
       }
    }
 }

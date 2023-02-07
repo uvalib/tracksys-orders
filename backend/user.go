@@ -63,11 +63,11 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 
 	log.Printf("INFO: customer update payload: %+v", user)
 
-	// First, see if there is an ID with this user. If so, just update
+	// First, see if there is an ID with this user. If so, just updateeeee
 	if user.ID > 0 {
 		log.Printf("INFO: update existing customer with ID %d", user.ID)
 		user.UpdatedAt = time.Now()
-		upErr := svc.GDB.Model(&user).Omit("created_at", "id", "master_files_count", "orders_count").Updates(user).Error
+		upErr := svc.GDB.Model(&user).Select("first_name", "last_name", "email", "academic_stattus_id", "updated_at").Updates(user).Error
 		if upErr != nil {
 			log.Printf("ERROR: unable to update customer %d: %s", user.ID, upErr.Error())
 			c.String(http.StatusInternalServerError, upErr.Error())
@@ -83,7 +83,7 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 	if err == nil {
 		user.ID = existUser.ID
 		log.Printf("INFO: update existing customer with email %s id %d", user.Email, existUser.ID)
-		upErr := svc.GDB.Model(&user).Omit("created_at", "id", "master_files_count", "orders_count").Updates(user).Error
+		upErr := svc.GDB.Model(&user).Select("first_name", "last_name", "email", "academic_stattus_id", "updated_at").Updates(user).Error
 		if upErr != nil {
 			log.Printf("ERROR: unable to update customer %d: %s", user.ID, upErr.Error())
 			c.String(http.StatusInternalServerError, upErr.Error())

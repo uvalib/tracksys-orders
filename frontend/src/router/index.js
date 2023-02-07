@@ -40,13 +40,22 @@ const router = createRouter({
    routes
 })
 
-router.beforeEach((to, _from) => {
+router.beforeEach((to, _from, next) => {
+   const orderStore = useOrderStore()
    if (to.path === '/granted') {
-      const orderStore = useOrderStore()
       console.log(`User ${to.query.user} authenticated`)
+      orderStore.termsAgreed = true
       orderStore.setComputeID(to.query.user)
       orderStore.startRequest()
-      return  "/request"
+      next("/request")
+   } else if (to.path != "/") {
+      if (orderStore.termsAgreed == false) {
+         next("/")
+      } else {
+         next()
+      }
+   } else {
+      next()
    }
 })
 

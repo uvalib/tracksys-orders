@@ -24,7 +24,7 @@
       </div>
       <div class="form-row">
          <label for="country">Country</label>
-         <country-select id="country" v-model="address.country" :country="address.country" topCountry="US" :countryName="true"/>
+         <country-select id="country" v-model="address.country" :country="address.country" topCountry="US" :countryName="true" :usei18n="false" />
       </div>
       <div class="form-row">
          <label for="phone">Phone</label>
