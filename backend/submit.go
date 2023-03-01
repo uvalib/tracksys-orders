@@ -12,7 +12,7 @@ import (
 )
 
 type submission struct {
-	DateDue             time.Time   `json:"dateDue"`
+	DateDue             string      `json:"dateDue"`
 	IntendedUseID       int64       `json:"intendedUseID"`
 	SpecialInstructions string      `json:"specialInstructions"`
 	Items               []orderItem `json:"items"`
@@ -54,6 +54,12 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
+	dateDue, err := time.Parse("2006-01-02", req.DateDue)
+	if err != nil {
+		log.Printf("ERROR: unable to parse due date")
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
 
 	// NOTE: intended use and user are needed for the confirmation email
 	log.Printf("INFO: lookup intended use %d", req.IntendedUseID)
@@ -75,7 +81,7 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 	}
 
 	log.Printf("INFO: create order and order items")
-	newOrder := order{CustomerID: customerID, DateDue: req.DateDue, SpecialInstructions: req.SpecialInstructions,
+	newOrder := order{CustomerID: customerID, DateDue: dateDue, SpecialInstructions: req.SpecialInstructions,
 		DateRequestSubmitted: time.Now(), CreatedAt: time.Now(), UpdatedAt: time.Now(), OrderStatus: "requested"}
 	addErr := svc.GDB.Create(&newOrder).Error
 	if addErr != nil {
@@ -100,7 +106,7 @@ func (svc *serviceContext) submitRequest(c *gin.Context) {
 	log.Printf("INFO: generate confirmation email for %s", user.Email)
 	var emailData struct {
 		OrderID             int64
-		DueDate             time.Time
+		DueDate             string
 		SpecialInstructions string
 		User                customer
 		IntendedUse         intendedUse

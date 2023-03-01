@@ -4,9 +4,13 @@
          <label for="due">Date Due (required)</label>
          <div class="note">
             Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it.
-            <span class="important">Starting mid-November through mid-January additional turnaround time is required due to the holiday season.</span>
+            <p>
+               <span class="important">Starting mid-November through mid-January additional turnaround time is required due to the holiday season.</span>
+            </p>
          </div>
-         <datepicker v-model="orderStore.dateDue" class="picker"/>
+         <VueDatePicker v-model="orderStore.dateDue" model-type="yyyy-MM-dd"
+            :auto-apply="true" :hide-navigation="['time']" :format="dateFormat"
+            :enable-time-picker="false" :min-date="minDueDate()" :start-date="orderStore.dateDue"/>
       </div>
       <div class="form-row">
          <label for="instruct">Special Instructions</label>
@@ -73,9 +77,18 @@
 <script setup>
 import {useOrderStore} from '@/stores/order'
 import { useRouter } from 'vue-router'
+import moment from 'moment'
 
 const router = useRouter()
 const orderStore = useOrderStore()
+
+function dateFormat(date)  {
+  return moment(date).format("YYYY-MM-DD")
+}
+
+function minDueDate() {
+   return new Date(new Date().getTime()+(29*24*60*60*1000))
+}
 
 function cancelClicked() {
    orderStore.clearRequest()

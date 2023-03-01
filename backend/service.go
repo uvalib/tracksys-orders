@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -48,9 +47,6 @@ func initializeService(version string, cfg *configData) *serviceContext {
 	funcMap := template.FuncMap{
 		"inc": func(i int) int {
 			return i + 1
-		},
-		"dateFmt": func(d time.Time) string {
-			return d.Format("2006-01-02")
 		},
 	}
 	tpl, err := template.New("confirmation.html").Funcs(funcMap).ParseFiles("./templates/confirmation.html")

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import moment from 'moment'
 
 export const useOrderStore = defineStore('order', {
 	state: () => ({
@@ -233,7 +234,7 @@ export const useOrderStore = defineStore('order', {
       initRequest() {
          let sd = new Date()
          sd.setDate(sd.getDate() + 29)
-         this.dateDue = sd
+         this.dateDue = moment(sd).format("YYYY-MM-DD")
          this.items.splice(0, this.items.length)
          this.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
          this.currItemIdx = 0

@@ -9,13 +9,14 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@vuepic/vue-datepicker": "^4.0.1",
     "axios": "^0.21.4",
+    "moment": "^2.29.4",
     "pinia": "^2.0.11",
     "vue": "^3.0.0",
     "vue-i18n": "^9.3.0-beta.16",
     "vue-router": "^4.0.0-0",
-    "vue3-country-region-select": "^1.0.0",
-    "vue3-datepicker": "^0.2.5"
+    "vue3-country-region-select": "^1.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.2",
