@@ -7,26 +7,37 @@ export const useOrderStore = defineStore('order', {
       working: false,
       version: "unknown",
       error: "",
-      constants: {},
-      currStepIdx: 0,
-      steps: [
-         { name: "Customer Information", component: "CustomerInfo", page: 1 },
-         { name: "Address Information", component: "AddressInfo", page: 2 },
-         { name: "General Request Information", component: "RequestInfo", page: 3 },
-         { name: "Item Information", component: "ItemInfo", page: 4 },
-         { name: "Review Order", component: "ReviewOrder", page: 5 },
-      ],
+      academicStatuses: [],
+      intendedUses: [],
       computeID: "",
-      differentBillingAddress: false,
       customer: {
          id: 0,
          firstName: "",
          lastName: "",
          email: "",
-         academicStatusID: 0,
+         academicStatusID: 1,
       },
-      currAddressIdx: 0,
-      addresses: [],
+      sameBillingAddress: true,
+      primaryAddress: {
+         addressType: "primary",
+         address1: "",
+         address2: "",
+         city: "",
+         state: "",
+         zip: "",
+         country: "",
+         phone: "",
+      },
+      billingAddress: {
+         addressType: "billable_address",
+         address1: "",
+         address2: "",
+         city: "",
+         state: "",
+         zip: "",
+         country: "",
+         phone: "",
+      },
       currItemIdx: -1,
       dateDue: "",
       specialInstructions: "",
@@ -39,35 +50,19 @@ export const useOrderStore = defineStore('order', {
       isUVA: false
    }),
    getters: {
-      currAddress: state => {
-         return state.addresses[state.currAddressIdx]
-      },
-      currStep: state => {
-         return state.steps[state.currStepIdx]
-      },
-      numSteps: state => {
-         return state.steps.length
-      },
-      academicStatuses: state => {
-         return state.constants['academicStatus']
-      },
       academicStatusName: state => {
          // NOTE: getters cannot accept params. Instead have the getter return a function that
          // takes a param. The result will not me cached like other getters tho
          return (id) => {
-            let v = state.constants['academicStatus'].find((item) => item.id === id)
+            let v = state.academicStatuses.find((item) => item.id === id)
             if (v) {
                return v.name
             }
             return "Unknown"
          }
       },
-      intendedUses: state => {
-         return state.constants['intendedUse']
-      },
       intendedUse: state => (id) => {
-         let uses = state.constants['intendedUse']
-         let v = uses.find(item => item.id == id)
+         let v = state.intendedUses.find(item => item.id == id)
          if (v) {
             return v.name
          }
@@ -82,16 +77,18 @@ export const useOrderStore = defineStore('order', {
       },
       getConstants() {
          axios.get(`/api/constants`).then(response => {
-            this.constants = response.data
+            console.log(response.data)
+            this.academicStatuses = response.data.academicStatus
+            this.intendedUses = response.data.intendedUse
          }).catch(_e => {
             // NO-OP, there is just no constants
          })
       },
-      startRequest() {
+      async startRequest() {
          this.getConstants()
          if (this.computeID != "") {
             this.working = true
-            axios.get(`/api/users/${this.computeID}`).then(response => {
+            return axios.get(`/api/users/${this.computeID}`).then(response => {
                this.setUserData(response.data)
                this.working = false
             }).catch(_e => {
@@ -100,40 +97,30 @@ export const useOrderStore = defineStore('order', {
             })
          }
       },
-      getAddressInfo() {
+      async updateCustomer() {
          this.working = true
-         this.resetAddresses()
-         axios.get(`/api/users/${this.customer.id}/address`).then(response => {
-            this.setAddresses(response.data)
+         return axios.post(`/api/users`, this.customer).then(response => {
+            this.setUserData(response.data.customer)
+            this.setAddresses(response.data.addresses)
             this.working = false
-            this.nextStep()
-         }).catch(_e => {
-            // NO-OP, there is just no user data pre-populated
-            this.working = false
-         })
-      },
-      updateCustomer() {
-         this.working = true
-         axios.post(`/api/users`, this.customer).then(response => {
-            this.setUserData(response.data)
-            this.getAddressInfo()
          }).catch(err => {
             this.setError(err)
             this.working = false
          })
       },
-      updateAddress() {
+      async updateAddress() {
          this.working = true
-         let currAddr = this.addresses[this.currAddressIdx]
-         axios.post(`/api/users/${this.customer.id}/address`, currAddr).then(_response => {
-            if (this.differentBillingAddress && this.currAddressIdx == 0) {
-               this.nextAddress()
-               this.working = false
-            } else {
-               this.initRequest()
-               this.nextStep()
-               this.working = false
-            }
+         var data = {
+            primary: this.primaryAddress,
+            differentBilling: false
+         }
+         if (this.sameBillingAddress == false ) {
+            data.differentBilling = true
+            data.billing = this.billingAddress
+         }
+         return axios.post(`/api/users/${this.customer.id}/address`, data).then(response => {
+            this.setAddresses(response.data)
+            this.working = false
          }).catch(err => {
             this.setError(err)
             this.working = false
@@ -156,24 +143,17 @@ export const useOrderStore = defineStore('order', {
             this.working = false
          })
       },
-      clearItems() {
-         this.items.splice(0, this.items.length)
-      },
       editItem(idx) {
-         this.currItemIdx = idx
-         this.currStepIdx = 3
          this.itemMode = "edit"
          this.origItem = Object.assign({}, this.items[this.currItemIdx])
       },
       itemEditCanceled() {
          this.items.splice(this.currItemIdx, 1, this.origItem)
-         this.currStepIdx = 4
          this.itemMode = "add"
          this.origItem = {}
       },
       itemEditDone() {
          this.itemMode = "add"
-         this.currStepIdx = 4
          this.origItem = {}
       },
       addItem() {
@@ -184,60 +164,47 @@ export const useOrderStore = defineStore('order', {
          this.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
          this.currItemIdx = this.items.length - 1
          this.itemMode = "add"
-         this.currStepIdx = 3
       },
       removeItem(idx) {
          if (idx < 0 || idx > this.items.length - 1) return
          this.items.splice(idx, 1)
       },
-      clearError() {
-         this.error = ""
-      },
       clearRequest() {
          this.computeID = ""
-         this.currStepIdx = 0
          this.customer.id = 0
          this.customer.firstName = ""
          this.customer.lastName = ""
          this.customer.email = ""
-         this.customer.academicStatusID = 0
-         this.addresses.splice(0, this.addresses.length)
-         this.currAddressIdx = 0
-         this.items.splice(0, this.items.length)
-         this.currItemIdx = 0
+         this.customer.academicStatusID = 1
+         this.sameBillingAddress = true
+         this.primaryAddress = { addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
+         this.billingAddress = { addressType: "billable_address", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
          this.error = ""
-      },
-      nextStep() {
-         this.currStepIdx++
-         this.error = ""
-      },
-      resetAddresses() {
-         this.currAddressIdx = 0
-         this.addresses.splice(0, this.addresses.length)
-      },
-      setAddresses(data) {
-         data.forEach(addr => this.addresses.push(Object.assign({}, addr)))
-         if (this.addresses.length == 0) {
-            this.addresses.push({ addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" })
-         }
-      },
-      nextAddress() {
-         this.currAddressIdx++
-         if (this.addresses.length < this.currAddressIdx + 1) {
-            this.addresses.push({ addressType: "business", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" })
-         }
-      },
-      setComputeID(cid) {
-         this.computeID = cid
-         this.customer.email = `${cid}@virginia.edu`
-      },
-      initRequest() {
          let sd = new Date()
          sd.setDate(sd.getDate() + 29)
          this.dateDue = moment(sd).format("YYYY-MM-DD")
          this.items.splice(0, this.items.length)
          this.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
          this.currItemIdx = 0
+      },
+
+      setAddresses(data) {
+         if ( data.length == 0 ) {
+            this.sameBillingAddress = true
+            this.primaryAddress = { addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
+            this.billingAddress = { addressType: "billable_address", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
+         } else {
+            this.primaryAddress = data[0]
+            this.sameBillingAddress = true
+            if (data.length == 2) {
+               this.sameBillingAddress = false
+               this.billingAddress = data[1]
+            }
+         }
+      },
+      setComputeID(cid) {
+         this.computeID = cid
+         this.customer.email = `${cid}@virginia.edu`
       },
       setError(err) {
          if (err.message) {

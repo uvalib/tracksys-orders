@@ -33,7 +33,6 @@ func main() {
 		api.GET("/constants", svc.getConstants)
 		api.GET("/users/:id", svc.getUser)
 		api.POST("/users", svc.updateUser)
-		api.GET("/users/:id/address", svc.getUserAddress)
 		api.POST("/users/:id/address", svc.updateUserAddress)
 		api.POST("/users/:id/submit", svc.submitRequest)
 	}

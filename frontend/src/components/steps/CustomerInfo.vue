@@ -1,87 +1,36 @@
 <template>
-   <div class="customer">
-      <div class="form-row">
-         <label for="fname">First Name</label>
-         <input id="fname" type="text" v-model="orderStore.customer.firstName">
-      </div>
-      <div class="form-row">
-         <label for="lname">Last Name</label>
-         <input id="lname" type="text" v-model="orderStore.customer.lastName">
-      </div>
-      <div class="form-row">
-         <label for="email">Email</label>
-         <input id="email" type="text" v-model="orderStore.customer.email" :disabled="orderStore.computeID.length > 0">
-      </div>
-      <div class="form-row" v-if="orderStore.computeID.length > 0">
-         <label for="academic-status">Academic Status</label>
-         <select id="academic-status" v-model="orderStore.customer.academicStatusID">
-            <option disabled value="0">Select an academic status</option>
-            <option v-for="opt in orderStore.academicStatuses" :key="`as-${opt.id}`" :value="opt.id">{{opt.name}}</option>
-         </select>
-      </div>
-      <p class="error">{{orderStore.error}}</p>
-      <div class="button-bar">
-         <uva-button @click="cancelClicked">Cancel</uva-button>
-         <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
-      </div>
-   </div>
+   <FormKit type="step" name="customerInfo" :before-step-change="beforeStepChange">
+      <FormKit label="First Name" type="text" v-model="orderStore.customer.firstName" validation="required"  id="fname" autofocus/>
+      <FormKit label="Last Name" type="text" v-model="orderStore.customer.lastName" validation="required"  id="lname"/>
+      <FormKit label="Email" type="email" v-model="orderStore.customer.email" validation="required"  id="email" :disabled="orderStore.computeID.length > 0"/>
+      <FormKit v-if="orderStore.computeID.length > 0" type="select"
+         label="Acedemic Status" v-model="orderStore.customer.academicStatusID"
+         placeholder="Select an academic status" :options="academicStatuses" validation="required"/>
+   </FormKit>
 </template>
 
 <script setup>
-import {useOrderStore} from '@/stores/order'
-import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useOrderStore } from '@/stores/order'
 
-const router = useRouter()
 const orderStore = useOrderStore()
 
-function cancelClicked() {
-   orderStore.clearRequest()
-   router.push("/")
-}
+const academicStatuses = computed(()=>{
+   let out = []
+   if (orderStore.working) return out
+   orderStore.academicStatuses.forEach(l => {
+      out.push( {label:  l.name, value: l.id})
+   })
+   return out
+})
 
-function nextClicked() {
-   if (orderStore.computeID.length == 0) {
-      orderStore.customer.academicStatusID = 1
+async function beforeStepChange({currentStep}) {
+   if ( currentStep.blockingCount == 0) {
+      await orderStore.updateCustomer()
+      return orderStore.error == ""
    }
-   if ( orderStore.customer.email.length == 0) {
-      orderStore.setError("Customer email is required")
-      return
-   }
-   if ( orderStore.customer.academicStatusID == 0) {
-      orderStore.setError("Academic status is required")
-      return
-   }
-   orderStore.updateCustomer()
 }
 </script>
 
 <style scoped lang="scss">
-.customer {
-   text-align: left;
-   padding: 15px 10%;
-
-   .form-row {
-      margin: 10px 0;
-      label {
-         font-weight: bold;
-         display: block;
-      }
-      input, select {
-         width: 100%;
-         margin: 5px 0;
-      }
-   }
-   .error {
-      font-style: italic;
-      color: var(--uvalib-red);
-      margin-bottom: 0;
-   }
-   .button-bar {
-      text-align: right;
-      padding: 15px 0;
-      .pad-left {
-         margin-left: 10px;
-      }
-   }
-}
 </style>
