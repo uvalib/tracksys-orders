@@ -51,6 +51,9 @@ func (svc *serviceContext) updateUserAddress(c *gin.Context) {
 	addresses = append(addresses, req.Primary)
 	if req.DifferentBilling {
 		addresses = append(addresses, req.Billing)
+	} else {
+		log.Printf("INFO: customer has same billing and primary addres; remove prior billing address")
+		svc.GDB.Where("address_type=? AND addressable_id=?", "billable_address", uid).Delete(&address{})
 	}
 
 	for _, addr := range addresses {
