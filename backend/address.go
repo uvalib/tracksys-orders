@@ -1,14 +1,12 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type address struct {
@@ -27,28 +25,14 @@ type address struct {
 	UpdatedAt       time.Time `json:"-"`
 }
 
-func (svc serviceContext) getUserAddress(c *gin.Context) {
-	uid := c.Param("id")
-	log.Printf("INFO: get addresses for user id %s", uid)
-	var addresses []address
-	err := svc.GDB.Order("address_type desc").Where("addressable_id=? and addressable_type=?", uid, "Customer").Find(&addresses).Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			log.Printf("INFO: no address found for user %s", uid)
-			c.String(http.StatusNotFound, "no address")
-		} else {
-			log.Printf("ERROR: unable to get address user %s: %s", uid, err.Error())
-			c.String(http.StatusInternalServerError, err.Error())
-		}
-		return
-	}
-	c.JSON(http.StatusOK, addresses)
-}
-
 func (svc *serviceContext) updateUserAddress(c *gin.Context) {
 	uidStr := c.Param("id")
-	var addr address
-	err := c.ShouldBindJSON(&addr)
+	var req struct {
+		Primary          address `json:"primary"`
+		DifferentBilling bool    `json:"differentBilling"`
+		Billing          address `json:"billing"`
+	}
+	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		log.Printf("ERROR: unable to parse address update payload: %s", err.Error())
 		c.String(http.StatusBadRequest, err.Error())
@@ -62,30 +46,38 @@ func (svc *serviceContext) updateUserAddress(c *gin.Context) {
 		return
 	}
 
-	log.Printf("INFO: user id %d requests address update: %+v", uid, addr)
-	if addr.ID > 0 {
-		log.Printf("INFO: updating user %s address %d", uidStr, addr.ID)
-		addr.UpdatedAt = time.Now()
-		upErr := svc.GDB.Model(&addr).Omit("created_at", "addressable_id", "addressable_type").Updates(addr).Error
-		if upErr != nil {
-			log.Printf("ERROR: unable to update address for customer %s: %s", uidStr, upErr.Error())
-			c.String(http.StatusInternalServerError, upErr.Error())
+	log.Printf("INFO: user id %d requests address update: %+v", uid, req)
+	var addresses []address
+	addresses = append(addresses, req.Primary)
+	if req.DifferentBilling {
+		addresses = append(addresses, req.Billing)
+	} else {
+		log.Printf("INFO: customer has same billing and primary addres; remove prior billing address")
+		svc.GDB.Where("address_type=? AND addressable_id=?", "billable_address", uid).Delete(&address{})
+	}
+
+	for _, addr := range addresses {
+		if addr.ID > 0 {
+			log.Printf("INFO: updating user %s %s address %d", uidStr, addr.AddressType, addr.ID)
+			addr.UpdatedAt = time.Now()
+			upErr := svc.GDB.Model(&addr).Omit("created_at", "addressable_id", "addressable_type").Updates(addr).Error
+			if upErr != nil {
+				log.Printf("ERROR: unable to update address for customer %s: %s", uidStr, upErr.Error())
+				c.String(http.StatusInternalServerError, upErr.Error())
+			}
 		} else {
-			c.JSON(http.StatusOK, addr)
+			log.Printf("INFO: create new %s address for user %s", addr.AddressType, uidStr)
+			addr.CreatedAt = time.Now()
+			addr.AddressableType = "Customer"
+			addr.AddressableID = uid
+			addErr := svc.GDB.Create(&addr).Error
+			if addErr != nil {
+				log.Printf("ERROR: unable to add address for customer %s: %s", uidStr, addErr.Error())
+				c.String(http.StatusInternalServerError, addErr.Error())
+				return
+			}
 		}
-		return
 	}
 
-	log.Printf("INFO: create new address for user %s", uidStr)
-	addr.CreatedAt = time.Now()
-	addr.AddressableType = "Customer"
-	addr.AddressableID = uid
-	addErr := svc.GDB.Create(&addr).Error
-	if addErr != nil {
-		log.Printf("ERROR: unable to add address for customer %s: %s", uidStr, addErr.Error())
-		c.String(http.StatusInternalServerError, addErr.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, addr)
+	c.JSON(http.StatusOK, svc.getCustomerAddresses(uid))
 }

@@ -62,6 +62,10 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 	}
 
 	log.Printf("INFO: customer update payload: %+v", user)
+	var out struct {
+		Customer  customer  `json:"customer"`
+		Addresses []address `json:"addresses"`
+	}
 
 	// First, see if there is an ID with this user. If so, just updateeeee
 	if user.ID > 0 {
@@ -72,7 +76,9 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 			log.Printf("ERROR: unable to update customer %d: %s", user.ID, upErr.Error())
 			c.String(http.StatusInternalServerError, upErr.Error())
 		} else {
-			c.JSON(http.StatusOK, user)
+			out.Customer = user
+			out.Addresses = svc.getCustomerAddresses(user.ID)
+			c.JSON(http.StatusOK, out)
 		}
 		return
 	}
@@ -88,7 +94,9 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 			log.Printf("ERROR: unable to update customer %d: %s", user.ID, upErr.Error())
 			c.String(http.StatusInternalServerError, upErr.Error())
 		} else {
-			c.JSON(http.StatusOK, user)
+			out.Customer = user
+			out.Addresses = svc.getCustomerAddresses(user.ID)
+			c.JSON(http.StatusOK, out)
 		}
 		return
 	}
@@ -101,6 +109,17 @@ func (svc *serviceContext) updateUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, addErr.Error())
 		return
 	}
-	c.JSON(http.StatusOK, user)
 
+	out.Customer = user
+	out.Addresses = svc.getCustomerAddresses(user.ID)
+	c.JSON(http.StatusOK, out)
+}
+
+func (svc *serviceContext) getCustomerAddresses(custID int64) []address {
+	var addresses []address
+	err := svc.GDB.Order("address_type desc").Where("addressable_id=? and addressable_type=?", custID, "Customer").Find(&addresses).Error
+	if err != nil {
+		log.Printf("ERROR: unable to get address user %d: %s", custID, err.Error())
+	}
+	return addresses
 }

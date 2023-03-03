@@ -44,6 +44,7 @@ router.beforeEach((to, _from, next) => {
    const orderStore = useOrderStore()
    if (to.path === '/granted') {
       console.log(`User ${to.query.user} authenticated`)
+      orderStore.clearRequest()
       orderStore.termsAgreed = true
       orderStore.setComputeID(to.query.user)
       orderStore.startRequest()

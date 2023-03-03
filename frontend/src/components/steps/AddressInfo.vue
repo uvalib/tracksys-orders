@@ -1,121 +1,97 @@
 <template>
-   <div class="address">
-      <h2 v-if="addressType=='primary'">Primary Address Information</h2>
-      <h2 v-else>Billing Address Information</h2>
-      <div class="form-row">
-         <label for="address1">Address Line 1</label>
-         <input id="address1" type="text" v-model="address.address1">
+   <FormKit type="step" name="addressInfo" :before-step-change="beforeStepChange">
+      <h2>Primary Address</h2>
+      <div class="address">
+         <FormKit label="Address Line 1" type="text" v-model="orderStore.primaryAddress.address1" validation="required" id="address1" autofocus/>
+         <FormKit label="Address Line 2" type="text" v-model="orderStore.primaryAddress.address2" id="address2"/>
+         <FormKit label="City" type="text" v-model="orderStore.primaryAddress.city" id="city" validation="required" />
+         <FormKit label="State" type="text" v-model="orderStore.primaryAddress.state" id="state" validation="required" />
+         <FormKit label="Zip Code" type="text" v-model="orderStore.primaryAddress.zip" id="zip" validation="required" />
+         <div class="form-row">
+            <label for="country">Country</label>
+            <country-select id="country" v-model="orderStore.primaryAddress.country" :country="orderStore.primaryAddress.country" topCountry="US" :countryName="true" :usei18n="false" />
+         </div>
+         <FormKit label="Phone" type="text" v-model="orderStore.primaryAddress.phone" id="city"/>
       </div>
-      <div class="form-row">
-         <label for="address2">Address Line 2</label>
-         <input id="address2" type="text" v-model="address.address2">
+
+      <h2>
+         <span>Billing Address</span>
+         <label>
+            <input type="checkbox" v-model="orderStore.sameBillingAddress">
+            Same as primary address
+         </label>
+      </h2>
+      <div class="address">
+         <template v-if="orderStore.sameBillingAddress == false">
+            <FormKit label="Address Line 1" type="text" v-model="orderStore.billingAddress.address1" validation="required" id="address1"/>
+            <FormKit label="Address Line 2" type="text" v-model="orderStore.billingAddress.address2" id="address2"/>
+            <FormKit label="City" type="text" v-model="orderStore.billingAddress.city" id="city" validation="required" />
+            <FormKit label="State" type="text" v-model="orderStore.billingAddress.state" id="state" validation="required" />
+            <FormKit label="Zip Code" type="text" v-model="orderStore.billingAddress.zip" id="zip" validation="required" />
+            <div class="form-row">
+               <label for="country">Country</label>
+               <country-select id="country" v-model="orderStore.billingAddress.country" :country="orderStore.billingAddress.country" topCountry="US" :countryName="true" :usei18n="false" />
+            </div>
+            <FormKit label="Phone" type="text" v-model="orderStore.billingAddress.phone" id="city"/>
+         </template>
       </div>
-      <div class="form-row">
-         <label for="city">City</label>
-         <input id="city" type="text" v-model="address.city">
-      </div>
-      <div class="form-row">
-         <label for="state">State</label>
-         <input id="state" type="text" v-model="address.state">
-      </div>
-      <div class="form-row">
-         <label for="zip">Zip Code</label>
-         <input id="zip" type="text" v-model="address.zip">
-      </div>
-      <div class="form-row">
-         <label for="country">Country</label>
-         <country-select id="country" v-model="address.country" :country="address.country" topCountry="US" :countryName="true" :usei18n="false" />
-      </div>
-      <div class="form-row">
-         <label for="phone">Phone</label>
-         <input id="phone" type="text" v-model="address.phone">
-      </div>
-      <div class="form-row bill" v-if="addressType=='primary'">
-         <label for="billing">Do you have a different billing address?</label>
-         <span class="checkbox"><input id="billing" type="checkbox" v-model="orderStore.differentBillingAddress"><span>Yes</span></span>
-      </div>
-      <p class="error">{{orderStore.error}}</p>
-      <div class="button-bar">
-         <uva-button @click="cancelClicked">Cancel</uva-button>
-         <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
-      </div>
-   </div>
+   </FormKit>
 </template>
 
 <script setup>
 import {useOrderStore} from '@/stores/order'
-import { useRouter } from 'vue-router'
-import {computed} from 'vue'
 
-const router = useRouter()
 const orderStore = useOrderStore()
 
-const address = computed(() => {
-   return orderStore.currAddress
-})
-const addressType = computed(() => {
-   return  orderStore.currAddress.addressType
-})
-
-function cancelClicked() {
-   orderStore.clearRequest()
-   router.push("/")
-}
-function nextClicked() {
-  orderStore.updateAddress()
+async function beforeStepChange({currentStep}) {
+   if ( currentStep.blockingCount == 0) {
+      await orderStore.updateAddress()
+      return orderStore.error == ""
+   }
 }
 </script>
 
 <style scoped lang="scss">
-.address {
+h2 {
+   font-size: 1.25em;
+   margin: 0 0 15px 0;
    text-align: left;
-   padding: 15px 10%;
+   display: flex;
+   flex-flow: row nowrap;
+   justify-content: space-between;
+   align-items: center;
+   background-color: var(--uvalib-grey-lightest);
+   padding: 5px 10px;
+   border-radius: 5px;
+   label {
+      font-weight: 500;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9em;
 
-   h2 {
-      text-align: center;
-      margin: 0 0 30px 0;
-      font-size: 1.15em;
-   }
-
-   .form-row {
-      margin: 10px 0;
-      label {
-         font-weight: bold;
-         display: block;
-      }
-      input, select {
-         width: 100%;
-         margin: 5px 0;
-      }
       input[type=checkbox] {
-         display: inline-block;
-         width: 20px;
-         padding: 0;
          height: 20px;
+         width: 20px;
+         display: inline-block;
          margin-right: 10px;
       }
-      .checkbox {
-         display: flex;
-         flex-flow: row nowrap;
-         justify-content: flex-start;
-         align-items: center;
-         margin-top: 5px;
-      }
    }
-   .form-row.bill {
-      margin-top: 20px;
+}
+.address {
+   padding-left: 20px;
+   margin-bottom: 30px;
+}
+.form-row {
+   margin-top: 20px;
+   text-align: left;
+   label {
+      display:block;
+      font-weight: bold;
    }
-   .error {
-      font-style: italic;
-      color: var(--uvalib-red);
-      margin-bottom: 0;
-   }
-   .button-bar {
-      text-align: right;
-      padding: 15px 0;
-      .pad-left {
-         margin-left: 10px;
-      }
+   select {
+      width: 100%;
    }
 }
 </style>

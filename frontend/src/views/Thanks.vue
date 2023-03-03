@@ -27,38 +27,38 @@
                <h3>Primary Address</h3>
                <dl class="fields">
                   <dt>Address Line 1</dt>
-                  <dd>{{orderStore.addresses[0].address1}}</dd>
+                  <dd>{{orderStore.primaryAddress.address1}}</dd>
                   <dt>Address Line 2</dt>
-                  <dd>{{orderStore.addresses[0].address2}}</dd>
+                  <dd>{{orderStore.primaryAddress.address2}}</dd>
                   <dt>City</dt>
-                  <dd>{{orderStore.addresses[0].city}}</dd>
+                  <dd>{{orderStore.primaryAddress.city}}</dd>
                   <dt>State</dt>
-                  <dd>{{orderStore.addresses[0].state}}</dd>
+                  <dd>{{orderStore.primaryAddress.state}}</dd>
                   <dt>Zip Code</dt>
-                  <dd>{{orderStore.addresses[0].zip}}</dd>
+                  <dd>{{orderStore.primaryAddress.zip}}</dd>
                   <dt>Country</dt>
-                  <dd>{{orderStore.addresses[0].country}}</dd>
+                  <dd>{{orderStore.primaryAddress.country}}</dd>
                   <dt>Phone</dt>
-                  <dd>{{orderStore.addresses[0].phone}}</dd>
+                  <dd>{{orderStore.primaryAddress.phone}}</dd>
                </dl>
             </div>
-            <div class="subsection" v-if="orderStore.differentBillingAddress">
+            <div class="subsection" v-if="orderStore.sameBillingAddress == false">
                <h3>Billing Address</h3>
                <dl class="fields">
                   <dt>Address Line 1</dt>
-                  <dd>{{orderStore.addresses[1].address1}}</dd>
+                  <dd>{{orderStore.billingAddress.address1}}</dd>
                   <dt>Address Line 2</dt>
-                  <dd>{{orderStore.addresses[1].address2}}</dd>
+                  <dd>{{orderStore.billingAddress.address2}}</dd>
                   <dt>City</dt>
-                  <dd>{{orderStore.addresses[1].city}}</dd>
+                  <dd>{{orderStore.billingAddress.city}}</dd>
                   <dt>State</dt>
-                  <dd>{{orderStore.addresses[1].state}}</dd>
+                  <dd>{{orderStore.billingAddress.state}}</dd>
                   <dt>Zip Code</dt>
-                  <dd>{{orderStore.addresses[1].zip}}</dd>
+                  <dd>{{orderStore.billingAddress.zip}}</dd>
                   <dt>Country</dt>
-                  <dd>{{orderStore.addresses[1].country}}</dd>
+                  <dd>{{orderStore.billingAddress.country}}</dd>
                   <dt>Phone</dt>
-                  <dd>{{orderStore.addresses[1].phone}}</dd>
+                  <dd>{{orderStore.billingAddress.phone}}</dd>
                </dl>
             </div>
             <div class="subsection">

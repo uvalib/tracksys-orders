@@ -1,0 +1,107 @@
+
+input[type=color],
+input[type=date],
+input[type=datetime-local],
+input[type=datetime],
+input[type=email],
+input[type=month],
+input[type=number],
+input[type=password],
+input[type=search],
+input[type=tel],
+input[type=text],
+input[type=time],
+input[type=url],
+input[type=week],
+select,
+.dpg-form-input {
+   padding: 0.5em 0.6em;
+   display: inline-block;
+   border: 1px solid #ccc;
+   -webkit-box-shadow: inset 0 1px 3px #ddd;
+   box-shadow: inset 0 1px 3px #ddd;
+   border-radius: 4px;
+   vertical-align: middle;
+   -webkit-box-sizing: border-box;
+   box-sizing: border-box;
+   box-shadow: none;
+   margin-bottom: 0.3em;
+}
+
+button.dpg-form-input {
+   @include primary-button();
+   margin: 0;
+}
+
+.formkit-outer[data-type="radio"] {
+   margin-top: 20px;
+   .dpg-form-help {
+      margin: 5px 0 20px 5px;
+   }
+   fieldset {
+      border: 1px solid var(--uvalib-grey-light);
+      border-radius: 5px;
+      legend {
+         padding: 0 5px;
+      }
+      ul.formkit-options {
+         list-style-type: none;
+         padding: 0;
+         margin: 5px 10px;
+         display: flex;
+         flex-flow: row wrap;
+         justify-content: flex-start;
+         li {
+            margin: 5px 0;
+            .formkit-inner {
+               display: inline-block;
+            }
+         }
+      }
+      .dpg-form-label  {
+         display: inline-block;
+         margin: 0 20px 0 5px;
+      }
+   }
+ }
+
+ div.formkit-wrapper {
+   max-width: 100% !important;
+   width: 100%;
+}
+div.formkit-steps {
+   box-shadow: none !important;
+   border-color: var(--uvalib-grey-light) !important;
+   margin-bottom: 50px;
+}
+div.formkit-step-actions {
+   margin-top: 15px;
+}
+
+div.formkit-help {
+   text-align: left;
+   font-size: 0.9em;
+}
+
+.dpg-form-invalid {
+   list-style: none;
+   padding: 0;
+   margin: 5px 0;
+   color: var(--uvalib-red-emergency);
+   text-align: left;
+}
+
+.dpg-form-label {
+   display: flex;
+   flex-flow: row nowrap;
+   justify-content: flex-start;
+   align-items: center;
+   margin-bottom: 0.3em;
+   margin-top: 20px;
+   color: var(--uvalib-text-dark);
+   font-weight: bold;
+}
+
+.dpg-form-input {
+   width: 100%
+}

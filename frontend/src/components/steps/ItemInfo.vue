@@ -1,149 +1,115 @@
 <template>
-   <div class="item">
+   <FormKit type="step" name="items">
+      <div class="item-label">
+         <span>Item {{ orderStore.currItemIdx+1 }} of {{ orderStore.items.length }}</span>
+         <span class="paging">
+            <uva-button @click="deleteItem" :disabled="orderStore.items.length==1" class="trash" title="Delete item"><i class="far fa-trash-alt"></i></uva-button>
+            <uva-button @click="prevItem" class="pad-left big" :disabled="orderStore.currItemIdx==0" title="Prior item"><i class="fas fa-chevron-left"></i></uva-button>
+            <uva-button @click="nextItem" class="pad-left" :disabled="orderStore.currItemIdx == orderStore.items.length-1" title="Next item"><i class="fas fa-chevron-right"></i></uva-button>
+         </span>
+      </div>
       <div class="help pad-bottom">
          In the boxes below, include the item, image, or page numbers to be scanned. If possible, include any additional
          descriptive information such as, item call number, box number, and folder or item description. Please add one item for each individual collection or book you would like digitized.
       </div>
-      <div class="form-row">
-         <label for="title">Title (required)</label>
-         <input id="title" type="text" v-model="item.title">
-      </div>
-      <div class="form-row">
-         <label for="pages">Image or page numbers (required)</label>
-         <textarea rows="2" id="pages" v-model="item.pages"></textarea>
-      </div>
-      <div class="form-row">
-         <label for="callnum">Call Number</label>
-         <input id="callnum" type="text" v-model="item.callNumber">
-      </div>
-      <div class="form-row">
-         <label for="author">Author</label>
-         <input id="author" type="text" v-model="item.author">
-      </div>
-      <div class="form-row">
-         <label for="published">Year Published</label>
-         <input id="published" type="text" v-model="item.published">
-      </div>
-      <div class="form-row">
-         <label for="location">Location</label>
-         <input id="location" type="text" v-model="item.location">
-      </div>
-      <div class="form-row">
-         <label for="link">Web link for item (if available)</label>
-         <input id="link" type="text" v-model="item.link">
-      </div>
-      <div class="form-row">
-         <label for="description">Additional Description</label>
-         <div class="note">
-            If the provided fields were insufficient to describe the item, include supplemental information above.
+      <div class="item">
+         <FormKit label="Title" type="text" v-model="item.title" validation="required" id="title" autofocus/>
+         <FormKit label="Image or page numbers" type="text" v-model="item.pages" validation="required" id="pages"/>
+         <FormKit label="Call Number" type="text" v-model="item.callNumber" id="callnum"/>
+         <FormKit label="Author" type="text" v-model="item.author" id="author"/>
+         <FormKit label="Year Published" type="text" v-model="item.published" id="published"/>
+         <FormKit label="Location" type="text" v-model="item.location" id="location"/>
+         <FormKit label="Web link for item (if available)" type="text" validation="url" v-model="item.link" id="link"/>
+         <FormKit label="Additional Description" type="textarea" :rows="2" v-model="item.description" id="description"
+            help="If the provided fields were insufficient to describe the item, include supplemental information above."
+         />
+         <div class="help pad-top">
+            Use the Add Item button to add addtional items to your order. When complete, click Complete Order to review and submit your order.
          </div>
-         <textarea rows="2" id="description" v-model="item.description"></textarea>
       </div>
-      <p class="error">{{orderStore.error}}</p>
-      <div class="help">
-         Use the Add Item button to add addtional items to your order. When complete, click Complete Order to review and submit your order.
-      </div>
-      <div class="button-bar" v-if="orderStore.itemMode == 'add'">
-         <uva-button @click="cancelClicked">Cancel</uva-button>
-         <uva-button @click="addClicked" class="pad-left">Add Item</uva-button>
-         <uva-button @click="completeClicked" class="pad-left">Complete Order</uva-button>
-      </div>
-      <div class="button-bar" v-else>
-         <uva-button @click="cancelEditClicked">Cancel</uva-button>
-         <uva-button @click="updateClicked" class="pad-left">Update</uva-button>
-      </div>
-   </div>
+      <template #stepNext="{ handlers, node }">
+         <span class="next-btns">
+            <uva-button @click="addClicked(node.context)" class="pad-left">Add Item</uva-button>
+            <uva-button @click="handlers.incrementStep(1, node.context)()" class="pad-left" data-next="true">Complete Order</uva-button>
+         </span>
+      </template>
+   </FormKit>
 </template>
 
 <script setup>
-import {useOrderStore} from '@/stores/order'
-import {useRouter} from 'vue-router'
+import { useOrderStore } from '@/stores/order'
 import { computed, nextTick } from 'vue'
 
-const router = useRouter()
 const orderStore = useOrderStore()
 
 const item = computed(() => {
    return orderStore.items[orderStore.currItemIdx]
 })
 
-function cancelEditClicked() {
-   orderStore.itemEditCanceled()
+function deleteItem() {
+   orderStore.removeItem(orderStore.currItemIdx)
 }
-function updateClicked() {
-   orderStore.itemEditDone()
-}
-function cancelClicked() {
-   orderStore.clearRequest()
-   router.push("/")
-}
-function addClicked() {
-   if ( item.value.title == "" || item.value.pages == "") {
-      orderStore.setError("Title and Image/Pages are are required.")
-      return
+function prevItem() {
+   if ( orderStore.currItemIdx > 0) {
+      orderStore.currItemIdx--
    }
-   orderStore.addItem()
-   nextTick( () => {
-      let titleInput = document.getElementById("title")
-      titleInput.focus()
-   })
 }
-function completeClicked() {
-   if ( item.value.title == "" || item.value.pages == "") {
-      orderStore.setError("Title and Image/Pages are are required.")
-      return
+function nextItem() {
+   if ( orderStore.currItemIdx < orderStore.items.length) {
+      orderStore.currItemIdx++
    }
-   orderStore.nextStep()
+}
+function addClicked( context ) {
+   if ( context.blockingCount == 0) {
+      orderStore.addItem()
+      nextTick( () => {
+         let titleInput = document.getElementById("title")
+         titleInput.focus()
+      })
+   }
 }
 </script>
 
 <style scoped lang="scss">
-.item {
+.help {
    text-align: left;
-   padding: 15px 10%;
-
-   .note {
-      font-style: italic;
-      font-size: 0.9em;
-      margin: 5px 0;
-   }
-   .pad-bottom {
-      margin-bottom: 25px;
-   }
-
-   .form-row {
-      margin: 10px 0;
-      label {
-         font-weight: bold;
-         display: block;
-      }
-      input, select {
-         width: 100%;
-         margin: 5px 0;
-      }
-      textarea {
-         box-sizing: border-box;
-         width: 100%;
-         border: 1px solid var(--uvalib-grey-light);
-         border-radius: 5px;
-         padding: 5px 10px;
-         margin: 5px 0;
-         font-family: "franklin-gothic-urw", arial, sans-serif;
-         -webkit-font-smoothing: antialiased;
-         -moz-osx-font-smoothing: grayscale;
-      }
-   }
-   .error {
-      font-style: italic;
-      color: var(--uvalib-red);
-      margin-bottom: 0;
-   }
-   .button-bar {
-      text-align: right;
-      padding: 15px 0;
-      .pad-left {
-         margin-left: 10px;
+   background: white;
+}
+.pad-bottom {
+   margin-bottom: 10px;
+   margin-left: 5px;
+}
+.pad-top {
+   margin-top: 25px
+}
+.pad-left {
+   margin-left: 5px;
+}
+.pad-left.big {
+   margin-left: 10px;
+}
+.item-label {
+   text-align: left;
+   font-size: 1.15em;
+   font-weight: bold;
+   background: var(--uvalib-grey-lightest);
+   padding: 5px 10px;
+   border-radius: 5px;
+   margin-bottom: 10px;
+   display: flex;
+   flex-flow: row nowrap;
+   justify-content: space-between;
+   .paging {
+      padding: 0;
+      button.uva-button {
+         padding: 4px 10px;
       }
    }
+}
+.item {
+   padding-left: 5px;;
+}
+.next-btns {
+   margin-left: auto;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-   <div class="review">
+   <FormKit type="step" name="reviewOrder">
       <div class="request">
          <dl>
             <dt>Date Due:</dt>
@@ -16,8 +16,7 @@
          <div class="item" v-for="(item,idx) in orderStore.items" :key="`item-${idx}`">
             <div class="item-bar">
                <span>Item #{{idx+1}}</span>
-               <span class="buttons">
-                  <button @click="editClicked(idx)">Edit</button>
+               <span class="buttons" v-if="orderStore.items.length > 1">
                   <button @click="deleteClicked(idx)">Delete</button>
                </span>
             </div>
@@ -53,34 +52,21 @@
             </dl>
          </div>
       </div>
-      <p class="error">{{orderStore.error}}</p>
-      <div class="button-bar">
-         <uva-button @click="cancelClicked">Cancel</uva-button>
-         <uva-button @click="addClicked" class="pad-left">Add Items</uva-button>
-         <uva-button @click="submitClicked" class="pad-left">Submit Order</uva-button>
-      </div>
-   </div>
+      <template #stepNext>
+         <span class="next-btns">
+            <uva-button @click="submitClicked" class="pad-left">Submit Order</uva-button>
+         </span>
+      </template>
+   </FormKit>
 </template>
 
 <script setup>
 import {useOrderStore} from '@/stores/order'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
 const orderStore = useOrderStore()
 
-function cancelClicked() {
-   orderStore.clearRequest()
-   router.push("/")
-}
-function editClicked(idx) {
-   orderStore.editItem(idx)
-}
 function deleteClicked(idx) {
    orderStore.removeItem(idx)
-}
-function addClicked() {
-   orderStore.addMoreItems()
 }
 function submitClicked() {
    orderStore.submitOrder()
@@ -88,10 +74,14 @@ function submitClicked() {
 </script>
 
 <style scoped lang="scss">
-.review {
+.pad-left {
+   margin-left: 5px;
+}
+.request {
    text-align: left;
-   padding: 15px 10%;
-
+}
+.items {
+   text-align: left;
    dl {
       margin-left: 25px;
       display: inline-grid;
@@ -120,18 +110,6 @@ function submitClicked() {
       border-bottom: 1px solid var(--uvalib-grey-light);
       button {
          margin-left: 5px;
-      }
-   }
-   .error {
-      font-style: italic;
-      color: var(--uvalib-red);
-      margin-bottom: 0;
-   }
-   .button-bar {
-      text-align: right;
-      padding: 15px 0;
-      .pad-left {
-         margin-left: 10px;
       }
    }
 }
