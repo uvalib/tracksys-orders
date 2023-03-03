@@ -1,5 +1,12 @@
 <template>
-   <div class="review">
+   <FormKit type="step" name="reviewOrder">
+      <template #stepNext>
+         <span class="next-btns">
+            <uva-button @click="submitClicked" class="pad-left">Submit Order</uva-button>
+         </span>
+      </template>
+   </FormKit>
+   <!-- <div class="review">
       <div class="request">
          <dl>
             <dt>Date Due:</dt>
@@ -59,7 +66,7 @@
          <uva-button @click="addClicked" class="pad-left">Add Items</uva-button>
          <uva-button @click="submitClicked" class="pad-left">Submit Order</uva-button>
       </div>
-   </div>
+   </div> -->
 </template>
 
 <script setup>
@@ -88,51 +95,7 @@ function submitClicked() {
 </script>
 
 <style scoped lang="scss">
-.review {
-   text-align: left;
-   padding: 15px 10%;
-
-   dl {
-      margin-left: 25px;
-      display: inline-grid;
-      grid-template-columns: max-content 2fr;
-      grid-column-gap: 15px;
-      dt {
-         font-weight: bold;
-         text-align: right;
-      }
-      dd {
-         margin: 0 0 10px 0;
-         word-break: break-word;
-         -webkit-hyphens: auto;
-         -moz-hyphens: auto;
-         hyphens: auto;
-      }
-   }
-
-   .item-bar {
-      font-size: 1.15em;
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: space-between;
-      border-top: 1px solid var(--uvalib-grey-light);
-      padding: 5px;
-      border-bottom: 1px solid var(--uvalib-grey-light);
-      button {
-         margin-left: 5px;
-      }
-   }
-   .error {
-      font-style: italic;
-      color: var(--uvalib-red);
-      margin-bottom: 0;
-   }
-   .button-bar {
-      text-align: right;
-      padding: 15px 0;
-      .pad-left {
-         margin-left: 10px;
-      }
-   }
+.pad-left {
+   margin-left: 5px;
 }
 </style>

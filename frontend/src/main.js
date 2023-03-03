@@ -10,9 +10,6 @@ import '@formkit/addons/css/multistep'
 import './assets/forms.scss'
 import './assets/uva-colors.css'
 
-import VueDatePicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
-
 const i18n = createI18n({
    legacy: false,
    locale: 'en',
@@ -25,7 +22,6 @@ pinia.use(({ store }) => {
 
 const app = createApp(App)
 
-app.component('VueDatePicker', VueDatePicker)
 app.use( pinia )
 app.use( router )
 app.use( i18n )

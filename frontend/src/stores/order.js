@@ -41,7 +41,7 @@ export const useOrderStore = defineStore('order', {
       currItemIdx: -1,
       dateDue: "",
       specialInstructions: "",
-      intendedUseID: 0,
+      intendedUseID: null,
       items: [],
       origItem: {},
       itemMode: "add",
@@ -77,7 +77,6 @@ export const useOrderStore = defineStore('order', {
       },
       getConstants() {
          axios.get(`/api/constants`).then(response => {
-            console.log(response.data)
             this.academicStatuses = response.data.academicStatus
             this.intendedUses = response.data.intendedUse
          }).catch(_e => {

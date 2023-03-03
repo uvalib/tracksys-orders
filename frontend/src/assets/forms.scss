@@ -29,7 +29,8 @@ select,
 }
 
 button.dpg-form-input {
-   @include base-button();
+   @include primary-button();
+   margin: 0;
 }
 
 .formkit-outer[data-type="radio"] {
@@ -77,6 +78,11 @@ div.formkit-step-actions {
    margin-top: 15px;
 }
 
+div.formkit-help {
+   text-align: left;
+   font-size: 0.9em;
+}
+
 .dpg-form-invalid {
    list-style: none;
    padding: 0;
@@ -93,7 +99,7 @@ div.formkit-step-actions {
    margin-bottom: 0.3em;
    margin-top: 20px;
    color: var(--uvalib-text-dark);
-   font-weight: normal;
+   font-weight: bold;
 }
 
 .dpg-form-input {

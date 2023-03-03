@@ -1,7 +1,7 @@
 <template>
-   <div class="request">
+   <FormKit type="step" name="requestInfo">
       <div class="form-row">
-         <label for="due">Date Due (required)</label>
+         <label for="due">Date Due</label>
          <div class="note">
             Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it.
             <p>
@@ -10,17 +10,18 @@
          </div>
          <VueDatePicker v-model="orderStore.dateDue" model-type="yyyy-MM-dd"
             :auto-apply="true" :hide-navigation="['time']" :format="dateFormat"
-            :enable-time-picker="false" :min-date="minDueDate()" :start-date="orderStore.dateDue"/>
+            :clearable="false" autofucus required
+            :enable-time-picker="false" :min-date="minDueDate()" :start-date="orderStore.dateDue">
+            <template #input-icon>
+               <i class="icon far fa-calendar-alt"></i>
+            </template>
+         </VueDatePicker>
       </div>
-      <div class="form-row">
-         <label for="instruct">Special Instructions</label>
-         <div class="note">
-            Include any additional information required to fulfill this request.
-         </div>
-         <textarea rows="5" id="instruct" v-model="orderStore.specialInstructions"></textarea>
-      </div>
-      <div class="form-row">
-         <label for="intended-use">How do you intend to use items in this order? (required)</label>
+      <FormKit label="Special Instructions" type="textarea" v-model="orderStore.specialInstructions" id="instruct" :rows="5"
+         help="Include any additional information required to fulfill this request."
+      />
+      <div class="form-row top">
+         <label for="intended-use">How do you intend to use items in this order?</label>
          <div class="note">
             This helps us determine a digital format and watermark appropriate to your ultimate intended use.
             We do not grant permissions for specific uses, nor offer legal advice. Copyright and other legal restrictions may apply to use for
@@ -28,10 +29,7 @@
             <a href="https://small.library.virginia.edu/services/publishing/" target="_blank">Permissions and Publishing</a>
             page for more information.
          </div>
-         <select id="intended-use" v-model="orderStore.intendedUseID">
-            <option disabled value="0">Select an intended use</option>
-            <option v-for="opt in orderStore.intendedUses" :key="`u-${opt.id}`" :value="opt.id">{{opt.name}}</option>
-         </select>
+         <FormKit type="select" label="Intended Use" v-model="orderStore.intendedUseID" placeholder="Select an intended use" :options="intendedUses" validation="required"/>
       </div>
 
       <div class="intended-use-info" v-if="orderStore.intendedUseID=='100' || orderStore.intendedUseID=='104' || orderStore.intendedUseID=='106'">
@@ -66,111 +64,74 @@
             Any item larger than 14" on the long side will generally have a resolution of 300dpi.
          </p>
       </div>
-      <p class="error">{{orderStore.error}}</p>
-      <div class="button-bar">
-         <uva-button @click="cancelClicked">Cancel</uva-button>
-         <uva-button @click="nextClicked" class="pad-left">Next</uva-button>
-      </div>
-   </div>
+   </FormKit>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import {useOrderStore} from '@/stores/order'
 import { useRouter } from 'vue-router'
 import moment from 'moment'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
-const router = useRouter()
 const orderStore = useOrderStore()
+
+const intendedUses = computed(()=>{
+   let out = []
+   if (orderStore.working) return out
+   orderStore.intendedUses.forEach(l => {
+      out.push( {label:  l.name, value: l.id})
+   })
+   return out
+})
 
 function dateFormat(date)  {
   return moment(date).format("YYYY-MM-DD")
 }
 
 function minDueDate() {
-   return new Date(new Date().getTime()+(29*24*60*60*1000))
-}
-
-function cancelClicked() {
-   orderStore.clearRequest()
-   router.push("/")
-}
-
-function nextClicked() {
-   if (orderStore.dateDue == "" || orderStore.dateDue == null) {
-      orderStore.setError("Due date is required")
-      return
-   }
-   if (orderStore.intendedUseID == 0) {
-      orderStore.setError("Intended use is required")
-      return
-   }
-   orderStore.nextStep()
+   let minDate =  moment(new Date(new Date().getTime()+(29*24*60*60*1000))).format("YYYY-MM-DD")
+   return minDate
 }
 </script>
 
 <style scoped lang="scss">
-.request {
+.form-row {
    text-align: left;
-   padding: 15px 10%;
-
-   .form-row {
-      margin: 10px 0;
-      label {
-         font-weight: bold;
-         display: block;
-      }
-      input, select {
-         width: 100%;
-         margin: 5px 0;
-      }
-      :deep(input.picker) {
-         width: 100%;
-      }
-      textarea {
-         box-sizing: border-box;
-         width: 100%;
-         border: 1px solid var(--uvalib-grey-light);
-         border-radius: 5px;
-         padding: 5px 10px;
-         margin: 5px 0;
-         font-family: "franklin-gothic-urw", arial, sans-serif;
-         -webkit-font-smoothing: antialiased;
-         -moz-osx-font-smoothing: grayscale;
-      }
-      .note {
-         font-style: italic;
-         margin: 5px 0;
-         font-size: 0.9em;
-         .important {
-            color: var(--uvalib-red);
-            font-weight: bold;
-         }
-      }
+   label {
+      font-weight: bold;
    }
-   .intended-use-info {
+   .icon {
+      margin-left: 10px;
+   }
+   .note {
+      margin: 5px 0;
       font-size: 0.9em;
-      border: 1px solid var(--uvalib-grey-light);
-      padding: 5px 10px;
-      border-radius: 5px;
-      margin-top: 0px;
+      .important {
+         color: var(--uvalib-red);
+         font-weight: bold;
+      }
       p {
-         margin: 5px 0;
-      }
-      blockquote {
-         font-size: 1.1em;
+         margin:5px 0 0 0;
       }
    }
-   .error {
-      font-style: italic;
-      color: var(--uvalib-red);
-      margin-bottom: 0;
+}
+.form-row.top {
+   margin-top: 20px;
+}
+.intended-use-info {
+   text-align: left;
+   font-size: 0.9em;
+   border: 1px solid var(--uvalib-grey-light);
+   padding: 5px 10px;
+   border-radius: 5px;
+   margin-top: 0px;
+   p {
+      margin: 5px 0;
    }
-   .button-bar {
-      text-align: right;
-      padding: 15px 0;
-      .pad-left {
-         margin-left: 10px;
-      }
+   blockquote {
+      font-size: 1.1em;
    }
 }
 </style>

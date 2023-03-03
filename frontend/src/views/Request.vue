@@ -6,6 +6,8 @@
             <CustomerInfo />
             <AddressInfo />
             <RequestInfo />
+            <ItemInfo />
+            <ReviewOrder />
          </FormKit>
       </FormKit>
    </div>
