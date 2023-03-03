@@ -44,7 +44,6 @@ export const useOrderStore = defineStore('order', {
       intendedUseID: null,
       items: [],
       origItem: {},
-      itemMode: "add",
       requestID: "",
       termsAgreed: false,
       isUVA: false
@@ -142,30 +141,14 @@ export const useOrderStore = defineStore('order', {
             this.working = false
          })
       },
-      editItem(idx) {
-         this.itemMode = "edit"
-         this.origItem = Object.assign({}, this.items[this.currItemIdx])
-      },
-      itemEditCanceled() {
-         this.items.splice(this.currItemIdx, 1, this.origItem)
-         this.itemMode = "add"
-         this.origItem = {}
-      },
-      itemEditDone() {
-         this.itemMode = "add"
-         this.origItem = {}
-      },
       addItem() {
          this.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
          this.currItemIdx = this.items.length - 1
       },
-      addMoreItems() {
-         this.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
-         this.currItemIdx = this.items.length - 1
-         this.itemMode = "add"
-      },
       removeItem(idx) {
          if (idx < 0 || idx > this.items.length - 1) return
+         console.log("SPLICCE")
+         this.currItemIdx = 0
          this.items.splice(idx, 1)
       },
       clearRequest() {
