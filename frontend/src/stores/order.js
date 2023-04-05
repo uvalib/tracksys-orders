@@ -66,7 +66,7 @@ export const useOrderStore = defineStore('order', {
             return v.name
          }
          return "Unknown"
-      }
+      },
    },
    actions: {
       getVersion() {
@@ -147,7 +147,6 @@ export const useOrderStore = defineStore('order', {
       },
       removeItem(idx) {
          if (idx < 0 || idx > this.items.length - 1) return
-         console.log("SPLICCE")
          this.currItemIdx = 0
          this.items.splice(idx, 1)
       },
