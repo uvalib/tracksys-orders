@@ -7,8 +7,9 @@
             <p>
                <span class="important">
                   <!-- Starting mid-November through mid-January additional turnaround time is required due to the holiday season. -->
-                  We will be moving our studio this fall, so any order placed on or after September 30, 2023, may not be delivered until sometime in
-               December 2023, or later, depending on the size of the request.  We expect to resume our normal turnaround times in early 2024.
+                  We will be moving our studio this fall, so any orders approved (fees paid)  after September 30, 2023,
+                  may not be delivered until sometime in December 2023, or later, depending on the size of the request.
+                  We expect to resume our normal turnaround times in early 2024.
                </span>
             </p>
          </div>
