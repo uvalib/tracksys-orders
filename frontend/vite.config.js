@@ -16,7 +16,7 @@ export default defineConfig({
       port: 8080,
       proxy: {
          '/version': {
-            target: process.env.TS_ORDER_SRV,
+            target: process.env.TS_ORDER_SRV,  // export TS_ORDER_SRV=http://localhost:8085
             changeOrigin: true
          },
          '/healthcheck': {
