@@ -47,11 +47,7 @@
                <li>
                   We normally require at least 20 working days to complete a digitization request. Rush requests will be honored if possible.
                   <span class="warn">
-                     <!-- Starting mid-November through mid-January additional turnaround time is required due to the holiday season. -->
-                     <br/>
-                     We will be moving our studio this fall, so any orders approved (fees paid)  after September 30, 2023,
-                     may not be delivered until sometime in December 2023, or later, depending on the size of the request.
-                     We expect to resume our normal turnaround times in early 2024.
+                     Starting mid-November through mid-January additional turnaround time is required due to the holiday season.
                   </span>
                </li>
                <li>
