@@ -40,23 +40,27 @@ const router = createRouter({
    routes
 })
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach((to) => {
+   console.log("BEFORE ROUTE "+to.path)
    const orderStore = useOrderStore()
+
    if (to.path === '/granted') {
       console.log(`User ${to.query.user} authenticated`)
       orderStore.clearRequest()
       orderStore.termsAgreed = true
       orderStore.setComputeID(to.query.user)
       orderStore.startRequest()
-      next("/request")
-   } else if (to.path != "/") {
-      if (orderStore.termsAgreed == false) {
-         next("/")
-      } else {
-         next()
-      }
+      return "/request"
+   }
+
+   if (to.path == "/") {
+      console.log("NOT A PROTECTED PAGE")
    } else {
-      next()
+      // terms must be agreed to or go back to home page
+      if (orderStore.termsAgreed == false) {
+         return "/"
+      }
+      console.log(`AUTHENTICATED PAGE REQUEST WITH TERMS AGREED`)
    }
 })
 
