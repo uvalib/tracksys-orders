@@ -3,6 +3,8 @@ module github.com/uvalib/tracksys-orders
 go 1.16
 
 require (
+	github.com/bytedance/sonic v1.11.7 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.4 // indirect
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/contrib v0.0.0-20240508051311-c1c6bf0061b0
 	github.com/gin-gonic/gin v1.10.0
