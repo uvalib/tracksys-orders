@@ -38,13 +38,17 @@ const dc = defaultConfig({
 })
 app.use(plugin, dc)
 
+import '@fortawesome/fontawesome-free/css/all.css'
+
 import UvaButton from "@/components/UvaButton.vue"
 app.component('UvaButton', UvaButton)
 
 import vueCountryRegionSelect from 'vue3-country-region-select'
 app.use(vueCountryRegionSelect)
 
-import '@fortawesome/fontawesome-free/css/all.css'
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+app.component('VueDatePicker', VueDatePicker)
 
 // actually mount to DOM
 app.mount('#app')

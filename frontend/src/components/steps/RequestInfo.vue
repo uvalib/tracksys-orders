@@ -13,10 +13,7 @@
                </span>
             </p>
          </div>
-         <VueDatePicker v-model="orderStore.dateDue" model-type="yyyy-MM-dd"
-            :auto-apply="true" :hide-navigation="['time']" :format="dateFormat"
-            :clearable="false" autofucus required
-            :enable-time-picker="false" :min-date="minDueDate()" :start-date="orderStore.dateDue">
+         <VueDatePicker v-model="orderStore.dateDue"  :enable-time-picker="false" format="yyyy-MM-dd" auto-apply :clearable="false" :min-date="minDueDate()">
             <template #input-icon>
                <i class="icon far fa-calendar-alt"></i>
             </template>
@@ -75,10 +72,7 @@
 <script setup>
 import { computed } from 'vue'
 import {useOrderStore} from '@/stores/order'
-import { useRouter } from 'vue-router'
 import moment from 'moment'
-import VueDatePicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
 
 const orderStore = useOrderStore()
 
@@ -90,10 +84,6 @@ const intendedUses = computed(()=>{
    })
    return out
 })
-
-function dateFormat(date)  {
-  return moment(date).format("YYYY-MM-DD")
-}
 
 function minDueDate() {
    let minDate =  moment(new Date(new Date().getTime()+(29*24*60*60*1000))).format("YYYY-MM-DD")

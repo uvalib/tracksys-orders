@@ -127,7 +127,7 @@ export const useOrderStore = defineStore('order', {
       submitOrder() {
          this.working = true
          let req = {
-            dateDue: this.dateDue,
+            dateDue: moment(this.dateDue).format("YYYY-MM-DD"),
             intendedUseID: this.intendedUseID,
             specialInstructions: this.specialInstructions,
             items: this.items,
