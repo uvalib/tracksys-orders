@@ -4,7 +4,7 @@
       <FormKit label="Last Name" type="text" v-model="orderStore.customer.lastName" validation="required"  id="lname"/>
       <FormKit label="Email" type="email" v-model="orderStore.customer.email" validation="required"  id="email" :disabled="orderStore.computeID.length > 0"/>
       <FormKit v-if="orderStore.computeID.length > 0" type="select"
-         label="Acedemic Status" v-model="orderStore.customer.academicStatusID"
+         label="Academic Status" v-model="orderStore.customer.academicStatusID"
          placeholder="Select an academic status" :options="academicStatuses" validation="required"/>
    </FormKit>
 </template>
