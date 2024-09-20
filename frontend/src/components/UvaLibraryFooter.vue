@@ -132,7 +132,7 @@ ul li {
   padding-bottom: 14px;
 }
 .footer-bucket a {
-  color: var(--uvalib-brand-blue-lightest) !important;
+  color: white !important;
 }
 .footer-bucket i {
   font-size: 26px;
@@ -153,11 +153,11 @@ address {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    background-color: var(--uvalib-brand-orange);
-    border: 1px solid var(--uvalib-brand-orange);
+    background-color: var(--uvalib-brand-orange-dark);
+    border: 1px solid var(--uvalib-brand-orange-dark);
     color: white !important;
     &:hover {
-        background-color: var(--uvalib-brand-orange-dark);
+        background-color: var(--uvalib-brand-orange);
         text-decoration: none !important;
     }
   }
