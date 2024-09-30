@@ -34,7 +34,7 @@ onMounted( () => {
    font-family: "franklin-gothic-urw", arial, sans-serif;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
-   text-align: center;
+   text-align: left;
    color: var(--color-primary-text);
    margin: 0;
    padding: 0;
@@ -47,6 +47,7 @@ onMounted( () => {
       margin: 25px 0;
       font-weight: bold;
       position: relative;
+      text-align: center;
    }
    a {
       color: var(--color-link);

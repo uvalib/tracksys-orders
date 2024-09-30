@@ -29,7 +29,6 @@ const orderStore = useOrderStore()
 
 <style lang="scss" scoped>
 div.content {
-   text-align: center;
    margin: 0 auto;
 }
 @media only screen and (min-width: 768px) {

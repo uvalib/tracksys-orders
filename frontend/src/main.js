@@ -46,9 +46,6 @@ app.component('UvaButton', UvaButton)
 import vueCountryRegionSelect from 'vue3-country-region-select'
 app.use(vueCountryRegionSelect)
 
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
-app.component('VueDatePicker', VueDatePicker)
 
 // actually mount to DOM
 app.mount('#app')

@@ -1,20 +1,12 @@
 <template>
    <FormKit type="step" name="requestInfo">
-      <div class="form-row">
-         <label for="due">Date Due</label>
-         <div class="note">
-            Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it.
-         </div>
-         <VueDatePicker v-model="orderStore.dateDue"  :enable-time-picker="false" format="yyyy-MM-dd" auto-apply :clearable="false" :min-date="minDueDate()">
-            <template #input-icon>
-               <i class="icon far fa-calendar-alt"></i>
-            </template>
-         </VueDatePicker>
-      </div>
+      <FormKit type="date" label="Date Due" v-model="orderStore.dateDue" :min="minDueDate" validation="required"
+         help="Normal delivery time is 4 weeks from today. We make every effort to honor earlier delivery if requested, but we cannot guarantee it."
+      />
       <FormKit label="Special Instructions" type="textarea" v-model="orderStore.specialInstructions" id="instruct" :rows="5"
          help="Include any additional information required to fulfill this request."
       />
-      <div class="form-row top">
+      <div class="form-row">
          <label for="intended-use">How do you intend to use items in this order?</label>
          <div class="note">
             This helps us determine a digital format and watermark appropriate to your ultimate intended use.
@@ -77,24 +69,19 @@ const intendedUses = computed(()=>{
    return out
 })
 
-function minDueDate() {
+const minDueDate = computed(() => {
    let minDate =  moment(new Date(new Date().getTime()+(29*24*60*60*1000))).format("YYYY-MM-DD")
    return minDate
-}
+})
 </script>
 
 <style scoped lang="scss">
 .form-row {
-   text-align: left;
    label {
       font-weight: bold;
    }
-   .icon {
-      margin-left: 10px;
-   }
    .note {
-      margin: 5px 0;
-      font-size: 0.9em;
+      margin: 5px 0 20px 0;
       .important {
          color: var(--uvalib-red);
          font-weight: bold;
@@ -104,21 +91,13 @@ function minDueDate() {
       }
    }
 }
-.form-row.top {
-   margin-top: 20px;
-}
 .intended-use-info {
-   text-align: left;
-   font-size: 0.9em;
    border: 1px solid var(--uvalib-grey-light);
    padding: 5px 10px;
    border-radius: 5px;
    margin-top: 0px;
    p {
       margin: 5px 0;
-   }
-   blockquote {
-      font-size: 1.1em;
    }
 }
 </style>

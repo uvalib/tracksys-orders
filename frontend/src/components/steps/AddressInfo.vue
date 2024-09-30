@@ -54,7 +54,7 @@ async function beforeStepChange({currentStep}) {
 <style scoped lang="scss">
 h2 {
    font-size: 1.25em;
-   margin: 0 0 15px 0;
+   margin: 0;
    text-align: left;
    display: flex;
    flex-flow: row nowrap;
@@ -81,17 +81,18 @@ h2 {
 }
 .address {
    padding-left: 20px;
-   margin-bottom: 30px;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
 }
 .form-row {
-   margin-top: 20px;
-   text-align: left;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: flex-start;
+   gap: 5px;
    label {
-      display:block;
       font-weight: bold;
-   }
-   select {
-      width: 100%;
    }
 }
 </style>
