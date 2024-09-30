@@ -41,9 +41,7 @@ div.spinner-overlay {
    height: 100%;
    z-index: 1000;
    background: rgba(100,100,100,0.3);
-   .spinner {
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);;
-   }
+   text-align: center;
 }
 div.spinner {
    background: white;
@@ -53,6 +51,7 @@ div.spinner {
    display: inline-block;
    font-weight: bold;
    color: var(--uvalib-text);
+   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 div.spinner.embed {
    box-shadow: none;

@@ -7,10 +7,7 @@
          <FormKit label="City" type="text" v-model="orderStore.primaryAddress.city" id="city" validation="required" />
          <FormKit label="State" type="text" v-model="orderStore.primaryAddress.state" id="state" validation="required" />
          <FormKit label="Zip Code" type="text" v-model="orderStore.primaryAddress.zip" id="zip" validation="required" />
-         <div class="form-row">
-            <label for="country">Country</label>
-            <country-select id="country" v-model="orderStore.primaryAddress.country" :country="orderStore.primaryAddress.country" topCountry="US" :countryName="true" :usei18n="false" />
-         </div>
+         <FormKit label="Country" type="select" v-model="orderStore.primaryAddress.country" id="country" validation="required" :options="orderStore.countries"/>
          <FormKit label="Phone" type="text" v-model="orderStore.primaryAddress.phone" id="city"/>
       </div>
 
@@ -23,16 +20,13 @@
       </h2>
       <div class="address">
          <template v-if="orderStore.sameBillingAddress == false">
-            <FormKit label="Address Line 1" type="text" v-model="orderStore.billingAddress.address1" validation="required" id="address1"/>
-            <FormKit label="Address Line 2" type="text" v-model="orderStore.billingAddress.address2" id="address2"/>
-            <FormKit label="City" type="text" v-model="orderStore.billingAddress.city" id="city" validation="required" />
-            <FormKit label="State" type="text" v-model="orderStore.billingAddress.state" id="state" validation="required" />
-            <FormKit label="Zip Code" type="text" v-model="orderStore.billingAddress.zip" id="zip" validation="required" />
-            <div class="form-row">
-               <label for="country">Country</label>
-               <country-select id="country" v-model="orderStore.billingAddress.country" :country="orderStore.billingAddress.country" topCountry="US" :countryName="true" :usei18n="false" />
-            </div>
-            <FormKit label="Phone" type="text" v-model="orderStore.billingAddress.phone" id="city"/>
+            <FormKit label="Address Line 1" type="text" v-model="orderStore.billingAddress.address1" validation="required" id="baddress1"/>
+            <FormKit label="Address Line 2" type="text" v-model="orderStore.billingAddress.address2" id="baddress2"/>
+            <FormKit label="City" type="text" v-model="orderStore.billingAddress.city" id="bcity" validation="required" />
+            <FormKit label="State" type="text" v-model="orderStore.billingAddress.state" id="bstate" validation="required" />
+            <FormKit label="Zip Code" type="text" v-model="orderStore.billingAddress.zip" id="bzip" validation="required" />
+            <FormKit label="Country" type="select" v-model="orderStore.billingAddress.country" id="bcountry" validation="required" :options="orderStore.countries"/>
+            <FormKit label="Phone" type="text" v-model="orderStore.billingAddress.phone" id="bcity"/>
          </template>
       </div>
    </FormKit>
@@ -84,15 +78,5 @@ h2 {
    display: flex;
    flex-direction: column;
    gap: 20px;
-}
-.form-row {
-   display: flex;
-   flex-direction: column;
-   justify-content: flex-start;
-   align-items: flex-start;
-   gap: 5px;
-   label {
-      font-weight: bold;
-   }
 }
 </style>

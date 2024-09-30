@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import moment from 'moment'
+import dayjs from 'dayjs'
+import jsonCountryData from 'country-region-data/data.json';
 
 export const useOrderStore = defineStore('order', {
 	state: () => ({
@@ -25,7 +26,7 @@ export const useOrderStore = defineStore('order', {
          city: "",
          state: "",
          zip: "",
-         country: "",
+         country: "United States",
          phone: "",
       },
       billingAddress: {
@@ -35,7 +36,7 @@ export const useOrderStore = defineStore('order', {
          city: "",
          state: "",
          zip: "",
-         country: "",
+         country: "United States",
          phone: "",
       },
       currItemIdx: -1,
@@ -46,9 +47,13 @@ export const useOrderStore = defineStore('order', {
       origItem: {},
       requestID: "",
       termsAgreed: false,
-      isUVA: false
+      isUVA: false,
+      countryJson: jsonCountryData,
    }),
    getters: {
+      countries: state => {
+         return state.countryJson.map( data => data.countryName )
+      },
       academicStatusName: state => {
          // NOTE: getters cannot accept params. Instead have the getter return a function that
          // takes a param. The result will not me cached like other getters tho
@@ -127,7 +132,7 @@ export const useOrderStore = defineStore('order', {
       submitOrder() {
          this.working = true
          let req = {
-            dateDue: moment(this.dateDue).format("YYYY-MM-DD"),
+            dateDue: dayjs(this.dateDue).format("YYYY-MM-DD"),
             intendedUseID: this.intendedUseID,
             specialInstructions: this.specialInstructions,
             items: this.items,
@@ -158,12 +163,12 @@ export const useOrderStore = defineStore('order', {
          this.customer.email = ""
          this.customer.academicStatusID = 1
          this.sameBillingAddress = true
-         this.primaryAddress = { addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
-         this.billingAddress = { addressType: "billable_address", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
+         this.primaryAddress = { addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "United States", phone: "" }
+         this.billingAddress = { addressType: "billable_address", address1: "", address2: "", city: "", state: "", zip: "", country: "United States", phone: "" }
          this.error = ""
          let sd = new Date()
          sd.setDate(sd.getDate() + 29)
-         this.dateDue = moment(sd).format("YYYY-MM-DD")
+         this.dateDue = dayjs(sd).format("YYYY-MM-DD")
          this.items.splice(0, this.items.length)
          this.items.push({ title: "", pages: "", callNumber: "", author: "", published: "", location: "", link: "", description: "" })
          this.currItemIdx = 0
@@ -172,8 +177,8 @@ export const useOrderStore = defineStore('order', {
       setAddresses(data) {
          if ( data.length == 0 ) {
             this.sameBillingAddress = true
-            this.primaryAddress = { addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
-            this.billingAddress = { addressType: "billable_address", address1: "", address2: "", city: "", state: "", zip: "", country: "", phone: "" }
+            this.primaryAddress = { addressType: "primary", address1: "", address2: "", city: "", state: "", zip: "", country: "United States", phone: "" }
+            this.billingAddress = { addressType: "billable_address", address1: "", address2: "", city: "", state: "", zip: "", country: "United States", phone: "" }
          } else {
             this.primaryAddress = data[0]
             this.sameBillingAddress = true

@@ -56,7 +56,7 @@
 <script setup>
 import { computed } from 'vue'
 import {useOrderStore} from '@/stores/order'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 const orderStore = useOrderStore()
 
@@ -70,7 +70,7 @@ const intendedUses = computed(()=>{
 })
 
 const minDueDate = computed(() => {
-   let minDate =  moment(new Date(new Date().getTime()+(29*24*60*60*1000))).format("YYYY-MM-DD")
+   let minDate =  dayjs(new Date(new Date().getTime()+(29*24*60*60*1000))).format("YYYY-MM-DD")
    return minDate
 })
 </script>
