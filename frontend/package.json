@@ -1,30 +1,27 @@
 {
   "name": "tracksys-orders",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview --port 5050",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+    "build": "vite build"
   },
   "dependencies": {
     "@formkit/addons": "^1.6.7",
     "@formkit/vue": "^1.6.7",
     "@fortawesome/fontawesome-free": "^6.6.0",
-    "@vuepic/vue-datepicker": "^4.0.1",
-    "axios": "^1.7.2",
+    "@vuepic/vue-datepicker": "^9.0.3",
+    "axios": "^1.7.7",
     "moment": "^2.30.1",
-    "pinia": "^2.0.11",
-    "vue": "^3.2.31",
-    "vue-i18n": "^9.13.1",
-    "vue-router": "^4.1.2",
+    "pinia": "^2.2.2",
+    "vue": "^3.5.10",
+    "vue-i18n": "^9.14.1",
+    "vue-router": "^4.4.5",
     "vue3-country-region-select": "^1.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^3.0.1",
-    "eslint": "^8.5.0",
-    "eslint-plugin-vue": "^9.0.0",
-    "sass": "^1.54.2",
-    "vite": "^3.0.1"
+    "@vitejs/plugin-vue": "^5.1.4",
+    "sass-embedded": "^1.79.4",
+    "vite": "^5.4.8"
   }
 }

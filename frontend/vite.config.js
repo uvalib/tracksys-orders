@@ -1,4 +1,4 @@
- /*global process */
+/*global process */
 
 import { fileURLToPath, URL } from 'url'
 import { defineConfig } from 'vite'
@@ -9,7 +9,7 @@ export default defineConfig({
    define: {
       // enable hydration mismatch details in production build
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true'
-    },
+   },
    plugins: [vue()],
    resolve: {
       alias: {
@@ -39,16 +39,17 @@ export default defineConfig({
    },
    css: {
       preprocessorOptions: {
-        scss: {
-           // example : additionalData: `@import "./src/design/styles/variables";`
-           // dont need include file extend .scss
-           additionalData: `
+         scss: {
+            api: "modern-compiler",
+            // example : additionalData: `@import "./src/design/styles/variables";`
+            // dont need include file extend .scss
+            additionalData: `
              @import "@/assets/variables.scss";
              @import "@/assets/mixins.scss";
           `
-       },
+         },
       },
-    },
+   },
 })
 
 
