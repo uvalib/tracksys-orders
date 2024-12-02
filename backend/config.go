@@ -83,6 +83,11 @@ func getConfiguration() *configData {
 	}
 	if config.dev.fakeSMTP {
 		log.Printf("[CONFIG] stubsmtp      = [YES]")
+	} else {
+		log.Printf("[CONFIG] smtphost      = [%s]", config.smtp.Host)
+		log.Printf("[CONFIG] smtpport      = [%d]", config.smtp.Port)
+		log.Printf("[CONFIG] smtpuser      = [%s]", config.smtp.User)
+		log.Printf("[CONFIG] smtpsender    = [%s]", config.smtp.Sender)
 	}
 
 	return &config
