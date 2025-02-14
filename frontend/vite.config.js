@@ -41,11 +41,9 @@ export default defineConfig({
       preprocessorOptions: {
          scss: {
             api: "modern-compiler",
-            // example : additionalData: `@import "./src/design/styles/variables";`
-            // dont need include file extend .scss
             additionalData: `
-             @import "@/assets/variables.scss";
-             @import "@/assets/mixins.scss";
+             @use "@/assets/variables.scss" as *;
+             @use "@/assets/mixins.scss" as *;
           `
          },
       },
