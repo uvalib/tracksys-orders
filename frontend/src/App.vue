@@ -43,7 +43,7 @@ onMounted( () => {
    line-height: 1.3;
 
    h1 {
-      color: var(--uvalib-brand-orange);
+      color: var(--uvalib-brand-blue);
       margin: 25px 0;
       font-weight: bold;
       position: relative;

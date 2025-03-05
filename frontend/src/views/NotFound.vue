@@ -12,7 +12,7 @@
 .notfound {
    padding: 25px;
    h2 {
-      color: var(--uvalib-brand-orange);
+      color: var(--uvalib-brand-blue);
    }
 }
 </style>
