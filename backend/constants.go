@@ -48,11 +48,12 @@ func (svc *serviceContext) getConstants(c *gin.Context) {
 	iu := make([]constantInfo, 0)
 	for _, use := range uses {
 		u := constantInfo{ID: use.ID}
-		if use.DeliverableResolution == "" {
+		switch use.DeliverableResolution {
+		case "":
 			u.Name = fmt.Sprintf("%s : %s", use.Description, use.DeliverableFormat)
-		} else if use.DeliverableResolution == "Highest Possible" {
+		case "Highest Possible":
 			u.Name = fmt.Sprintf("%s : %s resolution %s", use.Description, use.DeliverableResolution, use.DeliverableFormat)
-		} else {
+		default:
 			u.Name = fmt.Sprintf("%s : %s dpi %s", use.Description, use.DeliverableResolution, use.DeliverableFormat)
 		}
 		iu = append(iu, u)

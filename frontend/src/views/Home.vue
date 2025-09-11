@@ -81,16 +81,18 @@
             <div v-if="termsError" class="terms-note">You must agree to the terms and conditions to continue.</div>
          </div>
          <h2>UVA Status</h2>
-         <div class="sect">
-            <label for="is_uva_yes" class="radio">
-                <input type="radio" name="is_uva" id="is_uva_yes" :value="true" v-model="orderStore.isUVA" class="uva-radio">
-                I am UVA faculty, staff, or student.  <span style="font-style: italic;">(You will be asked to verify your identity using
-               <a target="_blank" href="http://itc.virginia.edu/netbadge/">NetBadge</a>.)</span>
-            </label>
-            <label for="is_uva_no" class="radio">
+         <div class="sect status">
+            <div class="opt">
+               <input type="radio" name="is_uva" id="is_uva_yes" :value="true" v-model="orderStore.isUVA" class="uva-radio">
+               <label for="is_uva_yes" class="radio">
+                  I am UVA faculty, staff, or student.  <span style="font-style: italic;">(You will be asked to verify your identity using
+                  <a target="_blank" href="http://itc.virginia.edu/netbadge/">NetBadge</a>.)</span>
+               </label>
+            </div>
+            <div class="opt">
                <input type="radio" name="is_uva" id="is_uva_no" :value="false" v-model="orderStore.isUVA" class="uva-radio">
-               I am not affiliated with UVA.
-            </label>
+               <label for="is_uva_no" class="radio">I am not affiliated with UVA.</label>
+            </div>
          </div>
       </div>
       <div class="button-bar">
@@ -168,10 +170,21 @@ div.content {
          margin: 0 15px 0 0;
       }
    }
-   label.radio {
-      display: block;
-      .uva-radio {
-         margin: 5px 15px 5px 0;
+
+   .sect.status {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .opt {
+         display: flex;
+         flex-flow: row nowrap;
+         gap: 10px;
+         justify-content: flex-start;
+         align-items: baseline;
+         .uva-radio {
+            width: 16px;
+            height: 16px;
+         }
       }
    }
 }

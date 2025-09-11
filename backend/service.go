@@ -51,7 +51,7 @@ func initializeService(version string, cfg *configData) *serviceContext {
 	}
 	tpl, err := template.New("confirmation.html").Funcs(funcMap).ParseFiles("./templates/confirmation.html")
 	if err != nil {
-		log.Fatal(fmt.Sprintf("unable to load confirmation template: %s", err.Error()))
+		log.Fatalf("unable to load confirmation template: %s", err.Error())
 	}
 	ctx.ConfirmTemplate = tpl
 

@@ -2,7 +2,7 @@
    <div id="app">
       <div class="header" role="banner" id="uva-header">
          <div class="library-link">
-            <a target="_blank" href="https://library.virginia.edu">
+            <a href="https://library.virginia.edu">
                <UvaLibraryLogo />
             </a>
          </div>

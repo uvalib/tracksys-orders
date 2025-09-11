@@ -9,17 +9,17 @@
   "dependencies": {
     "@formkit/addons": "^1.6.9",
     "@formkit/vue": "^1.6.9",
-    "@fortawesome/fontawesome-free": "^6.7.2",
-    "axios": "^1.8.1",
+    "@fortawesome/fontawesome-free": "^7.0.1",
+    "axios": "^1.11.0",
     "country-region-data": "^3.1.0",
-    "dayjs": "^1.11.13",
-    "pinia": "^3.0.1",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "dayjs": "^1.11.18",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.21",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.1",
-    "sass-embedded": "^1.85.1",
-    "vite": "^6.2.0"
+    "@vitejs/plugin-vue": "^6.0.1",
+    "sass-embedded": "^1.92.1",
+    "vite": "^7.1.5"
   }
 }
