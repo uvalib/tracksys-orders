@@ -1,6 +1,6 @@
 <template>
-   <footer role="contentinfo" id="v4footer">
-      <div class="pre-footer" v-if="$route.name != 'feedback'">
+   <footer role="contentinfo">
+      <div class="pre-footer">
         Have questions? Need help? Email: <a href="mailto:digitalservices@virginia.edu">digitalservices@virginia.edu</a>
       </div>
       <div class="footer-container">
@@ -85,7 +85,6 @@ footer {
    background-color: var(--uvalib-teal-lightest);
    color: var(--uvalib-text-dark);
    padding: 5px 20px;
-   margin: -20px -20px 0 -20px;
    text-align: center;
 }
 
@@ -96,12 +95,14 @@ footer {
    padding-top: 1.35rem;
    gap: 3rem;
    font-family: franklin-gothic-urw, Arial, Helvetica, sans-serif !important;
-   h2 a {
-      font-size: 24px;
-      font-weight: 700 !important;
-      text-decoration: none !important;
-       &:hover {
-         text-decoration: underline !important;
+   h2 {
+      font-size: 1.3em;
+      a {
+         font-weight: 700 !important;
+         text-decoration: none !important;
+         &:hover {
+            text-decoration: underline !important;
+         }
       }
    }
    .social-media {
@@ -122,10 +123,8 @@ footer {
    }
    address {
       line-height: 25.5px;
-      font-weight: 700;
    }
    a {
-      font-weight: 700 !important;
       color:white !important;
       text-decoration: underline !important;
       &:hover {

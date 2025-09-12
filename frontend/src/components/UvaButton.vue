@@ -56,7 +56,7 @@ function tabNext(event) {
 
 <style lang="scss" scoped>
 button.uva-button {
-   font-weight: normal;
+   font-weight: 700;
    padding: 8px 20px;
    border-radius: 5px;
    cursor: pointer;
