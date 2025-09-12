@@ -8,7 +8,7 @@
          <FormKit label="State" type="text" v-model="orderStore.primaryAddress.state" id="state" validation="required" />
          <FormKit label="Zip Code" type="text" v-model="orderStore.primaryAddress.zip" id="zip" validation="required" />
          <FormKit label="Country" type="select" v-model="orderStore.primaryAddress.country" id="country" validation="required" :options="orderStore.countries"/>
-         <FormKit label="Phone" type="text" v-model="orderStore.primaryAddress.phone" id="city"/>
+         <FormKit label="Phone" type="text" v-model="orderStore.primaryAddress.phone" id="phone"/>
       </div>
 
       <h2>
@@ -26,7 +26,7 @@
             <FormKit label="State" type="text" v-model="orderStore.billingAddress.state" id="bstate" validation="required" />
             <FormKit label="Zip Code" type="text" v-model="orderStore.billingAddress.zip" id="bzip" validation="required" />
             <FormKit label="Country" type="select" v-model="orderStore.billingAddress.country" id="bcountry" validation="required" :options="orderStore.countries"/>
-            <FormKit label="Phone" type="text" v-model="orderStore.billingAddress.phone" id="bcity"/>
+            <FormKit label="Phone" type="text" v-model="orderStore.billingAddress.phone" id="bphone"/>
          </template>
       </div>
    </FormKit>

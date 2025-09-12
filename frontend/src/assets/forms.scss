@@ -28,7 +28,16 @@ select,
 }
 
 button.dpg-form-input {
-   @include primary-button();
+   font-weight: 700;
+   padding: 8px 20px;
+   border-radius: 5px;
+   cursor: pointer;
+   background-color: var(--uvalib-brand-blue-light);
+   border: 1px solid var(--uvalib-brand-blue-light);
+   color: white;
+   &:hover {
+      background-color: var(--uvalib-brand-blue-lighter);
+   }
 }
 
 .formkit-outer[data-type="radio"] {
@@ -72,6 +81,7 @@ div.formkit-steps {
    border-color: var(--uvalib-grey-light) !important;
    margin-bottom: 50px;
    border-radius: 0.3rem;
+   padding: 25px !important;
    .formkit-step-inner {
       display: flex;
       flex-direction: column;
@@ -92,6 +102,14 @@ div.formkit-steps {
    }
    div.formkit-step-actions {
       margin-top: 20px;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-end;
+      gap: 5px;
+      align-items: center;
+      .formkit-step-previous {
+         margin-right: auto;
+      }
    }
 }
 div.formkit-tabs {

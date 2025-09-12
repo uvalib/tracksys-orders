@@ -17,8 +17,8 @@
          <span>Item {{ orderStore.currItemIdx+1 }} of {{ orderStore.items.length }}</span>
          <span class="btn-group">
             <uva-button @click="deleteItem" :disabled="orderStore.items.length==1" class="trash" title="Delete item"><i class="far fa-trash-alt"></i></uva-button>
-            <uva-button @click="prevItem" class="pad-left big" :disabled="orderStore.currItemIdx==0" title="Prior item"><i class="fas fa-chevron-left"></i></uva-button>
-            <uva-button @click="nextItem" class="pad-left" :disabled="orderStore.currItemIdx == orderStore.items.length-1" title="Next item"><i class="fas fa-chevron-right"></i></uva-button>
+            <uva-button @click="prevItem" :disabled="orderStore.currItemIdx==0" title="Prior item"><i class="fas fa-chevron-left"></i></uva-button>
+            <uva-button @click="nextItem" :disabled="orderStore.currItemIdx == orderStore.items.length-1" title="Next item"><i class="fas fa-chevron-right"></i></uva-button>
          </span>
       </div>
       <div class="help">
@@ -42,8 +42,8 @@
       </div>
       <template #stepNext="{ handlers, node }">
          <span class="btn-group">
-            <uva-button @click="addClicked()" class="pad-left">Add Item</uva-button>
-            <uva-button @click="completeClicked(handlers, node.context)" class="pad-left" data-next="true">Complete Order</uva-button>
+            <uva-button @click="addClicked()">Add Item</uva-button>
+            <uva-button @click="completeClicked(handlers, node.context)" data-next="true">Complete Order</uva-button>
          </span>
       </template>
    </FormKit>

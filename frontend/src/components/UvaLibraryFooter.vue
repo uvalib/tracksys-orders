@@ -74,11 +74,6 @@ footer {
    color: white;
    padding: 0;
    font-size: 0.95rem;
-
-   i.fa-external-link-alt {
-      display: inline-block;
-      margin-left: 5px;
-   }
 }
 
 .pre-footer {
@@ -145,7 +140,7 @@ footer {
 .footer-post-container {
    background-color: var(--uvalib-blue-alt-darkest);
    color: white;
-   padding: 20px 110px;
+   padding: 20px;
    text-align: left;
    margin: 20px 0;
    display: flex;
@@ -154,7 +149,6 @@ footer {
    align-items: center;
    gap: 1.5rem;
    font-size: 1rem;
-
    a {
       color: white !important;
    }
@@ -162,16 +156,20 @@ footer {
 
 @media only screen and (max-width: 768px) {
    .footer-container {
-      padding: 0 40px;
-      grid-template-columns: 1fr;
+      padding: 0 20px;
+      gap: 15px;
+      flex-direction: column;
+      .footer-block {
+         text-align: center;
+         .social-media {
+            justify-content: center;
+         }
+      }
+   }
+   .footer-post-container  {
+      text-align: center;
+      gap: 10px;
    }
 
-   .footer-post-container {
-      padding-left: 60px;
-   }
-
-   .fdl-gov {
-      display: block;
-   }
 }
 </style>
