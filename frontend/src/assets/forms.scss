@@ -38,6 +38,10 @@ button.dpg-form-input {
    &:hover {
       background-color: var(--uvalib-brand-blue-lighter);
    }
+   &:focus {
+      outline: 3px dotted var( --uvalib-accessibility-highlight );
+      outline-offset: 3px;
+   }
 }
 
 .formkit-outer[data-type="radio"] {

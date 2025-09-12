@@ -125,6 +125,10 @@ footer {
       &:hover {
          text-decoration: none !important;
       }
+      &:focus, &:focus-visible {
+         outline: 2px dotted white !important;
+         outline-offset: 2px !important;
+      }
    }
    p {
       margin-top: 1.5rem;
@@ -139,7 +143,6 @@ footer {
 }
 .footer-post-container {
    background-color: var(--uvalib-blue-alt-darkest);
-   color: white;
    padding: 20px;
    text-align: left;
    margin: 20px 0;
@@ -149,9 +152,6 @@ footer {
    align-items: center;
    gap: 1.5rem;
    font-size: 1rem;
-   a {
-      color: white !important;
-   }
 }
 
 @media only screen and (max-width: 768px) {
@@ -170,6 +170,5 @@ footer {
       text-align: center;
       gap: 10px;
    }
-
 }
 </style>

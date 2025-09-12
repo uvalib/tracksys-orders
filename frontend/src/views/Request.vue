@@ -11,7 +11,6 @@
          </FormKit>
       </FormKit>
    </div>
-   <WaitSpinner message="Processing..." :overlay="true" v-if="orderStore.working" />
 </template>
 
 <script setup>
@@ -21,7 +20,6 @@ import AddressInfo from "@/components/steps/AddressInfo.vue"
 import RequestInfo from "@/components/steps/RequestInfo.vue"
 import ItemInfo from "@/components/steps/ItemInfo.vue"
 import ReviewOrder from "@/components/steps/ReviewOrder.vue"
-import WaitSpinner from '../components/WaitSpinner.vue'
 
 const orderStore = useOrderStore()
 

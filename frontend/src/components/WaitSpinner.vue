@@ -1,7 +1,7 @@
 <template>
    <div v-if="props.overlay" class="spinner-overlay">
       <div class="spinner">
-         <h3 v-if="message">{{ props.message }}</h3>
+         <h3 v-if="message" v-html="props.message"></h3>
          <div class="spinner-animation">
             <div class="dot bounce1"></div>
             <div class="dot bounce2"></div>
@@ -42,6 +42,9 @@ div.spinner-overlay {
    z-index: 1000;
    background: rgba(100,100,100,0.3);
    text-align: center;
+   .spinner {
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);;
+   }
 }
 div.spinner {
    background: white;
@@ -51,7 +54,6 @@ div.spinner {
    display: inline-block;
    font-weight: bold;
    color: var(--uvalib-text);
-   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 div.spinner.embed {
    box-shadow: none;
@@ -68,7 +70,7 @@ div.spinner h1 {
    width: 80px;
    text-align: center;
    .dot  {
-      color: var(--uvalib-brand-orange);
+      background: var(--uvalib-brand-orange);
    }
 }
 .spinner-animation > div {

@@ -14,12 +14,14 @@
       <router-view />
       <UvaLibraryFooter />
    </div>
+   <WaitSpinner message="Processing..." :overlay="true" v-if="orderStore.working" />
 </template>
 
 <script setup>
 import UvaLibraryLogo from "@/components/UvaLibraryLogo.vue"
 import UvaLibraryFooter from "@/components/UvaLibraryFooter.vue"
 import {useOrderStore} from '@/stores/order'
+import WaitSpinner from '@/components/WaitSpinner.vue'
 import { onMounted } from 'vue'
 
 const orderStore = useOrderStore()

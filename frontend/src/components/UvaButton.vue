@@ -66,6 +66,10 @@ button.uva-button {
    &:hover {
       background-color: var(--uvalib-brand-blue-lighter);
    }
+   &:focus {
+      outline: 3px dotted var( --uvalib-accessibility-highlight );
+      outline-offset: 3px;
+   }
 }
 .uva-button.disabled {
    cursor: default;
