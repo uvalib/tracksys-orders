@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Request from '../views/Request.vue'
 import Thanks from '../views/Thanks.vue'
-import Forbidden from '../views/Forbidden.vue'
 import NotFound from '../views/NotFound.vue'
 
 import { useOrderStore } from '@/stores/order'
@@ -22,11 +21,6 @@ const routes = [
       path: '/thanks',
       name: 'Thanks',
       component: Thanks
-   },
-   {
-      path: '/forbidden',
-      name: 'Forbidden',
-      component: Forbidden
    },
    {
       path: '/:pathMatch(.*)*',
@@ -55,7 +49,7 @@ router.beforeEach((to) => {
 
    if (to.path == "/") {
       console.log("NOT A PROTECTED PAGE")
-   } else {
+   } else if (to.path == "/request") {
       // terms must be agreed to or go back to home page
       if (orderStore.termsAgreed == false) {
          return "/"

@@ -14,15 +14,11 @@
 </template>
 
 <script setup>
-import {useOrderStore} from '@/stores/order'
 import CustomerInfo from "@/components/steps/CustomerInfo.vue"
 import AddressInfo from "@/components/steps/AddressInfo.vue"
 import RequestInfo from "@/components/steps/RequestInfo.vue"
 import ItemInfo from "@/components/steps/ItemInfo.vue"
 import ReviewOrder from "@/components/steps/ReviewOrder.vue"
-
-const orderStore = useOrderStore()
-
 </script>
 
 <style lang="scss" scoped>
