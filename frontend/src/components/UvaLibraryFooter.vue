@@ -74,17 +74,6 @@ footer {
    color: white;
    padding: 0;
    font-size: 0.95rem;
-   a {
-      color:white !important;
-      text-decoration: underline !important;
-      &:hover {
-         text-decoration: none !important;
-      }
-      &:focus, &:focus-visible {
-         outline: 2px dotted white !important;
-         outline-offset: 2px !important;
-      }
-   }
 }
 
 .pre-footer {
@@ -101,6 +90,17 @@ footer {
    padding-top: 1.35rem;
    gap: 3rem;
    font-family: franklin-gothic-urw, Arial, Helvetica, sans-serif !important;
+   a {
+      color:white !important;
+      text-decoration: underline !important;
+      &:hover {
+         text-decoration: none !important;
+      }
+      &:focus, &:focus-visible {
+         outline: 2px dotted white !important;
+         outline-offset: 2px !important;
+      }
+   }
    h2 {
       font-size: 1.3em;
       a {
@@ -152,6 +152,17 @@ footer {
    align-items: center;
    gap: 1.5rem;
    font-size: 1rem;
+   a {
+      color:white !important;
+      text-decoration: underline !important;
+      &:hover {
+         text-decoration: none !important;
+      }
+      &:focus, &:focus-visible {
+         outline: 2px dotted white !important;
+         outline-offset: 2px !important;
+      }
+   }
 }
 
 @media only screen and (max-width: 768px) {
