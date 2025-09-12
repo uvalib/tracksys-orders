@@ -74,6 +74,17 @@ footer {
    color: white;
    padding: 0;
    font-size: 0.95rem;
+   a {
+      color:white !important;
+      text-decoration: underline !important;
+      &:hover {
+         text-decoration: none !important;
+      }
+      &:focus, &:focus-visible {
+         outline: 2px dotted white !important;
+         outline-offset: 2px !important;
+      }
+   }
 }
 
 .pre-footer {
@@ -118,17 +129,6 @@ footer {
    }
    address {
       line-height: 25.5px;
-   }
-   a {
-      color:white !important;
-      text-decoration: underline !important;
-      &:hover {
-         text-decoration: none !important;
-      }
-      &:focus, &:focus-visible {
-         outline: 2px dotted white !important;
-         outline-offset: 2px !important;
-      }
    }
    p {
       margin-top: 1.5rem;
