@@ -7,7 +7,7 @@
          help="Include any additional information required to fulfill this request."
       />
       <div class="form-row">
-         <label for="intended-use">How do you intend to use items in this order?</label>
+         <div class="heavy">How do you intend to use items in this order?</div>
          <div class="note">
             This helps us determine a digital format and watermark appropriate to your ultimate intended use.
             We do not grant permissions for specific uses, nor offer legal advice. Copyright and other legal restrictions may apply to use for
@@ -15,7 +15,7 @@
             <a href="https://small.library.virginia.edu/services/publishing/" target="_blank">Permissions and Publishing</a>
             page for more information.
          </div>
-         <FormKit type="select" label="Intended Use" v-model="orderStore.intendedUseID" placeholder="Select an intended use" :options="intendedUses" validation="required"/>
+         <FormKit type="select" label="Intended Use" v-model="orderStore.intendedUseID" name="intended-use" placeholder="Select an intended use" :options="intendedUses" validation="required"/>
       </div>
 
       <div class="intended-use-info" v-if="orderStore.intendedUseID=='100' || orderStore.intendedUseID=='104' || orderStore.intendedUseID=='106'">
@@ -79,6 +79,9 @@ const minDueDate = computed(() => {
 .form-row {
    label {
       font-weight: bold;
+   }
+   .heavy {
+      font-weight: bold;;
    }
    .note {
       margin: 5px 0 20px 0;

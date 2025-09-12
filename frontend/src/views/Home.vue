@@ -86,7 +86,7 @@
             <input type="radio" name="is_uva" id="is_uva_yes" :value="true" v-model="orderStore.isUVA" class="uva-radio">
             <label for="is_uva_yes" class="radio">
                I am UVA faculty, staff, or student.  <span style="font-style: italic;">(You will be asked to verify your identity using
-               <a target="_blank" href="http://itc.virginia.edu/netbadge/">NetBadge</a>.)</span>
+               <a target="_blank" href="https://virginia.service-now.com/its?id=itsweb_kb_article&sys_id=4f98738bdbf6c744f032f1f51d9619ed">NetBadge</a>.)</span>
             </label>
          </div>
          <div class="opt">
@@ -131,6 +131,9 @@ function createRequestClicked() {
    div.content {
       max-width: 75%;
    }
+   h2 {
+      font-size: 1.5em;
+   }
    .sect {
       padding-left: 25px;
    }
@@ -143,6 +146,9 @@ function createRequestClicked() {
 @media only screen and (max-width: 768px) {
    div.content {
       max-width: 90%;
+   }
+   h2 {
+      font-size: 1em;
    }
    .sect {
       padding-left: 10px;
@@ -173,10 +179,11 @@ div.content {
       margin: 0 5px;
    }
    h2 {
-      font-weight: normal;
+      font-weight: bold;
       border-bottom: 1px solid var(--uvalib-grey-light);
       padding-bottom: 15px;
       margin-top: 35px;
+      color: var(--uvalib-brand-blue);
    }
    .terms  {
       display: flex;

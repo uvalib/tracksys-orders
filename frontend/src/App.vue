@@ -30,6 +30,23 @@ onMounted( () => {
 </script>
 
 <style lang="scss">
+@media only screen and (min-width: 768px) {
+   div.site-link {
+      font-size: 1.5em;
+   }
+   h1 {
+      font-size: 2em;
+   }
+}
+@media only screen and (max-width: 768px) {
+   div.site-link {
+      font-size: 1em;
+      text-align: right;
+   }
+   h1 {
+      font-size: 1.25em;
+   }
+}
 #app {
    font-family: "franklin-gothic-urw", arial, sans-serif;
    -webkit-font-smoothing: antialiased;
@@ -82,8 +99,7 @@ div.header {
    flex-direction: row;
    flex-wrap: nowrap;
    justify-content: space-between;
-   align-content: stretch;
-   align-items: center;
+   gap: 25px;
    div.library-link {
       height: 45px;
       width: 220px;
@@ -93,7 +109,6 @@ div.header {
    }
    div.site-link {
       order: 0;
-      font-size: 1.5em;
       a {
          color: white !important;
          text-decoration: none;
