@@ -104,12 +104,18 @@
                <dt>Processing Time</dt>
                <dd>Orders generally require at least 20 business days to process.  Rush requests will be honored if possible.</dd>
                <dt>Fees</dt>
-               <dd><em><strong>(Non-UVA only)</strong></em>  $50 for the first hour, $25 each additional hour.
-                  Special Collections staff will send a fee estimate that must be paid before any digitization work is done.</dd>
+               <dd><em><strong>(Non-UVA only)</strong></em>
+                  We charge a fee of $100 for the first hour of work (which includes a $50 processing fee) and $50 per hour for each additional hour
+                  (or partial hour) of expected work. Costs are calculated based on the length of time required for retrieval, identification, imaging,
+                  quality assurance, metadata creation, and delivery. For redelivery of images from our archive, we will only charge the processing fee ($50),
+                  unless it takes more than an hour to retrieve the items from our system. Library staff will contact you soon after your request is
+                  received with a quote based on our time estimate. If you accept our fee, pre-payment is required before we will proceed with your request.
+                  Payment information will be included with the fee estimate. Estimates are good for 30 days.
+               </dd>
                <dt>Deliverables</dt>
-               <dd>300dpi JPEG or highest resolution TIFF, depending on your intended use.</dd>
+               <dd>300dpi JPEG, highest resolution TIFF or PDF, depending on your intended use.</dd>
                <dt>Delivery</dt>
-               <dd>All requests are delivered as online downloads. Special delivery needs will be honored at Digital Production Group’s discretion.</dd>
+               <dd>All requests are delivered as online downloads.</dd>
                <dt>Copyright</dt>
                <dd>
                   All copies are provided for private study, scholarship, or research pursuant to 17 USC § 107 and/or 108.

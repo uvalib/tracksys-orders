@@ -46,25 +46,25 @@
             <li>
                We normally require at least 20 working days to complete a digitization request. Rush requests will be honored if possible.
                <span class="warn">
-                  Starting mid-November through mid-January additional turnaround time is required due to the holiday season.
+                   Starting mid-November through mid-January additional turnaround time is required due to the holiday season.
                </span>
             </li>
             <li>
                <strong>Non-UVa Patrons:</strong>
-               We charge a fee of $50 for first hour of work and $25 per hour for each additional hour thereafter.
-               Costs are calculated based on the length of time required for retrieval, identification, imaging and delivery.
-               Digital Production Group staff will contact you soon after your request is received with a quote based on our time estimate.
+               We charge a fee of $100 for the first hour of work (which includes a $50 processing fee) and $50 per hour for each additional hour
+               (or partial hour) of expected work. Costs are calculated based on the length of time required for retrieval, identification, imaging,
+               quality assurance, metadata creation, and delivery. For redelivery of images from our archive, we will only charge the processing fee ($50),
+               unless it takes more than an hour to retrieve the items from our system.
+               Library staff will contact you soon after your request is received with a quote based on our time estimate.
                If you accept our fee, pre-payment is required before we will proceed with your request.
-               Payment information will be included with the fee estimate.
+               Payment information will be included with the fee estimate. Estimates are good for 30 days.
             </li>
             <li>
                We provide images at various resolutions and formats depending on the intended use of the request.
                Generally, we can provide 300dpi JPEG images, TIF images at the highest resolution possible, or PDFs.
             </li>
             <li>
-               All orders will be delivered via the web. If you wish for your order to be delivered by some other means,
-               please write <a href="mailto:digitalservices@virginia.edu">digitalservices@virginia.edu</a> after submitting your request.
-               The decision to honor this request is at the sole discretion of Digital Production Group staff.
+               All orders will be delivered via the web.
             </li>
          </ul>
       </div>
