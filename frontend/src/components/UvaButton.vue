@@ -63,6 +63,7 @@ button.uva-button {
    background-color: var(--uvalib-brand-blue-light);
    border: 1px solid var(--uvalib-brand-blue-light);
    color: white;
+   transition: all 0.25s ease-in-out;
    &:hover {
       background-color: var(--uvalib-brand-blue-lighter);
    }

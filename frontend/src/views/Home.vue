@@ -101,13 +101,17 @@
 </template>
 
 <script setup>
-import {useOrderStore} from '@/stores/order'
+import { useOrderStore } from '@/stores/order'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const router = useRouter()
 const orderStore = useOrderStore()
 const termsError = ref(false)
+
+onMounted( () => {
+   orderStore.termsAgreed = false
+})
 
 function createRequestClicked() {
    termsError.value = false

@@ -10,7 +10,7 @@ import (
 )
 
 // Version of the service
-const Version = "3.2.3"
+const Version = "3.3.0"
 
 func main() {
 	// Load cfg
@@ -31,6 +31,7 @@ func main() {
 	api := router.Group("/api")
 	{
 		api.GET("/constants", svc.getConstants)
+		api.GET("/lookup", svc.lookupUser)
 		api.GET("/users/:id", svc.getUser)
 		api.POST("/users", svc.updateUser)
 		api.POST("/users/:id/address", svc.updateUserAddress)

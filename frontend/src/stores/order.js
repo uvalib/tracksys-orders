@@ -8,6 +8,7 @@ export const useOrderStore = defineStore('order', {
       working: false,
       version: "unknown",
       error: "",
+      lookupFailed: false,
       academicStatuses: [],
       intendedUses: [],
       computeID: "",
@@ -99,6 +100,16 @@ export const useOrderStore = defineStore('order', {
                this.working = false
             })
          }
+      },
+      async lookupPatron( email ) {
+         return axios.get("/api/lookup?email="+email).then(response => {
+            this.setUserData(response.data)
+            this.setAddresses(response.data.addresses)
+            this.lookupFailed = false
+         }).catch( (error) =>{
+            console.error("lookup "+email+" failed: "+error)
+            this.lookupFailed = true
+         })
       },
       async updateCustomer() {
          this.working = true

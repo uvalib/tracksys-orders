@@ -24,6 +24,25 @@ type customer struct {
 	UpdatedAt        time.Time      `json:"-"`
 }
 
+func (svc *serviceContext) lookupUser(c *gin.Context) {
+	email := c.Query("email")
+	log.Printf("INFO: lookup existing user by email %s", email)
+	var user customer
+	err := svc.GDB.Preload("Addresses").Where("email=?", email).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Printf("INFO: customer %s does not exist", email)
+			c.String(http.StatusNotFound, fmt.Sprintf("%s not found", email))
+		} else {
+			log.Printf("ERROR: query for customer %s failed: %s", email, err.Error())
+			c.String(http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
 func (svc *serviceContext) getUser(c *gin.Context) {
 	cid := c.Param("id")
 	log.Printf("INFO: get user data for computing id %s", cid)
