@@ -8,7 +8,7 @@
             'Prior Patron' to lookup your account; otherwise, click 'New Patron'.
          </div>
          <div class="lookup">
-            <input v-model="emailLookup" placeholder="Patron email" @keydown="orderStore.lookupFailed = false" />
+            <input v-model="emailLookup" placeholder="Patron email" @keydown="orderStore.lookupFailed = false" autofocus />
             <button @click="lookupPatron">Prior Patron</button>
             <button @click="showPrompt=false">New Patron</button>
             <button @click="router.push('/')" class="cancel">Cancel Request</button>
